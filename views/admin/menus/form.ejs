@@ -1,0 +1,52 @@
+<div class="admin-page">
+  <section class="admin-form-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2><%= menu ? 'Editar menu' : 'Novo item de menu' %></h2>
+        <p>Configure rótulo, endereço, ícone, destino e prioridade de exibição no site público.</p>
+      </div>
+      <a href="/admin/menus" class="admin-btn-ghost">Voltar</a>
+    </div>
+
+    <form action="/admin/menus/<%= menu ? 'editar/' + menu.id : 'nova' %>" method="POST" class="admin-form">
+      <div class="admin-form-grid">
+        <div class="admin-form-row">
+          <label for="label">Rótulo</label>
+          <input type="text" id="label" name="label" value="<%= menu ? menu.label : '' %>" required>
+        </div>
+        <div class="admin-form-row">
+          <label for="url">URL</label>
+          <input type="text" id="url" name="url" value="<%= menu ? menu.url : '' %>" required placeholder="/contato ou https://site.com">
+        </div>
+      </div>
+
+      <div class="admin-form-grid admin-form-grid-3">
+        <div class="admin-form-row">
+          <label for="icon">Ícone do Font Awesome</label>
+          <input type="text" id="icon" name="icon" value="<%= menu && menu.icon ? menu.icon : 'fa-link' %>" placeholder="fa-house">
+        </div>
+        <div class="admin-form-row">
+          <label for="order">Ordem</label>
+          <input type="number" id="order" name="order" value="<%= menu ? menu.order : 0 %>">
+        </div>
+        <div class="admin-form-row">
+          <label for="target">Abrir em</label>
+          <select id="target" name="target">
+            <option value="_self" <%= menu && menu.target === '_blank' ? '' : 'selected' %>>Mesma aba</option>
+            <option value="_blank" <%= menu && menu.target === '_blank' ? 'selected' : '' %>>Nova aba</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-form-row">
+        <label><input type="checkbox" name="isActive" <%= !menu || menu.isActive ? 'checked' : '' %>> Link ativo</label>
+      </div>
+
+      <div class="admin-help">Exemplos de ícone: <code>fa-house</code>, <code>fa-briefcase</code>, <code>fa-graduation-cap</code>, <code>fa-envelope</code>, <code>fa-link</code>.</div>
+
+      <div class="admin-actions">
+        <button type="submit" class="admin-btn">Salvar menu</button>
+      </div>
+    </form>
+  </section>
+</div>

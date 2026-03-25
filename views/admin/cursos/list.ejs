@@ -1,0 +1,56 @@
+<div class="admin-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Capacitação</div>
+    <h1>Gerencie cursos com a mesma consistência visual do front.</h1>
+    <p>Mais legibilidade para revisar conteúdo, links e imagens antes da publicação.</p>
+  </section>
+
+  <section class="admin-table-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Cursos cadastrados</h2>
+        <p>Catálogo completo de treinamentos e especializações.</p>
+      </div>
+      <a href="/admin/cursos/novo" class="admin-btn"><i class="fas fa-plus"></i><span>Novo curso</span></a>
+    </div>
+
+    <% if (courses.length > 0) { %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Imagem</th>
+            <th>Título</th>
+            <th>Período</th>
+            <th>Link</th>
+            <th>Data</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% courses.forEach(course => { %>
+            <tr>
+              <td><% if (course.image) { %><img src="/uploads/<%= course.image %>" alt="<%= course.title %>" class="admin-thumb" data-lightbox-src="/uploads/<%= course.image %>"><% } else { %><div class="admin-thumb-fallback"><i class="fas fa-image"></i></div><% } %></td>
+              <td><strong><%= course.title %></strong><div class="admin-help"><%= course.description.length > 90 ? course.description.substring(0, 90) + '...' : course.description %></div></td>
+              <td>
+                <% if (course.startDate || course.endDate) { %>
+                  <span class="admin-help">
+                    <%= course.startDate ? new Date(course.startDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem início' %>
+                    até
+                    <%= course.endDate ? new Date(course.endDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem fim' %>
+                  </span>
+                <% } else { %>
+                  <span class="admin-help">Não informado</span>
+                <% } %>
+              </td>
+              <td><% if (course.link) { %><a href="<%= course.link %>" target="_blank" class="admin-inline-note">Abrir link</a><% } else { %><span class="admin-help">Sem link externo</span><% } %></td>
+              <td><%= new Date(course.createdAt).toLocaleDateString('pt-BR') %></td>
+              <td><div class="admin-actions"><a href="/admin/cursos/editar/<%= course.id %>" class="admin-btn-secondary">Editar</a><form action="/admin/cursos/deletar/<%= course.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este curso?');"><button type="submit" class="admin-btn-danger">Excluir</button></form></div></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="admin-empty">Nenhum curso cadastrado.</div>
+    <% } %>
+  </section>
+</div>

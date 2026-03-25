@@ -1,0 +1,128 @@
+<%
+  const isSidebar = typeof globalSetting !== 'undefined' && globalSetting.navbarPosition !== 'top';
+  const brandKicker = globalSetting && globalSetting.brandKicker ? globalSetting.brandKicker : 'Carreira e cursos';
+  const brandName = globalSetting && globalSetting.brandName ? globalSetting.brandName : 'Agência de Emprego';
+  const fallbackLinks = [
+    { href: '/', label: 'Início', icon: 'fa-house', target: '_self' },
+    { href: '/vagas', label: 'Vagas', icon: 'fa-briefcase', target: '_self' },
+    { href: '/cursos', label: 'Cursos', icon: 'fa-graduation-cap', target: '_self' },
+    { href: '/selecoes-publicas', label: 'Seleções públicas', icon: 'fa-file-signature', target: '_self' },
+    { href: '/sobre', label: 'Sobre', icon: 'fa-building', target: '_self' },
+    { href: '/contato', label: 'Contato', icon: 'fa-envelope', target: '_self' }
+  ];
+  const configuredLinks = (typeof menus !== 'undefined' ? menus : []).map(item => ({
+    href: item.url,
+    label: item.label,
+    icon: item.icon || 'fa-link',
+    target: item.target || '_self'
+  }));
+  const allLinks = configuredLinks.length > 0 ? configuredLinks : fallbackLinks;
+  const isLinkActive = (href) => href === '/' ? currentPath === '/' : currentPath === href || currentPath.indexOf(href + '/') === 0;
+%>
+
+<% if (isSidebar) { %>
+  <div class="site-brand mb-8">
+    <span class="site-brand-mark"><i class="fas fa-briefcase"></i></span>
+    <span class="site-brand-text">
+      <span><%= brandKicker %></span>
+      <strong><%= brandName %></strong>
+    </span>
+  </div>
+
+  <nav class="site-sidebar-links">
+    <% allLinks.forEach(link => { %>
+      <a href="<%= link.href %>" target="<%= link.target %>" class="site-nav-link <%= isLinkActive(link.href) ? 'is-active' : '' %>">
+        <i class="fas <%= link.icon %>"></i>
+        <span><%= link.label %></span>
+      </a>
+    <% }) %>
+  </nav>
+
+  <div class="mt-auto pt-6 border-t">
+    <% if (user) { %>
+      <div class="site-user-chip">
+        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=2563eb&color=fff" class="site-avatar" alt="<%= user.name %>">
+        <div class="site-chip-text">
+          <strong><%= user.name %></strong>
+          <span><%= user.role %></span>
+        </div>
+      </div>
+      <div class="site-mobile-links mt-4">
+        <% if (user.role === 'admin') { %>
+          <a href="/admin/dashboard" class="site-nav-link">
+            <i class="fas fa-gauge-high"></i>
+            <span>Painel admin</span>
+          </a>
+        <% } %>
+        <a href="/auth/logout" class="site-nav-link">
+          <i class="fas fa-right-from-bracket"></i>
+          <span>Sair</span>
+        </a>
+      </div>
+    <% } else { %>
+      <div class="site-mobile-links">
+        <a href="/auth/google" class="site-button">
+          <i class="fab fa-google"></i>
+          <span>Entrar com Google</span>
+        </a>
+        <a href="/admin/login" class="site-button-ghost">Acesso admin</a>
+      </div>
+    <% } %>
+  </div>
+<% } else { %>
+  <div class="site-page site-nav-wrap">
+    <a href="/" class="site-brand">
+      <span class="site-brand-mark"><i class="fas fa-briefcase"></i></span>
+      <span class="site-brand-text">
+        <span><%= brandKicker %></span>
+        <strong><%= brandName %></strong>
+      </span>
+    </a>
+
+    <nav class="site-nav-links">
+      <% allLinks.forEach(link => { %>
+        <a href="<%= link.href %>" target="<%= link.target %>" class="site-nav-link <%= isLinkActive(link.href) ? 'is-active' : '' %>">
+          <%= link.label %>
+        </a>
+      <% }) %>
+    </nav>
+
+    <div class="site-nav-actions">
+      <% if (user) { %>
+        <div class="site-user-chip">
+          <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=2563eb&color=fff" class="site-avatar" alt="<%= user.name %>">
+          <div class="site-chip-text">
+            <strong><%= user.name %></strong>
+            <span><%= user.role %></span>
+          </div>
+        </div>
+        <% if (user.role === 'admin') { %>
+          <a href="/admin/dashboard" class="site-button-secondary">Painel admin</a>
+        <% } %>
+        <a href="/auth/logout" class="site-button-ghost">Sair</a>
+      <% } else { %>
+        <a href="/auth/google" class="site-button">
+          <i class="fab fa-google"></i>
+          <span>Entrar</span>
+        </a>
+        <button class="site-mobile-nav-toggle" type="button" data-mobile-toggle="site-mobile-menu" aria-expanded="false" aria-controls="site-mobile-menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      <% } %>
+    </div>
+  </div>
+
+  <div id="site-mobile-menu" class="site-mobile-panel">
+    <div class="site-page py-4">
+      <nav class="site-mobile-links">
+        <% allLinks.forEach(link => { %>
+          <a href="<%= link.href %>" target="<%= link.target %>" class="site-nav-link <%= isLinkActive(link.href) ? 'is-active' : '' %>">
+            <i class="fas <%= link.icon %>"></i>
+            <span><%= link.label %></span>
+          </a>
+        <% }) %>
+        <a href="/admin/login" class="site-button-ghost">Acesso admin</a>
+      </nav>
+    </div>
+  </div>
+<% } %>

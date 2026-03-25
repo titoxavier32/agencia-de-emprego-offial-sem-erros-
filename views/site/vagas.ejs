@@ -1,0 +1,63 @@
+<%
+  const formatDateBr = (value) => value ? new Date(value + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+  const getDisplaySchedule = (start, end) => {
+    const startFormatted = formatDateBr(start);
+    const endFormatted = formatDateBr(end);
+    if (!startFormatted && !endFormatted) return null;
+    if (startFormatted && endFormatted && startFormatted !== endFormatted) {
+      return { label: 'Período', value: `${startFormatted} a ${endFormatted}` };
+    }
+    return { label: 'Data', value: startFormatted || endFormatted };
+  };
+%>
+<section class="site-hero">
+  <div class="site-hero-content">
+    <span class="site-kicker">Vagas abertas</span>
+    <h1>Oportunidades organizadas para leitura rápida e decisão imediata.</h1>
+    <p class="site-lead">
+      Cada vaga agora segue um padrão visual mais profissional, com foco em clareza, credibilidade e conversão.
+    </p>
+  </div>
+</section>
+
+<section class="site-section">
+  <div class="site-page-header">
+    <div>
+      <h1>Vagas disponíveis</h1>
+      <p class="site-page-copy">Consulte as oportunidades publicadas e avance para a candidatura com menos fricção.</p>
+    </div>
+  </div>
+
+  <% if (jobs.length > 0) { %>
+    <div class="site-card-grid">
+      <% jobs.forEach(job => { const jobSchedule = getDisplaySchedule(job.startDate, job.endDate); %>
+        <article class="site-card" data-preview-item data-preview-badge="Vaga" data-preview-title="<%= job.title %>" data-preview-description="<%= job.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= job.image ? '/uploads/' + job.image : '' %>" data-preview-meta-label="Publicado em" data-preview-meta-value="<%= new Date(job.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= jobSchedule ? jobSchedule.value : '' %>" data-preview-period-label="<%= jobSchedule ? jobSchedule.label : 'Período' %>" data-preview-link="<%= job.link || '' %>" data-preview-link-label="Candidatar">
+          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar vaga">
+            <% if (job.image) { %>
+              <img src="/uploads/<%= job.image %>" alt="<%= job.title %>">
+            <% } else { %>
+              <div class="site-card-icon"><i class="fas fa-briefcase"></i></div>
+            <% } %>
+            <span class="site-card-badge">Oportunidade</span>
+          </div>
+          <div class="site-card-body">
+            <h3><%= job.title %></h3>
+            <p class="site-card-text"><%= job.description %></p>
+            <% if (jobSchedule) { %>
+              <p class="site-card-text"><%= jobSchedule.label %>: <%= jobSchedule.value %></p>
+            <% } %>
+            <div class="site-card-meta">
+              <span>Publicado em <%= new Date(job.createdAt).toLocaleDateString('pt-BR') %></span>
+              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="site-empty">
+      <i class="fas fa-briefcase"></i>
+      <p>Nenhuma vaga cadastrada.</p>
+    </div>
+  <% } %>
+</section>

@@ -1,0 +1,91 @@
+<%
+  const getPlacementLabel = (placement) => {
+    if (placement === 'hero_top') return 'Acima da plataforma profissional';
+    return 'Mural publicitário da home';
+  };
+  const placementOrder = ['hero_top', 'mural_home'];
+  const groupedData = typeof groupedAdvertisements !== 'undefined' && groupedAdvertisements ? groupedAdvertisements : {};
+%>
+<div class="admin-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Banners e propagandas</div>
+    <h1>Gerencie os quadros do topo e do mural publicitário por grupo.</h1>
+    <p>Você pode separar as propagandas por grupo, editar cada item e definir a posição de cada banner.</p>
+  </section>
+
+  <section class="admin-table-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Propagandas cadastradas</h2>
+        <p>Defina local, grupo, posição, ordem, tamanho, link e visibilidade de cada banner.</p>
+      </div>
+      <a href="/admin/propagandas/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Nova propaganda</span></a>
+    </div>
+
+    <% if (advertisements.length > 0) { %>
+      <% placementOrder.forEach(placement => { const groups = groupedData[placement] || []; %>
+        <% if (groups.length > 0) { %>
+          <div class="admin-section-head" style="margin-top:24px;">
+            <div>
+              <h2><%= getPlacementLabel(placement) %></h2>
+              <p>Os banners abaixo estão organizados pelos grupos cadastrados nessa área.</p>
+            </div>
+          </div>
+
+          <% groups.forEach(group => { %>
+            <div style="margin-top:18px;">
+              <h3><%= group.groupName %></h3>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Imagem</th>
+                    <th>Identificação interna</th>
+                    <th>Grupo</th>
+                    <th>Posição</th>
+                    <th>Ordem</th>
+                    <th>Tamanho</th>
+                    <th>Status no site</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% group.items.forEach(item => { %>
+                    <tr>
+                      <td>
+                        <% if (item.image) { %>
+                          <img src="/uploads/<%= item.image %>" alt="Propaganda cadastrada" class="admin-thumb">
+                        <% } else { %>
+                          <span class="admin-help">Sem imagem</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <strong><%= item.title || 'Propaganda sem título interno' %></strong>
+                        <div class="admin-help"><%= item.link || 'Sem link' %></div>
+                        <% if (item.description) { %><div class="admin-help"><%= item.description %></div><% } %>
+                      </td>
+                      <td><span class="admin-badge neutral"><%= item.groupName || 'Geral' %></span></td>
+                      <td><span class="admin-badge neutral"><%= item.position || 1 %></span></td>
+                      <td><span class="admin-badge neutral"><%= item.order %></span></td>
+                      <td><span class="admin-help"><%= item.width %> x <%= item.height %> px</span></td>
+                      <td><span class="admin-badge <%= item.isActive ? 'success' : 'warning' %>"><%= item.isActive ? 'Exibida no site' : 'Oculta no site' %></span></td>
+                      <td>
+                        <div class="admin-actions">
+                          <a href="/admin/propagandas/editar/<%= item.id %>" class="admin-btn-secondary">Editar</a>
+                          <form action="/admin/propagandas/deletar/<%= item.id %>" method="POST" onsubmit="return confirm('Excluir esta propaganda?');">
+                            <button type="submit" class="admin-btn-danger">Excluir</button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          <% }) %>
+        <% } %>
+      <% }) %>
+    <% } else { %>
+      <div class="admin-empty">Nenhuma propaganda cadastrada ainda.</div>
+    <% } %>
+  </section>
+</div>

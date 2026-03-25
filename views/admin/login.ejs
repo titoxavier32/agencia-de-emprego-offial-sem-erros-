@@ -1,0 +1,13 @@
+<div class="admin-page admin-login-shell">
+  <section class="admin-login-card">
+    <div class="admin-kicker">Acesso restrito</div>
+    <h1 style="margin:10px 0 8px;font-size:2rem;">Entrar no painel</h1>
+    <p class="admin-help">Use sua conta administrativa para acessar publicacoes, configuracoes e mensagens recebidas.</p>
+    <% if (typeof error !== 'undefined' && error) { %><div class="admin-alert"><%= error %></div><% } %>
+    <form action="/admin/login" method="POST" class="admin-form" style="margin-top:20px;">
+      <div class="admin-form-row"><label for="email">E-mail</label><input type="email" id="email" name="email" required placeholder="admin@agencia.com"></div>
+      <div class="admin-form-row"><label for="password">Senha</label><input type="password" id="password" name="password" required></div>
+      <button type="submit" class="admin-btn">Entrar</button>
+    </form>
+  </section>
+</div>

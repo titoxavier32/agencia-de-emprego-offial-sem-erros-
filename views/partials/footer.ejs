@@ -1,0 +1,24 @@
+<footer class="site-footer">
+  <% const brandName = globalSetting && globalSetting.brandName ? globalSetting.brandName : 'Agência de Emprego'; %>
+  <% const footerDescription = globalSetting && globalSetting.footerDescription ? globalSetting.footerDescription : 'Agência de Emprego conecta vagas, cursos e orientação profissional em uma experiência mais clara e confiável.'; %>
+  <div class="site-page site-footer-wrap">
+    <div class="site-footer-copy">
+      <p><strong><%= brandName %></strong></p>
+      <p><%= footerDescription %></p>
+      <p>&copy; <%= new Date().getFullYear() %> Todos os direitos reservados.</p>
+      <p><a href="/contato">Fale com a equipe</a> para dúvidas, suporte, feedback ou parcerias.</p>
+    </div>
+
+    <div class="site-socials">
+      <% if (globalSetting && globalSetting.socialInstagram) { %>
+        <a href="<%= globalSetting.socialInstagram %>" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <% } %>
+      <% if (globalSetting && globalSetting.socialFacebook) { %>
+        <a href="<%= globalSetting.socialFacebook %>" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <% } %>
+      <% if (globalSetting && globalSetting.socialThreads) { %>
+        <a href="<%= globalSetting.socialThreads %>" target="_blank" aria-label="Threads"><i class="fa-brands fa-threads"></i></a>
+      <% } %>
+    </div>
+  </div>
+</footer>

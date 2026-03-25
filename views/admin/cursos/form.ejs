@@ -1,0 +1,19 @@
+<div class="admin-page">
+  <section class="admin-form-wrap">
+    <div class="admin-section-head"><div><h2><%= title %></h2><p>Cadastre ou ajuste cursos com uma estrutura limpa e mais confiavel para operacao.</p></div><a href="/admin/cursos" class="admin-btn-ghost">Voltar</a></div>
+    <form action="<%= course ? '/admin/cursos/editar/' + course.id : '/admin/cursos/novo' %>" method="POST" enctype="multipart/form-data" class="admin-form">
+      <div class="admin-form-row"><label for="title">Titulo do curso</label><input type="text" id="title" name="title" value="<%= course ? course.title : '' %>" required></div>
+      <div class="admin-form-row"><label for="description">Descricao completa</label><textarea id="description" name="description" required><%= course ? course.description : '' %></textarea></div>
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="startDate">Data de inicio <span class="admin-form-help">opcional</span></label><input type="date" id="startDate" name="startDate" value="<%= course && course.startDate ? course.startDate : '' %>"></div>
+        <div class="admin-form-row"><label for="endDate">Data de fim <span class="admin-form-help">opcional</span></label><input type="date" id="endDate" name="endDate" value="<%= course && course.endDate ? course.endDate : '' %>"></div>
+      </div>
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="link">Link externo</label><input type="url" id="link" name="link" value="<%= course ? course.link : '' %>" placeholder="https://plataforma.com/curso"></div>
+        <div class="admin-form-row"><label for="image">Imagem de capa <% if (course && course.image) { %><span class="admin-form-help">deixe em branco para manter a atual</span><% } %></label><input type="file" id="image" name="image" accept="image/*"></div>
+      </div>
+      <% if (course && course.image) { %><div class="admin-image-preview"><img src="/uploads/<%= course.image %>" alt="Imagem atual"></div><% } %>
+      <div class="admin-actions"><button type="submit" class="admin-btn">Salvar curso</button></div>
+    </form>
+  </section>
+</div>

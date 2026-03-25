@@ -1,0 +1,227 @@
+<div class="admin-page">
+  <section class="admin-form-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2><%= title %></h2>
+        <p>Cadastre concursos e processos seletivos com dados estruturados, cronograma organizado e quadro de cargos linha por linha.</p>
+      </div>
+      <a href="/admin/selecoes-publicas" class="admin-btn-ghost">Voltar</a>
+    </div>
+
+    <% if (typeof formError !== 'undefined' && formError) { %>
+      <div class="admin-alert"><%= formError %></div>
+    <% } %>
+
+    <form action="<%= publicSelection ? '/admin/selecoes-publicas/editar/' + publicSelection.id : '/admin/selecoes-publicas/nova' %>" method="POST" enctype="multipart/form-data" class="admin-form">
+      <div class="admin-form-grid">
+        <div class="admin-form-row">
+          <label for="category">Categoria</label>
+          <select id="category" name="category">
+            <option value="processo_seletivo" <%= !publicSelection || publicSelection.category === 'processo_seletivo' ? 'selected' : '' %>>Processo seletivo</option>
+            <option value="concurso_publico" <%= publicSelection && publicSelection.category === 'concurso_publico' ? 'selected' : '' %>>Concurso público</option>
+          </select>
+        </div>
+        <div class="admin-form-row">
+          <label for="status">Situação</label>
+          <input type="text" id="status" name="status" value="<%= publicSelection ? publicSelection.status : 'Publicado' %>" placeholder="Publicado">
+        </div>
+      </div>
+
+      <div class="admin-form-row">
+        <label for="title">Título da divulgação</label>
+        <input type="text" id="title" name="title" value="<%= publicSelection ? publicSelection.title : '' %>" required>
+        <div class="admin-help">Obrigatório.</div>
+      </div>
+
+      <div class="admin-form-row">
+        <label for="description">Descrição</label>
+        <textarea id="description" name="description"><%= publicSelection ? publicSelection.description : '' %></textarea>
+      </div>
+
+      <div class="admin-form-grid admin-form-grid-3">
+        <div class="admin-form-row">
+          <label for="processNumber">Processo ou edital</label>
+          <input type="text" id="processNumber" name="processNumber" value="<%= publicSelection ? publicSelection.processNumber : '' %>" placeholder="EDITAL Nº 001/2026-SEMEC">
+        </div>
+        <div class="admin-form-row">
+          <label for="selectionType">Tipo</label>
+          <input type="text" id="selectionType" name="selectionType" value="<%= publicSelection ? publicSelection.selectionType : '' %>" placeholder="Teste seletivo simplificado">
+        </div>
+        <div class="admin-form-row">
+          <label for="legalRegime">Regime jurídico</label>
+          <input type="text" id="legalRegime" name="legalRegime" value="<%= publicSelection ? publicSelection.legalRegime : '' %>" placeholder="Celetista">
+        </div>
+      </div>
+
+      <div class="admin-form-grid admin-form-grid-3">
+        <div class="admin-form-row">
+          <label for="duration">Duração</label>
+          <input type="text" id="duration" name="duration" value="<%= publicSelection ? publicSelection.duration : '' %>" placeholder="1 ano">
+        </div>
+        <div class="admin-form-row">
+          <label for="organizer">Órgão de realização</label>
+          <input type="text" id="organizer" name="organizer" value="<%= publicSelection ? publicSelection.organizer : '' %>" placeholder="Prefeitura Municipal de Cujubim">
+        </div>
+        <div class="admin-form-row">
+          <label for="destinationAgency">Órgão destinatário</label>
+          <input type="text" id="destinationAgency" name="destinationAgency" value="<%= publicSelection ? publicSelection.destinationAgency : '' %>" placeholder="Prefeitura Municipal de Cujubim">
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="admin-form-row">
+          <label for="registrationLocation">Local de inscrição</label>
+          <input type="text" id="registrationLocation" name="registrationLocation" value="<%= publicSelection ? publicSelection.registrationLocation : '' %>" placeholder="Online - SITE">
+        </div>
+        <div class="admin-form-row admin-form-checkbox">
+          <label for="isExtendable">
+            <input type="checkbox" id="isExtendable" name="isExtendable" <%= publicSelection && publicSelection.isExtendable ? 'checked' : '' %>>
+            <span>Prorrogável</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="admin-form-grid admin-form-grid-3">
+        <div class="admin-form-row">
+          <label for="noticePublicationDate">Publicação do edital</label>
+          <input type="date" id="noticePublicationDate" name="noticePublicationDate" value="<%= publicSelection && publicSelection.noticePublicationDate ? publicSelection.noticePublicationDate : '' %>">
+        </div>
+        <div class="admin-form-row">
+          <label for="registrationStartDate">Início das inscrições</label>
+          <input type="date" id="registrationStartDate" name="registrationStartDate" value="<%= publicSelection && publicSelection.registrationStartDate ? publicSelection.registrationStartDate : '' %>">
+        </div>
+        <div class="admin-form-row">
+          <label for="registrationEndDate">Fim das inscrições</label>
+          <input type="date" id="registrationEndDate" name="registrationEndDate" value="<%= publicSelection && publicSelection.registrationEndDate ? publicSelection.registrationEndDate : '' %>">
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="admin-form-row">
+          <label for="link">Link oficial</label>
+          <input type="url" id="link" name="link" value="<%= publicSelection ? publicSelection.link : '' %>" placeholder="https://site-oficial.com/edital">
+        </div>
+        <div class="admin-form-row">
+          <label for="image">Imagem de capa <% if (publicSelection && publicSelection.image) { %><span class="admin-form-help">deixe em branco para manter a atual</span><% } else { %><span class="admin-form-help">obrigatória</span><% } %></label>
+          <input type="file" id="image" name="image" accept="image/*" <%= publicSelection ? '' : 'required' %>>
+        </div>
+      </div>
+
+      <div class="admin-form-row">
+        <label for="noticePdf">PDF do edital ou processo seletivo <% if (publicSelection && publicSelection.noticePdf) { %><span class="admin-form-help">deixe em branco para manter o PDF atual</span><% } %></label>
+        <input type="file" id="noticePdf" name="noticePdf" accept="application/pdf,.pdf">
+        <div class="admin-help">Anexe o edital completo em PDF para o visitante visualizar o documento oficial.</div>
+        <% if (publicSelection && publicSelection.noticePdf) { %>
+          <div class="admin-help">PDF atual: <a href="/uploads/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer"><%= publicSelection.noticePdfOriginalName || 'Abrir PDF atual' %></a></div>
+        <% } %>
+      </div>
+
+      <div class="admin-form-row">
+        <label for="targetAudience">Público-alvo</label>
+        <textarea id="targetAudience" name="targetAudience"><%= publicSelection ? publicSelection.targetAudience : '' %></textarea>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Cronograma</h2>
+            <p>Cadastre cada etapa em uma linha separada para evitar erros de formato.</p>
+          </div>
+          <button type="button" class="admin-btn-secondary" data-add-row="schedule-row-template" data-target="#scheduleRows">Adicionar etapa</button>
+        </div>
+        <div id="scheduleRows" class="admin-repeat-list">
+          <% scheduleItems.forEach((item) => { %>
+            <div class="admin-repeat-card">
+              <div class="admin-form-grid">
+                <div class="admin-form-row">
+                  <label>Evento</label>
+                  <input type="text" name="scheduleLabel" value="<%= item.label %>" placeholder="Publicação do edital">
+                </div>
+                <div class="admin-form-row">
+                  <label>Data ou período</label>
+                  <input type="text" name="scheduleDate" value="<%= item.date %>" placeholder="11/02/2026">
+                </div>
+              </div>
+              <div class="admin-actions"><button type="button" class="admin-btn-danger" data-remove-row>Remover etapa</button></div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Quadro de cargos</h2>
+            <p>Monte cada cargo com seus campos individuais para manter a divulgação mais profissional.</p>
+          </div>
+          <button type="button" class="admin-btn-secondary" data-add-row="vacancy-row-template" data-target="#vacancyRows">Adicionar cargo</button>
+        </div>
+        <div id="vacancyRows" class="admin-repeat-list">
+          <% vacancyItems.forEach((item) => { %>
+            <div class="admin-repeat-card">
+              <div class="admin-form-grid admin-form-grid-3">
+                <div class="admin-form-row"><label>Cargo</label><input type="text" name="vacancyRole" value="<%= item.role %>" placeholder="Professor"></div>
+                <div class="admin-form-row"><label>Vagas</label><input type="text" name="vacancyTotal" value="<%= item.total %>" placeholder="10"></div>
+                <div class="admin-form-row"><label>Vagas PCD</label><input type="text" name="vacancyPcd" value="<%= item.pcd %>" placeholder="1"></div>
+              </div>
+              <div class="admin-form-grid admin-form-grid-3">
+                <div class="admin-form-row"><label>Vagas cota raça</label><input type="text" name="vacancyRace" value="<%= item.race %>" placeholder="1"></div>
+                <div class="admin-form-row"><label>Vagas cota renda</label><input type="text" name="vacancyIncome" value="<%= item.income %>" placeholder="1"></div>
+                <div class="admin-form-row"><label>Carga horária</label><input type="text" name="vacancyWorkload" value="<%= item.workload %>" placeholder="40h"></div>
+              </div>
+              <div class="admin-form-grid admin-form-grid-3">
+                <div class="admin-form-row"><label>Remuneração</label><input type="text" name="vacancySalary" value="<%= item.salary %>" placeholder="R$ 3.500,00"></div>
+                <div class="admin-form-row"><label>Zona</label><input type="text" name="vacancyZone" value="<%= item.zone %>" placeholder="Urbana"></div>
+                <div class="admin-form-row"><label>Local de trabalho</label><input type="text" name="vacancyWorkplace" value="<%= item.workplace %>" placeholder="Cujubim"></div>
+              </div>
+              <div class="admin-actions"><button type="button" class="admin-btn-danger" data-remove-row>Remover cargo</button></div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <% if (publicSelection && publicSelection.image) { %><div class="admin-image-preview"><img src="/uploads/<%= publicSelection.image %>" alt="Imagem atual"></div><% } %>
+
+      <div class="admin-actions">
+        <button type="submit" class="admin-btn">Salvar divulgação</button>
+      </div>
+    </form>
+
+    <template id="schedule-row-template">
+      <div class="admin-repeat-card">
+        <div class="admin-form-grid">
+          <div class="admin-form-row">
+            <label>Evento</label>
+            <input type="text" name="scheduleLabel" placeholder="Publicação do edital">
+          </div>
+          <div class="admin-form-row">
+            <label>Data ou período</label>
+            <input type="text" name="scheduleDate" placeholder="11/02/2026">
+          </div>
+        </div>
+        <div class="admin-actions"><button type="button" class="admin-btn-danger" data-remove-row>Remover etapa</button></div>
+      </div>
+    </template>
+
+    <template id="vacancy-row-template">
+      <div class="admin-repeat-card">
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Cargo</label><input type="text" name="vacancyRole" placeholder="Professor"></div>
+          <div class="admin-form-row"><label>Vagas</label><input type="text" name="vacancyTotal" placeholder="10"></div>
+          <div class="admin-form-row"><label>Vagas PCD</label><input type="text" name="vacancyPcd" placeholder="1"></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Vagas cota raça</label><input type="text" name="vacancyRace" placeholder="1"></div>
+          <div class="admin-form-row"><label>Vagas cota renda</label><input type="text" name="vacancyIncome" placeholder="1"></div>
+          <div class="admin-form-row"><label>Carga horária</label><input type="text" name="vacancyWorkload" placeholder="40h"></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Remuneração</label><input type="text" name="vacancySalary" placeholder="R$ 3.500,00"></div>
+          <div class="admin-form-row"><label>Zona</label><input type="text" name="vacancyZone" placeholder="Urbana"></div>
+          <div class="admin-form-row"><label>Local de trabalho</label><input type="text" name="vacancyWorkplace" placeholder="Cujubim"></div>
+        </div>
+        <div class="admin-actions"><button type="button" class="admin-btn-danger" data-remove-row>Remover cargo</button></div>
+      </div>
+    </template>
+  </section>
+</div>

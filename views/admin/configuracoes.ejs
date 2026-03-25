@@ -1,0 +1,315 @@
+<div class="admin-page">
+  <section class="admin-form-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Configurações globais</h2>
+        <p>Ajuste identidade visual, menu, banner principal, propagandas e cobrança comercial em uma única tela.</p>
+      </div>
+    </div>
+
+    <form action="/admin/configuracoes" method="POST" enctype="multipart/form-data" class="admin-form">
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Marca do site</h2>
+            <p>Controle o nome exibido e os textos institucionais sem alterar código.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-row">
+            <label for="brandKicker">Linha da marca</label>
+            <input type="text" id="brandKicker" name="brandKicker" value="<%= s && s.brandKicker ? s.brandKicker : 'Carreira e cursos' %>">
+          </div>
+          <div class="admin-form-row">
+            <label for="brandName">Nome da marca</label>
+            <input type="text" id="brandName" name="brandName" value="<%= s && s.brandName ? s.brandName : 'Agência de Emprego' %>">
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="footerDescription">Descrição do rodapé</label>
+          <textarea id="footerDescription" name="footerDescription"><%= s && s.footerDescription ? s.footerDescription : 'Agência de Emprego conecta vagas, cursos e orientação profissional em uma experiência mais clara e confiável.' %></textarea>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Cores do site</h2>
+            <p>Escolha a paleta exata do jeito que quiser. Os campos abaixo substituem o tema padrão.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="themeColor">Tema base</label>
+            <select id="themeColor" name="themeColor">
+              <option value="white" <%= (!s || s.themeColor === 'white') ? 'selected' : '' %>>Branco</option>
+              <option value="black" <%= (s && s.themeColor === 'black') ? 'selected' : '' %>>Preto</option>
+              <option value="blue" <%= (s && s.themeColor === 'blue') ? 'selected' : '' %>>Azul</option>
+              <option value="pink" <%= (s && s.themeColor === 'pink') ? 'selected' : '' %>>Rosa</option>
+            </select>
+          </div>
+          <div class="admin-form-row"><label for="primaryColor">Cor primária</label><input type="color" id="primaryColor" name="primaryColor" value="<%= s && s.primaryColor ? s.primaryColor : '#2563eb' %>"></div>
+          <div class="admin-form-row"><label for="accentColor">Cor de destaque</label><input type="color" id="accentColor" name="accentColor" value="<%= s && s.accentColor ? s.accentColor : '#f97316' %>"></div>
+          <div class="admin-form-row"><label for="surfaceColor">Cor dos cartões</label><input type="color" id="surfaceColor" name="surfaceColor" value="<%= s && s.surfaceColor ? s.surfaceColor : '#ffffff' %>"></div>
+          <div class="admin-form-row"><label for="backgroundBaseColor">Cor de fundo</label><input type="color" id="backgroundBaseColor" name="backgroundBaseColor" value="<%= s && s.backgroundBaseColor ? s.backgroundBaseColor : '#f8fafc' %>"></div>
+          <div class="admin-form-row"><label for="textColor">Cor do texto</label><input type="color" id="textColor" name="textColor" value="<%= s && s.textColor ? s.textColor : '#0f172a' %>"></div>
+          <div class="admin-form-row"><label for="mutedColor">Cor do texto secundário</label><input type="color" id="mutedColor" name="mutedColor" value="<%= s && s.mutedColor ? s.mutedColor : '#475569' %>"></div>
+          <div class="admin-form-row"><label for="headingColor">Cor dos títulos</label><input type="color" id="headingColor" name="headingColor" value="<%= s && s.headingColor ? s.headingColor : '#020617' %>"></div>
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="admin-form-row">
+          <label for="backgroundImage">Imagem de fundo</label>
+          <input type="file" id="backgroundImage" name="backgroundImage" accept="image/*">
+        </div>
+        <div class="admin-form-row">
+          <label for="cardImageHeight">Altura das imagens do site</label>
+          <input type="number" id="cardImageHeight" name="cardImageHeight" min="100" max="500" value="<%= s && s.cardImageHeight ? s.cardImageHeight : 220 %>">
+        </div>
+      </div>
+
+      <% if (s && s.backgroundImage) { %>
+        <div class="admin-image-preview"><img src="/uploads/<%= s.backgroundImage %>" alt="Fundo atual"></div>
+      <% } %>
+
+      <div class="admin-form-row">
+        <label for="backgroundOpacity">Opacidade do overlay <span class="admin-range-value" id="opacityValue"><%= s && s.backgroundOpacity !== undefined ? s.backgroundOpacity : 1 %></span></label>
+        <input type="range" id="backgroundOpacity" name="backgroundOpacity" min="0" max="1" step="0.1" value="<%= s && s.backgroundOpacity !== undefined ? s.backgroundOpacity : 1 %>" oninput="document.getElementById('opacityValue').innerText = this.value">
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Menu do site</h2>
+            <p>Mantenha todos os itens ajustáveis na mesma reta e visualize o resultado em tempo real antes de salvar.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="navbarPosition">Posição do menu</label>
+            <select id="navbarPosition" name="navbarPosition">
+              <option value="top" <%= (s && s.navbarPosition === 'top') ? 'selected' : '' %>>Topo</option>
+              <option value="left" <%= (s && s.navbarPosition === 'left') ? 'selected' : '' %>>Lateral esquerda</option>
+              <option value="right" <%= (s && s.navbarPosition === 'right') ? 'selected' : '' %>>Lateral direita</option>
+            </select>
+          </div>
+          <div class="admin-form-row">
+            <label for="navbarAlignment">Alinhamento no topo</label>
+            <select id="navbarAlignment" name="navbarAlignment" data-menu-preview-control="alignment">
+              <option value="start" <%= (s && s.navbarAlignment === 'start') ? 'selected' : '' %>>Esquerda</option>
+              <option value="center" <%= (s && s.navbarAlignment === 'center') ? 'selected' : '' %>>Centro</option>
+              <option value="end" <%= (!s || s.navbarAlignment === 'end') ? 'selected' : '' %>>Direita</option>
+            </select>
+          </div>
+          <div class="admin-form-row">
+            <label for="navbarWrap">Quebra de linha</label>
+            <select id="navbarWrap" name="navbarWrap" data-menu-preview-control="wrap">
+              <option value="nowrap" <%= (!s || !s.navbarWrap || s.navbarWrap === 'nowrap') ? 'selected' : '' %>>Sempre na mesma reta</option>
+              <option value="wrap" <%= (s && s.navbarWrap === 'wrap') ? 'selected' : '' %>>Permitir quebra</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="navbarFontSize">Tamanho da fonte</label>
+            <input type="number" id="navbarFontSize" name="navbarFontSize" min="12" max="24" value="<%= s && s.navbarFontSize ? s.navbarFontSize : 15 %>" data-menu-preview-control="fontSize">
+          </div>
+          <div class="admin-form-row">
+            <label for="navbarItemGap">Espaçamento entre itens</label>
+            <input type="number" id="navbarItemGap" name="navbarItemGap" min="4" max="36" value="<%= s && s.navbarItemGap ? s.navbarItemGap : 10 %>" data-menu-preview-control="gap">
+          </div>
+          <div class="admin-form-row">
+            <label for="navbarItemPaddingX">Padding lateral</label>
+            <input type="number" id="navbarItemPaddingX" name="navbarItemPaddingX" min="8" max="32" value="<%= s && s.navbarItemPaddingX ? s.navbarItemPaddingX : 16 %>" data-menu-preview-control="paddingX">
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="navbarItemMinHeight">Altura do item</label>
+            <input type="number" id="navbarItemMinHeight" name="navbarItemMinHeight" min="36" max="64" value="<%= s && s.navbarItemMinHeight ? s.navbarItemMinHeight : 44 %>" data-menu-preview-control="minHeight">
+          </div>
+        </div>
+
+        <div class="admin-live-preview" data-menu-preview>
+          <div class="admin-live-preview-head">
+            <strong>Prévia do menu</strong>
+            <span>O preview responde na hora. Para publicar no site, clique em salvar configurações.</span>
+          </div>
+          <div class="admin-menu-preview-shell">
+            <div class="admin-menu-preview-brand">
+              <span class="admin-menu-preview-mark"><i class="fas fa-briefcase"></i></span>
+              <div>
+                <small><%= s && s.brandKicker ? s.brandKicker : 'Carreira e cursos' %></small>
+                <strong><%= s && s.brandName ? s.brandName : 'Agência de Emprego' %></strong>
+              </div>
+            </div>
+            <nav class="admin-menu-preview-links" data-menu-preview-links>
+              <% const previewMenus = typeof menuPreviewItems !== 'undefined' && menuPreviewItems.length > 0 ? menuPreviewItems : [{ label: 'Início' }, { label: 'Vagas' }, { label: 'Cursos' }, { label: 'Seleções públicas' }, { label: 'Sobre' }, { label: 'Contato' }]; %>
+              <% previewMenus.forEach((item, index) => { %>
+                <span class="admin-menu-preview-link <%= index === 0 ? 'is-active' : '' %>"><%= item.label %></span>
+              <% }) %>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Banner principal da home</h2>
+            <p>Controle o conteúdo, o tamanho, o alinhamento e a posição do bloco principal.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="heroKicker">Linha superior do banner</label>
+          <input type="text" id="heroKicker" name="heroKicker" value="<%= s && s.heroKicker ? s.heroKicker : 'Plataforma profissional para carreira' %>">
+        </div>
+        <div class="admin-form-row">
+          <label for="heroTitle">Título do banner</label>
+          <input type="text" id="heroTitle" name="heroTitle" value="<%= s && s.heroTitle ? s.heroTitle : 'Conecte talento, contratação e qualificação em uma vitrine que transmite confiança.' %>">
+        </div>
+        <div class="admin-form-row">
+          <label for="heroDescription">Descrição do banner</label>
+          <textarea id="heroDescription" name="heroDescription"><%= s && s.heroDescription ? s.heroDescription : 'Sua agência agora apresenta vagas e cursos em uma experiência mais forte comercialmente: clara para quem busca oportunidade e convincente para quem quer divulgar serviços e atrair candidatos qualificados.' %></textarea>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label for="heroHeight">Altura mínima do banner</label><input type="number" id="heroHeight" name="heroHeight" min="0" max="900" value="<%= s && s.heroHeight !== undefined ? s.heroHeight : 0 %>"></div>
+          <div class="admin-form-row"><label for="heroPadding">Espaçamento interno</label><input type="number" id="heroPadding" name="heroPadding" min="20" max="120" value="<%= s && s.heroPadding ? s.heroPadding : 42 %>"></div>
+          <div class="admin-form-row"><label for="heroTitleSize">Tamanho máximo do título</label><input type="number" id="heroTitleSize" name="heroTitleSize" min="36" max="120" value="<%= s && s.heroTitleSize ? s.heroTitleSize : 72 %>"></div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label for="heroContentWidth">Largura máxima do quadro de informações</label><input type="number" id="heroContentWidth" name="heroContentWidth" min="320" max="1100" value="<%= s && s.heroContentWidth ? s.heroContentWidth : 720 %>"></div>
+          <div class="admin-form-row"><label for="heroKickerSize">Tamanho da linha superior</label><input type="number" id="heroKickerSize" name="heroKickerSize" min="10" max="28" value="<%= s && s.heroKickerSize ? s.heroKickerSize : 12 %>"></div>
+          <div class="admin-form-row"><label for="heroDescriptionSize">Tamanho do texto descritivo</label><input type="number" id="heroDescriptionSize" name="heroDescriptionSize" min="13" max="28" value="<%= s && s.heroDescriptionSize ? s.heroDescriptionSize : 17 %>"></div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="heroTextAlign">Alinhamento do conteúdo</label>
+            <select id="heroTextAlign" name="heroTextAlign">
+              <option value="left" <%= (!s || s.heroTextAlign === 'left') ? 'selected' : '' %>>Esquerda</option>
+              <option value="center" <%= (s && s.heroTextAlign === 'center') ? 'selected' : '' %>>Centro</option>
+              <option value="right" <%= (s && s.heroTextAlign === 'right') ? 'selected' : '' %>>Direita</option>
+            </select>
+          </div>
+          <div class="admin-form-row"><label for="heroContentOffsetX">Mover quadro na horizontal</label><input type="number" id="heroContentOffsetX" name="heroContentOffsetX" min="-400" max="400" value="<%= s && s.heroContentOffsetX ? s.heroContentOffsetX : 0 %>"></div>
+          <div class="admin-form-row"><label for="heroContentOffsetY">Mover quadro na vertical</label><input type="number" id="heroContentOffsetY" name="heroContentOffsetY" min="-300" max="300" value="<%= s && s.heroContentOffsetY ? s.heroContentOffsetY : 0 %>"></div>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Propagandas acima do banner</h2>
+            <p>Ajuste o bloco com os 3 quadros que fica acima da área principal da home.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="topAdsAlignment">Alinhamento dos quadros</label>
+            <select id="topAdsAlignment" name="topAdsAlignment">
+              <option value="left" <%= (s && s.topAdsAlignment === 'left') ? 'selected' : '' %>>Esquerda</option>
+              <option value="center" <%= (!s || s.topAdsAlignment === 'center') ? 'selected' : '' %>>Centro</option>
+              <option value="right" <%= (s && s.topAdsAlignment === 'right') ? 'selected' : '' %>>Direita</option>
+            </select>
+          </div>
+          <div class="admin-form-row"><label for="topAdsOffsetX">Mover para os lados</label><input type="number" id="topAdsOffsetX" name="topAdsOffsetX" min="-400" max="400" value="<%= s && s.topAdsOffsetX ? s.topAdsOffsetX : 0 %>"></div>
+          <div class="admin-form-row"><label for="topAdsOffsetY">Mover para cima ou para baixo</label><input type="number" id="topAdsOffsetY" name="topAdsOffsetY" min="-300" max="300" value="<%= s && s.topAdsOffsetY ? s.topAdsOffsetY : 0 %>"></div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="topAdsMaxWidth">Largura máxima do bloco</label>
+          <input type="number" id="topAdsMaxWidth" name="topAdsMaxWidth" min="600" max="1400" value="<%= s && s.topAdsMaxWidth ? s.topAdsMaxWidth : 1200 %>">
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Mural publicitário da home</h2>
+            <p>Ajuste a posição do bloco de 3 quadros que aparece na área do mural publicitário.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="muralAdsAlignment">Alinhamento dos quadros</label>
+            <select id="muralAdsAlignment" name="muralAdsAlignment">
+              <option value="left" <%= (s && s.muralAdsAlignment === 'left') ? 'selected' : '' %>>Esquerda</option>
+              <option value="center" <%= (!s || s.muralAdsAlignment === 'center') ? 'selected' : '' %>>Centro</option>
+              <option value="right" <%= (s && s.muralAdsAlignment === 'right') ? 'selected' : '' %>>Direita</option>
+            </select>
+          </div>
+          <div class="admin-form-row"><label for="muralAdsOffsetX">Mover para os lados</label><input type="number" id="muralAdsOffsetX" name="muralAdsOffsetX" min="-400" max="400" value="<%= s && s.muralAdsOffsetX ? s.muralAdsOffsetX : 0 %>"></div>
+          <div class="admin-form-row"><label for="muralAdsOffsetY">Mover para cima ou para baixo</label><input type="number" id="muralAdsOffsetY" name="muralAdsOffsetY" min="-300" max="300" value="<%= s && s.muralAdsOffsetY ? s.muralAdsOffsetY : 0 %>"></div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="muralAdsMaxWidth">Largura máxima do bloco</label>
+          <input type="number" id="muralAdsMaxWidth" name="muralAdsMaxWidth" min="600" max="1400" value="<%= s && s.muralAdsMaxWidth ? s.muralAdsMaxWidth : 1200 %>">
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="socialInstagram">Instagram</label><input type="url" id="socialInstagram" name="socialInstagram" value="<%= s ? s.socialInstagram : '' %>" placeholder="https://instagram.com/agencia"></div>
+        <div class="admin-form-row"><label for="socialFacebook">Facebook</label><input type="url" id="socialFacebook" name="socialFacebook" value="<%= s ? s.socialFacebook : '' %>" placeholder="https://facebook.com/agencia"></div>
+      </div>
+      <div class="admin-form-row"><label for="socialThreads">Threads</label><input type="url" id="socialThreads" name="socialThreads" value="<%= s ? s.socialThreads : '' %>" placeholder="https://threads.net/@agencia"></div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Cobrança comercial</h2>
+            <p>Controle o link de pagamento, o valor mensal e a quantidade de meses gratuitos para iniciar as divulgações comerciais.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="commercialPaymentLink">Link do Mercado Pago</label>
+          <input type="url" id="commercialPaymentLink" name="commercialPaymentLink" value="<%= s && s.commercialPaymentLink ? s.commercialPaymentLink : 'https://mpago.la/2BYr2CS' %>" placeholder="https://mpago.la/seu-link">
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="commercialPaymentAmount">Valor mensal</label>
+            <input type="text" id="commercialPaymentAmount" name="commercialPaymentAmount" value="<%= s && s.commercialPaymentAmount ? s.commercialPaymentAmount : 'R$ 50,00' %>" placeholder="R$ 50,00">
+          </div>
+          <div class="admin-form-row">
+            <label for="commercialPaymentPlan">Nome do plano</label>
+            <input type="text" id="commercialPaymentPlan" name="commercialPaymentPlan" value="<%= s && s.commercialPaymentPlan ? s.commercialPaymentPlan : 'Mensal' %>">
+          </div>
+          <div class="admin-form-row">
+            <label for="commercialFreeTrialMonths">Meses gratuitos para iniciar</label>
+            <input type="number" id="commercialFreeTrialMonths" name="commercialFreeTrialMonths" min="0" max="12" value="<%= s && s.commercialFreeTrialMonths !== undefined ? s.commercialFreeTrialMonths : 1 %>">
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>CSS personalizado</h2>
+            <p>Use este campo para fazer ajustes livres no site sem abrir o código-fonte.</p>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <label for="customCss">CSS customizado</label>
+          <textarea id="customCss" name="customCss" rows="10" placeholder=".site-hero { border-radius: 40px; }"><%= s && s.customCss ? s.customCss : '' %></textarea>
+        </div>
+      </div>
+
+      <div class="admin-actions"><button type="submit" class="admin-btn">Salvar configurações</button></div>
+    </form>
+  </section>
+</div>

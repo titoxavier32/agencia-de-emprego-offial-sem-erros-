@@ -1,0 +1,13 @@
+<div class="admin-page">
+  <section class="admin-table-wrap">
+    <div class="admin-section-head"><div><h2>Usuários registrados</h2><p>Base de usuários autenticados via plataforma.</p></div></div>
+    <% if (users.length > 0) { %>
+      <table class="admin-table"><thead><tr><th>Avatar</th><th>Nome</th><th>E-mail</th><th>Cadastro</th></tr></thead><tbody>
+      <% users.forEach(u => { %><tr>
+        <td><% if (u.avatar) { %><img src="<%= u.avatar %>" alt="<%= u.name %>" class="admin-avatar"><% } else { %><div class="admin-avatar-fallback"><i class="fas fa-user"></i></div><% } %></td>
+        <td><strong><%= u.name %></strong></td><td><%= u.email %></td><td><%= new Date(u.createdAt).toLocaleDateString('pt-BR') %></td>
+      </tr><% }) %>
+      </tbody></table>
+    <% } else { %><div class="admin-empty">Nenhum usuario cadastrado.</div><% } %>
+  </section>
+</div>

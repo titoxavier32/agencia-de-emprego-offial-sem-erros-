@@ -1,0 +1,139 @@
+<%
+  const formatDate = (value) => value ? new Date(value + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não informado';
+%>
+
+<section class="site-hero">
+  <div class="site-hero-content">
+    <span class="site-kicker"><%= publicSelection.category === 'concurso_publico' ? 'Concurso público' : 'Processo seletivo' %></span>
+    <h1><%= publicSelection.title %></h1>
+    <p class="site-lead"><%= publicSelection.description %></p>
+    <div class="site-hero-actions">
+      <% if (publicSelection.noticePdf) { %><a href="/uploads/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer" class="site-button">Ver edital completo</a><% } %>
+      <% if (publicSelection.link) { %><a href="<%= publicSelection.link %>" target="_blank" rel="noopener noreferrer" class="site-button">Abrir link oficial</a><% } %>
+      <a href="/selecoes-publicas" class="site-button-ghost">Voltar para a lista</a>
+    </div>
+  </div>
+</section>
+
+<section class="site-section">
+  <div class="site-detail-grid">
+    <article class="site-detail-card">
+      <h2>Resumo do edital</h2>
+      <div class="site-detail-list">
+        <span><strong>Processo:</strong> <%= publicSelection.processNumber || 'Não informado' %></span>
+        <span><strong>Tipo:</strong> <%= publicSelection.selectionType || 'Não informado' %></span>
+        <span><strong>Regime jurídico:</strong> <%= publicSelection.legalRegime || 'Não informado' %></span>
+        <span><strong>Duração:</strong> <%= publicSelection.duration || 'Não informado' %></span>
+        <span><strong>Prorrogável:</strong> <%= publicSelection.isExtendable ? 'Sim' : 'Não' %></span>
+        <span><strong>Situação:</strong> <%= publicSelection.status || 'Não informado' %></span>
+        <span><strong>Órgão de realização:</strong> <%= publicSelection.organizer || 'Não informado' %></span>
+        <span><strong>Órgão destinatário:</strong> <%= publicSelection.destinationAgency || 'Não informado' %></span>
+        <span><strong>Local de inscrição:</strong> <%= publicSelection.registrationLocation || 'Não informado' %></span>
+      </div>
+    </article>
+
+    <article class="site-detail-card">
+      <h2>Datas principais</h2>
+      <div class="site-detail-list">
+        <span><strong>Publicação do edital:</strong> <%= formatDate(publicSelection.noticePublicationDate) %></span>
+        <span><strong>Início das inscrições:</strong> <%= formatDate(publicSelection.registrationStartDate) %></span>
+        <span><strong>Fim das inscrições:</strong> <%= formatDate(publicSelection.registrationEndDate) %></span>
+        <span><strong>PDF do edital:</strong> <%= publicSelection.noticePdf ? 'Disponível para visualização' : 'Não anexado' %></span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<% if (publicSelection.noticePdf) { %>
+  <section class="site-section">
+    <div class="site-section-head">
+      <div class="site-section-heading">
+        <h2>Edital Anexado</h2>
+        <p>Visualize o edital completo diretamente nesta página.</p>
+      </div>
+    </div>
+    <article class="site-detail-card">
+      <iframe src="/uploads/<%= publicSelection.noticePdf %>" title="Edital anexado" style="width:100%; min-height:900px; border:0; border-radius:18px; background:#fff;"></iframe>
+    </article>
+  </section>
+<% } %>
+
+<% if (publicSelection.targetAudience) { %>
+  <section class="site-section">
+    <div class="site-section-head">
+      <div class="site-section-heading">
+        <h2>Público-alvo</h2>
+        <p>Informações resumidas sobre a finalidade da seleção.</p>
+      </div>
+    </div>
+    <article class="site-detail-card">
+      <p class="site-card-text"><%= publicSelection.targetAudience %></p>
+    </article>
+  </section>
+<% } %>
+
+<% if (scheduleRows.length > 0) { %>
+  <section class="site-section">
+    <div class="site-section-head">
+      <div class="site-section-heading">
+        <h2>Cronograma</h2>
+        <p>Etapas e datas previstas para acompanhamento do edital.</p>
+      </div>
+    </div>
+    <div class="site-detail-table-wrap">
+      <table class="site-detail-table">
+        <tbody>
+          <% scheduleRows.forEach(row => { %>
+            <tr>
+              <th><%= row.label || row[0] %></th>
+              <td><%= row.date || row.slice(1).join(' | ') || 'Não informado' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+<% } %>
+
+<% if (vacancyRows.length > 0) { %>
+  <section class="site-section">
+    <div class="site-section-head">
+      <div class="site-section-heading">
+        <h2>Quadro de cargos</h2>
+        <p>Distribuição de vagas, jornada e remuneração para consulta rápida.</p>
+      </div>
+    </div>
+    <div class="site-detail-table-wrap">
+      <table class="site-detail-table">
+        <thead>
+          <tr>
+            <th>Cargo</th>
+            <th>Vagas</th>
+            <th>Vagas PCD</th>
+            <th>Vagas Cota Raça</th>
+            <th>Vagas Cota Renda</th>
+            <th>C. H.</th>
+            <th>Remuneração</th>
+            <th>Zona</th>
+            <th>Local de Trabalho</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% vacancyRows.forEach(row => { %>
+            <tr>
+              <td><%= row.role || row[0] || '-' %></td>
+              <td><%= row.total || row[1] || '-' %></td>
+              <td><%= row.pcd || row[2] || '-' %></td>
+              <td><%= row.race || row[3] || '-' %></td>
+              <td><%= row.income || row[4] || '-' %></td>
+              <td><%= row.workload || row[5] || '-' %></td>
+              <td><%= row.salary || row[6] || '-' %></td>
+              <td><%= row.zone || row[7] || '-' %></td>
+              <td><%= row.workplace || row[8] || '-' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+<% } %>

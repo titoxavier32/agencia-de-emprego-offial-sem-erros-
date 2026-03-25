@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR" class="selection:bg-primary selection:text-primary-foreground">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title != 'undefined' ? title : 'Agência de Emprego' %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/frontend-style.css">
+  <%- include('../partials/header') %>
+</head>
+<body class="site-shell">
+  <% const brandKicker = globalSetting && globalSetting.brandKicker ? globalSetting.brandKicker : 'Carreira e cursos'; %>
+  <% const brandName = globalSetting && globalSetting.brandName ? globalSetting.brandName : 'Agência de Emprego'; %>
+  <div id="root" class="min-h-screen">
+    <% if (typeof globalSetting !== 'undefined' && globalSetting.navbarPosition !== 'top') { %>
+      <div class="site-sidebar-shell">
+        <aside class="site-sidebar">
+          <div class="h-full flex flex-col">
+            <%- include('../partials/navbar') %>
+          </div>
+        </aside>
+
+        <div class="site-sidebar-main">
+          <header class="site-topbar lg:hidden">
+            <div class="site-page site-nav-wrap">
+              <a href="/" class="site-brand">
+                <span class="site-brand-mark"><i class="fas fa-briefcase"></i></span>
+                <span class="site-brand-text">
+                  <span><%= brandKicker %></span>
+                  <strong><%= brandName %></strong>
+                </span>
+              </a>
+              <button class="site-mobile-sidebar-toggle" type="button" data-mobile-toggle="site-mobile-sidebar" aria-expanded="false" aria-controls="site-mobile-sidebar">
+                <i class="fas fa-bars"></i>
+              </button>
+            </div>
+            <div id="site-mobile-sidebar" class="site-mobile-panel">
+              <div class="site-page py-4">
+                <%- include('../partials/navbar') %>
+              </div>
+            </div>
+          </header>
+
+          <main class="site-main">
+            <div class="site-page">
+              <%- body %>
+            </div>
+          </main>
+
+          <%- include('../partials/footer') %>
+        </div>
+      </div>
+    <% } else { %>
+      <header class="site-topbar">
+        <%- include('../partials/navbar') %>
+      </header>
+
+      <main class="site-main">
+        <div class="site-page">
+          <%- body %>
+        </div>
+      </main>
+
+      <%- include('../partials/footer') %>
+    <% } %>
+  </div>
+
+  <div id="site-preview-modal" class="site-preview-modal">
+    <div class="site-preview-dialog">
+      <button id="site-preview-close" class="site-preview-close" type="button" aria-label="Fechar visualizacao"><i class="fas fa-times"></i></button>
+      <div class="site-preview-media-wrap">
+        <img id="site-preview-image" class="site-preview-image" src="" alt="">
+        <div id="site-preview-fallback" class="site-preview-fallback"><i class="fas fa-image"></i></div>
+      </div>
+      <div class="site-preview-content">
+        <div id="site-preview-badge" class="site-kicker"></div>
+        <h2 id="site-preview-title"></h2>
+        <p id="site-preview-description" class="site-card-text"></p>
+        <div class="site-detail-list">
+          <span id="site-preview-period-row" style="display:none;"><strong id="site-preview-period-label">Período:</strong> <span id="site-preview-period"></span></span>
+          <span><strong id="site-preview-meta-label">Data:</strong> <span id="site-preview-meta-value"></span></span>
+        </div>
+        <div class="site-hero-actions">
+          <a id="site-preview-link" href="#" target="_blank" class="site-button" style="display:none;"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/frontend-script.js"></script>
+</body>
+</html>

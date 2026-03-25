@@ -1,0 +1,72 @@
+<div class="admin-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Menus do site</div>
+    <h1>Edite, reorganize e amplie a navegação pública.</h1>
+    <p>Agora os menus atuais do site também ficam sob controle do administrador, além de permitir novos links personalizados.</p>
+  </section>
+
+  <section class="admin-table-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Itens de menu</h2>
+        <p>Você pode ajustar rótulo, endereço, ícone, ordem, visibilidade e destino de abertura.</p>
+      </div>
+      <a href="/admin/menus/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Novo menu</span></a>
+    </div>
+
+    <% if (menus.length > 0) { %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Ordem</th>
+            <th>Item</th>
+            <th>URL</th>
+            <th>Ícone</th>
+            <th>Abertura</th>
+            <th>Status</th>
+            <th>Ajuste rápido</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% menus.forEach(menu => { %>
+            <tr>
+              <td><span class="admin-badge neutral"><%= menu.order %></span></td>
+              <td><strong><%= menu.label %></strong></td>
+              <td><code><%= menu.url %></code></td>
+              <td><span class="admin-help"><i class="fas <%= menu.icon || 'fa-link' %>"></i> <%= menu.icon || 'fa-link' %></span></td>
+              <td><span class="admin-help"><%= menu.target === '_blank' ? 'Nova aba' : 'Mesma aba' %></span></td>
+              <td><span class="admin-badge <%= menu.isActive ? 'success' : 'warning' %>"><%= menu.isActive ? 'Ativo' : 'Oculto' %></span></td>
+              <td>
+                <div class="admin-actions">
+                  <form action="/admin/menus/mover/<%= menu.id %>" method="POST">
+                    <input type="hidden" name="direction" value="up">
+                    <button type="submit" class="admin-btn-secondary" title="Mover para cima">
+                      <i class="fas fa-arrow-up"></i>
+                    </button>
+                  </form>
+                  <form action="/admin/menus/mover/<%= menu.id %>" method="POST">
+                    <input type="hidden" name="direction" value="down">
+                    <button type="submit" class="admin-btn-secondary" title="Mover para baixo">
+                      <i class="fas fa-arrow-down"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+              <td>
+                <div class="admin-actions">
+                  <a href="/admin/menus/editar/<%= menu.id %>" class="admin-btn-secondary">Editar</a>
+                  <form action="/admin/menus/deletar/<%= menu.id %>" method="POST" onsubmit="return confirm('Excluir este item de menu?');">
+                    <button type="submit" class="admin-btn-danger">Excluir</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="admin-empty">Nenhum item de menu cadastrado.</div>
+    <% } %>
+  </section>
+</div>

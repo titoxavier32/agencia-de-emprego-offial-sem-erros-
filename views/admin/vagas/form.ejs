@@ -1,0 +1,19 @@
+<div class="admin-page">
+  <section class="admin-form-wrap">
+    <div class="admin-section-head"><div><h2><%= title %></h2><p>Preencha os dados da vaga com o mesmo padrao de organizacao visual do restante do painel.</p></div><a href="/admin/vagas" class="admin-btn-ghost">Voltar</a></div>
+    <form action="<%= job ? '/admin/vagas/editar/' + job.id : '/admin/vagas/nova' %>" method="POST" enctype="multipart/form-data" class="admin-form">
+      <div class="admin-form-row"><label for="title">Titulo da vaga</label><input type="text" id="title" name="title" value="<%= job ? job.title : '' %>" required></div>
+      <div class="admin-form-row"><label for="description">Descricao completa</label><textarea id="description" name="description" required><%= job ? job.description : '' %></textarea></div>
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="startDate">Data de inicio <span class="admin-form-help">opcional</span></label><input type="date" id="startDate" name="startDate" value="<%= job && job.startDate ? job.startDate : '' %>"></div>
+        <div class="admin-form-row"><label for="endDate">Data de fim <span class="admin-form-help">opcional</span></label><input type="date" id="endDate" name="endDate" value="<%= job && job.endDate ? job.endDate : '' %>"></div>
+      </div>
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="link">Link externo</label><input type="url" id="link" name="link" value="<%= job ? job.link : '' %>" placeholder="https://empresa.com/vaga"></div>
+        <div class="admin-form-row"><label for="image">Imagem de capa <% if (job && job.image) { %><span class="admin-form-help">deixe em branco para manter a atual</span><% } %></label><input type="file" id="image" name="image" accept="image/*"></div>
+      </div>
+      <% if (job && job.image) { %><div class="admin-image-preview"><img src="/uploads/<%= job.image %>" alt="Imagem atual"></div><% } %>
+      <div class="admin-actions"><button type="submit" class="admin-btn">Salvar vaga</button></div>
+    </form>
+  </section>
+</div>

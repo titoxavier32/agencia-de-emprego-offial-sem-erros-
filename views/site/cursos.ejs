@@ -1,0 +1,63 @@
+<%
+  const formatDateBr = (value) => value ? new Date(value + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+  const getDisplaySchedule = (start, end) => {
+    const startFormatted = formatDateBr(start);
+    const endFormatted = formatDateBr(end);
+    if (!startFormatted && !endFormatted) return null;
+    if (startFormatted && endFormatted && startFormatted !== endFormatted) {
+      return { label: 'Período', value: `${startFormatted} a ${endFormatted}` };
+    }
+    return { label: 'Data', value: startFormatted || endFormatted };
+  };
+%>
+<section class="site-hero">
+  <div class="site-hero-content">
+    <span class="site-kicker">Capacitação profissional</span>
+    <h1>Cursos apresentados com a mesma linguagem visual da sua vitrine principal.</h1>
+    <p class="site-lead">
+      A experiência de navegação fica coerente em toda a aplicação e transmite mais valor para quem busca evolução profissional.
+    </p>
+  </div>
+</section>
+
+<section class="site-section">
+  <div class="site-page-header">
+    <div>
+      <h1>Cursos disponíveis</h1>
+      <p class="site-page-copy">Treinamentos e especializações em um catálogo mais limpo, confiável e fácil de consultar.</p>
+    </div>
+  </div>
+
+  <% if (courses.length > 0) { %>
+    <div class="site-card-grid">
+      <% courses.forEach(course => { const courseSchedule = getDisplaySchedule(course.startDate, course.endDate); %>
+        <article class="site-card" data-preview-item data-preview-badge="Curso" data-preview-title="<%= course.title %>" data-preview-description="<%= course.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= course.image ? '/uploads/' + course.image : '' %>" data-preview-meta-label="Adicionado em" data-preview-meta-value="<%= new Date(course.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= courseSchedule ? courseSchedule.value : '' %>" data-preview-period-label="<%= courseSchedule ? courseSchedule.label : 'Período' %>" data-preview-link="<%= course.link || '' %>" data-preview-link-label="Acessar curso">
+          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar curso">
+            <% if (course.image) { %>
+              <img src="/uploads/<%= course.image %>" alt="<%= course.title %>">
+            <% } else { %>
+              <div class="site-card-icon"><i class="fas fa-graduation-cap"></i></div>
+            <% } %>
+            <span class="site-card-badge -accent">Formação</span>
+          </div>
+          <div class="site-card-body">
+            <h3><%= course.title %></h3>
+            <p class="site-card-text"><%= course.description %></p>
+            <% if (courseSchedule) { %>
+              <p class="site-card-text"><%= courseSchedule.label %>: <%= courseSchedule.value %></p>
+            <% } %>
+            <div class="site-card-meta">
+              <span>Adicionado em <%= new Date(course.createdAt).toLocaleDateString('pt-BR') %></span>
+              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="site-empty">
+      <i class="fas fa-graduation-cap"></i>
+      <p>Nenhum curso cadastrado.</p>
+    </div>
+  <% } %>
+</section>

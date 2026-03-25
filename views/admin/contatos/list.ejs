@@ -1,0 +1,166 @@
+<%
+const categoryMeta = {
+  contato_geral: { label: 'Contato geral', className: 'admin-badge category-general' },
+  feedback: { label: 'Feedback', className: 'admin-badge category-feedback' },
+  suporte: { label: 'Suporte', className: 'admin-badge category-support' },
+  parceria_comercial: { label: 'Parceria comercial', className: 'admin-badge category-partnership' },
+  divulgacao_curso: { label: 'Divulgar curso', className: 'admin-badge category-course' },
+  divulgacao_vaga: { label: 'Divulgar vaga', className: 'admin-badge category-job' },
+  propaganda: { label: 'Propaganda', className: 'admin-badge category-advertising' },
+  institucional: { label: 'Institucional', className: 'admin-badge category-institutional' }
+};
+const paymentMeta = {
+  nao_aplicavel: { label: 'Não se aplica', className: 'admin-badge neutral' },
+  primeiro_mes_gratuito: { label: '1º mês gratuito', className: 'admin-badge success' },
+  pendente: { label: 'Pendente', className: 'admin-badge warning' },
+  pagamento_informado: { label: 'Aguardando conferência', className: 'admin-badge payment-review' },
+  pagamento_confirmado: { label: 'Pagamento confirmado', className: 'admin-badge success' }
+};
+const getCategoryMeta = (value) => categoryMeta[value] || { label: value || 'Contato geral', className: 'admin-badge neutral' };
+const getPaymentMeta = (value) => paymentMeta[value] || { label: value || 'Não se aplica', className: 'admin-badge neutral' };
+%>
+<div class="admin-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Atendimento</div>
+    <h1>Mensagens recebidas pelo site em um fluxo real de acompanhamento.</h1>
+    <p>Agora o contato público virou um canal mais estruturado, com categoria, assunto, anexos e acompanhamento financeiro.</p>
+  </section>
+
+  <section class="admin-grid admin-grid-three">
+    <article class="admin-panel admin-panel-tone received">
+      <div class="admin-kicker">Recebido</div>
+      <h2 class="admin-panel-metric"><%= paymentSummary.totalReceivedLabel %></h2>
+      <p>Valor já confirmado no administrativo.</p>
+    </article>
+    <article class="admin-panel admin-panel-tone pending">
+      <div class="admin-kicker">Pendente</div>
+      <h2 class="admin-panel-metric"><%= paymentSummary.totalPendingLabel %></h2>
+      <p>Valor que ainda não entrou ou não foi sinalizado.</p>
+    </article>
+    <article class="admin-panel admin-panel-tone review">
+      <div class="admin-kicker">Aguardando conferência</div>
+      <h2 class="admin-panel-metric"><%= paymentSummary.totalUnderReviewLabel %></h2>
+      <p>Pagamento informado pelo cliente e aguardando sua validação.</p>
+    </article>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-section-head">
+      <div>
+        <h2>Legenda visual</h2>
+        <p>Cores para identificar o tipo de atendimento e o andamento do pagamento.</p>
+      </div>
+    </div>
+    <div class="admin-legend-grid">
+      <% Object.values(categoryMeta).forEach(item => { %>
+        <span class="<%= item.className %>"><%= item.label %></span>
+      <% }) %>
+      <span class="admin-badge success">1º mês gratuito</span>
+      <span class="admin-badge warning">Pagamento pendente</span>
+      <span class="admin-badge payment-review">Pagamento informado</span>
+      <span class="admin-badge success">Pagamento confirmado</span>
+    </div>
+  </section>
+
+  <section class="admin-table-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Caixa de entrada</h2>
+        <p>Mensagens mais recentes enviadas pela página de contato e feedback.</p>
+      </div>
+    </div>
+
+    <% if (contacts.length > 0) { %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Remetente</th>
+            <th>Detalhes</th>
+            <th>Mensagem</th>
+            <th>PDF</th>
+            <th>Foto</th>
+            <th>Pagamento</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% contacts.forEach(contact => { const category = getCategoryMeta(contact.category); const payment = getPaymentMeta(contact.paymentStatus); %>
+            <tr class="admin-contact-row <%= contact.paymentRequired ? 'is-commercial' : '' %>">
+              <td>
+                <strong><%= contact.name %></strong>
+                <div class="admin-help"><%= contact.email %></div>
+                <% if (contact.phone) { %>
+                  <div class="admin-help"><%= contact.phone %></div>
+                <% } %>
+              </td>
+              <td>
+                <div><span class="<%= category.className %>"><%= category.label %></span></div>
+                <div class="admin-help"><strong>Assunto:</strong> <%= contact.subject || 'Sem assunto' %></div>
+                <div class="admin-help"><strong>Retorno:</strong> <%= contact.preferredReply || 'email' %></div>
+              </td>
+              <td><%= contact.message %></td>
+              <td>
+                <% if (contact.pdfAttachment) { %>
+                  <a href="/uploads/<%= contact.pdfAttachment %>" target="_blank" class="admin-inline-note">Abrir PDF</a>
+                  <div class="admin-help"><%= contact.pdfAttachmentOriginalName || '' %></div>
+                <% } else { %>
+                  <span class="admin-help">Sem PDF</span>
+                <% } %>
+              </td>
+              <td>
+                <% if (contact.imageAttachment) { %>
+                  <a href="/uploads/<%= contact.imageAttachment %>" target="_blank" class="admin-inline-note">Abrir foto</a>
+                  <div class="admin-help"><%= contact.imageAttachmentOriginalName || '' %></div>
+                <% } else { %>
+                  <span class="admin-help">Sem foto</span>
+                <% } %>
+              </td>
+              <td>
+                <% if (contact.paymentRequired) { %>
+                  <div><span class="<%= payment.className %>"><%= payment.label %></span></div>
+                  <div class="admin-help"><strong>Valor:</strong> <%= contact.paymentAmount || 'R$ 50,00' %></div>
+                  <div class="admin-help"><strong>Método:</strong> <%= contact.paymentMethod || 'mercado_pago' %></div>
+                  <% if (contact.paymentLink) { %>
+                    <div class="admin-help"><a href="<%= contact.paymentLink %>" target="_blank">Abrir cobrança</a></div>
+                  <% } %>
+                  <form action="/admin/contatos/<%= contact.id %>/pagamento" method="POST">
+                    <select name="paymentStatus" onchange="this.form.submit()">
+                      <option value="primeiro_mes_gratuito" <%= contact.paymentStatus === 'primeiro_mes_gratuito' ? 'selected' : '' %>>1º mês gratuito</option>
+                      <option value="pendente" <%= contact.paymentStatus === 'pendente' ? 'selected' : '' %>>pendente</option>
+                      <option value="pagamento_informado" <%= contact.paymentStatus === 'pagamento_informado' ? 'selected' : '' %>>pagamento informado</option>
+                      <option value="pagamento_confirmado" <%= contact.paymentStatus === 'pagamento_confirmado' ? 'selected' : '' %>>pagamento confirmado</option>
+                    </select>
+                  </form>
+                  <% if (contact.paymentConfirmedAt) { %>
+                    <div class="admin-help"><strong>Data:</strong> <%= new Date(contact.paymentConfirmedAt).toLocaleDateString('pt-BR') %></div>
+                  <% } %>
+                <% } else { %>
+                  <span class="admin-help">Não se aplica</span>
+                <% } %>
+              </td>
+              <td>
+                <form action="/admin/contatos/<%= contact.id %>/status" method="POST">
+                  <select name="status" onchange="this.form.submit()">
+                    <option value="novo" <%= contact.status === 'novo' ? 'selected' : '' %>>novo</option>
+                    <option value="em_andamento" <%= contact.status === 'em_andamento' ? 'selected' : '' %>>em andamento</option>
+                    <option value="respondido" <%= contact.status === 'respondido' ? 'selected' : '' %>>respondido</option>
+                  </select>
+                </form>
+              </td>
+              <td><%= new Date(contact.createdAt).toLocaleDateString('pt-BR') %></td>
+              <td>
+                <form action="/admin/contatos/<%= contact.id %>/deletar" method="POST" onsubmit="return confirm('Excluir esta mensagem de contato?');">
+                  <button type="submit" class="admin-btn-danger">Excluir</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="admin-empty">Nenhuma mensagem de contato recebida ainda.</div>
+    <% } %>
+  </section>
+</div>

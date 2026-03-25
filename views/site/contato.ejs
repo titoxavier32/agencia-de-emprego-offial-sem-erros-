@@ -1,0 +1,126 @@
+<%
+  const monthlyAmount = typeof paymentAmount !== 'undefined' ? paymentAmount : 'R$ 50,00';
+  const monthlyPlan = typeof paymentPlan !== 'undefined' ? paymentPlan : 'Mensal';
+  const freeTrialMonths = typeof commercialFreeTrialMonths !== 'undefined' ? commercialFreeTrialMonths : 1;
+%>
+<section class="site-hero">
+  <div class="site-hero-content">
+    <span class="site-kicker">Contato e feedback</span>
+    <h1>Abra um canal real de atendimento com a equipe.</h1>
+    <p class="site-lead">
+      Agora o site oferece uma área profissional para dúvidas, feedbacks, propostas, suporte e contato institucional, com registro direto no painel administrativo.
+    </p>
+  </div>
+</section>
+
+<section class="site-section">
+  <div class="site-grid-2">
+    <article class="site-panel">
+      <h2>Envie sua mensagem</h2>
+      <p>
+        Escolha o tipo de atendimento, descreva sua necessidade e deixe seus dados para retorno. A equipe pode acompanhar, classificar e responder pelo painel.
+      </p>
+
+      <% if (contactStatus === 'success') { %>
+        <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(37,99,235,0.08);color:#1d4ed8;font-weight:700;">Mensagem enviada com sucesso. Seu contato já está disponível na caixa de entrada administrativa.</div>
+      <% } %>
+      <% if (contactStatus === 'error') { %>
+        <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(220,38,38,0.08);color:#b91c1c;font-weight:700;">Não foi possível enviar sua mensagem. Revise os campos obrigatórios e tente novamente.</div>
+      <% } %>
+      <% if (contactError) { %>
+        <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(220,38,38,0.08);color:#b91c1c;font-weight:700;"><%= contactError %></div>
+      <% } %>
+
+      <form action="/contato" method="POST" enctype="multipart/form-data" class="site-form">
+        <div class="site-form-row">
+          <label for="category">Tipo de atendimento</label>
+          <select id="category" name="category" required>
+            <option value="contato_geral" <%= formData && formData.category === 'contato_geral' ? 'selected' : '' %>>Contato geral</option>
+            <option value="feedback" <%= formData && formData.category === 'feedback' ? 'selected' : '' %>>Feedback</option>
+            <option value="suporte" <%= formData && formData.category === 'suporte' ? 'selected' : '' %>>Suporte</option>
+            <option value="parceria_comercial" <%= formData && formData.category === 'parceria_comercial' ? 'selected' : '' %>>Parceria comercial</option>
+            <option value="divulgacao_curso" <%= formData && formData.category === 'divulgacao_curso' ? 'selected' : '' %>>Divulgar curso</option>
+            <option value="divulgacao_vaga" <%= formData && formData.category === 'divulgacao_vaga' ? 'selected' : '' %>>Divulgar vaga de emprego</option>
+            <option value="propaganda" <%= formData && formData.category === 'propaganda' ? 'selected' : '' %>>Propaganda</option>
+            <option value="institucional" <%= formData && formData.category === 'institucional' ? 'selected' : '' %>>Institucional</option>
+          </select>
+          <% if (freeTrialMonths > 0) { %>
+            <p class="site-form-note">Parceria comercial, divulgar curso, divulgar vaga e propaganda entram com <%= freeTrialMonths %> mês gratuito. A cobrança mensal de <%= monthlyAmount %> começa a partir do segundo mês.</p>
+          <% } else { %>
+            <p class="site-form-note">Parceria comercial, divulgar curso, divulgar vaga e propaganda seguem para a etapa de pagamento mensal de <%= monthlyAmount %>.</p>
+          <% } %>
+        </div>
+
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="name">Nome completo</label>
+            <input type="text" id="name" name="name" value="<%= formData && formData.name ? formData.name : '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" value="<%= formData && formData.email ? formData.email : '' %>" required>
+          </div>
+        </div>
+
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="phone">Telefone ou WhatsApp</label>
+            <input type="text" id="phone" name="phone" value="<%= formData && formData.phone ? formData.phone : '' %>" placeholder="(69) 99999-9999">
+          </div>
+          <div class="site-form-row">
+            <label for="preferredReply">Preferência de retorno</label>
+            <select id="preferredReply" name="preferredReply">
+              <option value="email" <%= !formData || formData.preferredReply === 'email' ? 'selected' : '' %>>E-mail</option>
+              <option value="telefone" <%= formData && formData.preferredReply === 'telefone' ? 'selected' : '' %>>Telefone</option>
+              <option value="whatsapp" <%= formData && formData.preferredReply === 'whatsapp' ? 'selected' : '' %>>WhatsApp</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="site-form-row">
+          <label for="subject">Assunto</label>
+          <input type="text" id="subject" name="subject" value="<%= formData && formData.subject ? formData.subject : '' %>" placeholder="Ex.: Dúvida sobre inscrição">
+        </div>
+
+        <div class="site-form-row">
+          <label for="message">Mensagem</label>
+          <textarea id="message" name="message" rows="6" required><%= formData && formData.message ? formData.message : '' %></textarea>
+        </div>
+
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="attachmentPdf">Anexar PDF <span class="site-form-note">(opcional)</span></label>
+            <input type="file" id="attachmentPdf" name="attachmentPdf" accept=".pdf,application/pdf">
+            <p class="site-form-note">Você pode anexar um PDF de até 25 MB.</p>
+          </div>
+          <div class="site-form-row">
+            <label for="attachmentImage">Anexar foto <span class="site-form-note">(opcional)</span></label>
+            <input type="file" id="attachmentImage" name="attachmentImage" accept="image/*">
+            <p class="site-form-note">Você pode anexar uma imagem de até 25 MB.</p>
+          </div>
+        </div>
+
+        <button type="submit" class="site-button">Enviar mensagem</button>
+        <p class="site-form-note">Seu atendimento entra na fila administrativa com categoria, assunto, preferência de retorno e dois anexos opcionais.</p>
+      </form>
+    </article>
+
+    <aside class="site-info-card">
+      <h3>Como esse canal funciona</h3>
+      <ul class="site-list">
+        <li><i class="fas fa-inbox"></i><span>Cada mensagem entra na caixa de entrada do admin com dados mais completos.</span></li>
+        <li><i class="fas fa-filter"></i><span>Feedback, suporte, parceria e contato institucional ficam mais organizados.</span></li>
+        <li><i class="fas fa-paperclip"></i><span>O visitante pode anexar um PDF e uma foto separadamente para tornar o atendimento mais completo.</span></li>
+        <li><i class="fas fa-reply"></i><span>A equipe consegue priorizar e responder de acordo com o melhor canal indicado.</span></li>
+      </ul>
+      <div class="site-contact-cta">
+        <strong>Divulgação comercial com cobrança configurável</strong>
+        <% if (freeTrialMonths > 0) { %>
+          <span>Ao selecionar parceria comercial, divulgar curso, divulgar vaga ou propaganda, o sistema registra a solicitação com <%= freeTrialMonths %> mês gratuito. A partir do segundo mês, a cobrança segue em <%= monthlyAmount %> por <%= monthlyPlan.toLowerCase() %>.</span>
+        <% } else { %>
+          <span>Ao selecionar parceria comercial, divulgar curso, divulgar vaga ou propaganda, o sistema envia você para a etapa de pagamento via Mercado Pago, com valor de <%= monthlyAmount %> por <%= monthlyPlan.toLowerCase() %>.</span>
+        <% } %>
+      </div>
+    </aside>
+  </div>
+</section>

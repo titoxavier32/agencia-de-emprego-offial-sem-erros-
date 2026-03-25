@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - <%= typeof title !== 'undefined' ? title : 'Painel de controle' %></title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin-professional.css">
+</head>
+<body class="admin-body">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <div style="display:flex;flex-direction:column;height:100%;gap:18px;">
+        <a href="/admin/dashboard" class="admin-brand">
+          <span class="admin-brand-mark"><i class="fas fa-compass-drafting"></i></span>
+          <span class="admin-brand-copy">
+            <small>Painel administrativo</small>
+            <strong>Agência de Emprego</strong>
+          </span>
+        </a>
+
+        <nav class="admin-nav">
+          <a href="/admin/dashboard" class="admin-nav-link <%= currentPath === '/admin/dashboard' ? 'is-active' : '' %>"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+          <a href="/admin/vagas" class="admin-nav-link <%= currentPath.indexOf('/admin/vagas') === 0 ? 'is-active' : '' %>"><i class="fas fa-briefcase"></i><span>Vagas</span></a>
+          <a href="/admin/cursos" class="admin-nav-link <%= currentPath.indexOf('/admin/cursos') === 0 ? 'is-active' : '' %>"><i class="fas fa-graduation-cap"></i><span>Cursos</span></a>
+          <a href="/admin/propagandas" class="admin-nav-link <%= currentPath.indexOf('/admin/propagandas') === 0 ? 'is-active' : '' %>"><i class="fas fa-bullhorn"></i><span>Propagandas</span></a>
+          <a href="/admin/selecoes-publicas" class="admin-nav-link <%= currentPath.indexOf('/admin/selecoes-publicas') === 0 ? 'is-active' : '' %>"><i class="fas fa-file-signature"></i><span>Seleções públicas</span></a>
+          <a href="/admin/contatos" class="admin-nav-link <%= currentPath.indexOf('/admin/contatos') === 0 ? 'is-active' : '' %>"><i class="fas fa-envelope-open-text"></i><span>Contatos</span></a>
+          <a href="/admin/menus" class="admin-nav-link <%= currentPath.indexOf('/admin/menus') === 0 ? 'is-active' : '' %>"><i class="fas fa-bars-staggered"></i><span>Menus</span></a>
+          <a href="/admin/usuarios" class="admin-nav-link <%= currentPath.indexOf('/admin/usuarios') === 0 ? 'is-active' : '' %>"><i class="fas fa-users"></i><span>Usuários</span></a>
+          <a href="/admin/configuracoes" class="admin-nav-link <%= currentPath.indexOf('/admin/configuracoes') === 0 ? 'is-active' : '' %>"><i class="fas fa-sliders"></i><span>Configurações</span></a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+          <div class="admin-user-card">
+            <% if (typeof user !== 'undefined' && user) { %>
+              <strong><%= user.name %></strong>
+              <span><%= user.email || 'Administrador' %></span>
+            <% } else { %>
+              <strong>Acesso administrativo</strong>
+              <span>Entre para continuar.</span>
+            <% } %>
+          </div>
+
+          <div class="admin-sidebar-actions">
+            <a href="/" target="_blank" class="admin-btn-secondary"><i class="fas fa-arrow-up-right-from-square"></i><span>Ver site</span></a>
+            <% if (typeof user !== 'undefined' && user) { %>
+              <a href="/auth/logout" class="admin-btn-danger"><i class="fas fa-right-from-bracket"></i><span>Sair</span></a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-mobile-bar">
+        <strong>Admin</strong>
+        <a href="/" target="_blank" class="admin-btn-ghost"><i class="fas fa-arrow-up-right-from-square"></i><span>Site</span></a>
+      </div>
+
+      <div class="admin-topbar">
+        <div class="admin-topbar-card" style="flex:1;">
+          <div>
+            <div class="admin-kicker">Operação e conteúdo</div>
+            <strong style="font-size:1.15rem;"><%= typeof title !== 'undefined' ? title : 'Painel de controle' %></strong>
+          </div>
+          <div style="color:var(--admin-muted);font-size:14px;">Controle visual, publicações e atendimento em um único fluxo.</div>
+        </div>
+      </div>
+
+      <%- body %>
+
+      <div class="admin-footer">&copy; <%= new Date().getFullYear() %> Agência de Emprego. Painel administrativo renovado.</div>
+    </main>
+  </div>
+
+  <div id="admin-lightbox" class="admin-lightbox">
+    <button id="admin-lightbox-close" class="admin-lightbox-close" type="button"><i class="fas fa-times"></i></button>
+    <img id="admin-lightbox-image" src="" alt="Pré-visualização">
+  </div>
+
+  <script src="/js/admin-professional.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<%
+const categoryMeta = {
+  contato_geral: { label: 'Contato geral', className: 'admin-badge category-general' },
+  feedback: { label: 'Feedback', className: 'admin-badge category-feedback' },
+  suporte: { label: 'Suporte', className: 'admin-badge category-support' },
+  parceria_comercial: { label: 'Parceria comercial', className: 'admin-badge category-partnership' },
+  divulgacao_curso: { label: 'Divulgar curso', className: 'admin-badge category-course' },
+  divulgacao_vaga: { label: 'Divulgar vaga', className: 'admin-badge category-job' },
+  propaganda: { label: 'Propaganda', className: 'admin-badge category-advertising' },
+  institucional: { label: 'Institucional', className: 'admin-badge category-institutional' }
+};
+const paymentMeta = {
+  pendente: { label: 'Pendente', className: 'admin-badge warning' },
+  pagamento_informado: { label: 'Aguardando conferência', className: 'admin-badge payment-review' },
+  pagamento_confirmado: { label: 'Pagamento confirmado', className: 'admin-badge success' }
+};
+const getCategoryMeta = (value) => categoryMeta[value] || { label: value || 'Contato geral', className: 'admin-badge neutral' };
+const getPaymentMeta = (value) => paymentMeta[value] || null;
+%>
+<div class="admin-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Painel central</div>
+    <h1>Operação, conteúdo e atendimento com leitura executiva.</h1>
+    <p>O painel agora apresenta os principais números da aplicação e permite agir rápido sobre vagas, cursos, usuários e mensagens recebidas pelo site.</p>
+  </section>
+
+  <section class="admin-stats">
+    <article class="admin-stat"><i class="fas fa-briefcase"></i><strong><%= jobCount %></strong><span>vagas publicadas</span></article>
+    <article class="admin-stat"><i class="fas fa-graduation-cap"></i><strong><%= courseCount %></strong><span>cursos ativos</span></article>
+    <article class="admin-stat"><i class="fas fa-file-signature"></i><strong><%= publicSelectionCount %></strong><span>seleções públicas</span></article>
+    <article class="admin-stat"><i class="fas fa-users"></i><strong><%= userCount %></strong><span>usuários cadastrados</span></article>
+    <article class="admin-stat"><i class="fas fa-envelope-open-text"></i><strong><%= contactCount %></strong><span>mensagens recebidas</span></article>
+  </section>
+
+  <section class="admin-grid admin-grid-three">
+    <article class="admin-panel admin-panel-tone received">
+      <div class="admin-kicker">Recebido</div>
+      <h2 class="admin-panel-metric"><%= paymentSummary.totalReceivedLabel %></h2>
+      <p>Valor que já foi confirmado como recebido.</p>
+      <div class="admin-help"><strong><%= paymentSummary.receivedCount %></strong> pagamento(s) confirmado(s)</div>
+    </article>
+    <article class="admin-panel admin-panel-tone pending">
+      <div class="admin-kicker">Pendente</div>
+      <h2 class="admin-panel-metric"><%= paymentSummary.totalPendingLabel %></h2>
+      <p>Valor comercial ainda aguardando pagamento.</p>
+      <div class="admin-help"><strong><%= paymentSummary.pendingCount %></strong> solicitação(ões) pendente(s)</div>
+    </article>
+    <article class="admin-panel admin-panel-tone review">
+      <div class="admin-kicker">Aguardando conferência</div>
+      <h2 class="admin-panel-metric"><%= paymentSummary.totalUnderReviewLabel %></h2>
+      <p>Pagamentos informados pelo cliente e ainda não validados.</p>
+      <div class="admin-help"><strong><%= paymentSummary.underReviewCount %></strong> pagamento(s) em conferência</div>
+    </article>
+  </section>
+
+  <section class="admin-grid two">
+    <article class="admin-panel">
+      <div class="admin-section-head"><div><h2>Acessos rápidos</h2><p>Atalhos para as áreas que normalmente exigem manutenção diária.</p></div></div>
+      <div class="admin-actions">
+        <a href="/admin/vagas/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Nova vaga</span></a>
+        <a href="/admin/cursos/novo" class="admin-btn-secondary"><i class="fas fa-plus"></i><span>Novo curso</span></a>
+        <a href="/admin/selecoes-publicas/nova" class="admin-btn-secondary"><i class="fas fa-file-circle-plus"></i><span>Nova seleção</span></a>
+        <a href="/admin/menus/nova" class="admin-btn-ghost"><i class="fas fa-link"></i><span>Novo menu</span></a>
+        <a href="/admin/configuracoes" class="admin-btn-ghost"><i class="fas fa-sliders"></i><span>Ajustar visual</span></a>
+        <a href="/admin/contatos" class="admin-btn-ghost"><i class="fas fa-wallet"></i><span>Gerenciar recebimentos</span></a>
+      </div>
+    </article>
+
+    <article class="admin-panel">
+      <div class="admin-section-head"><div><h2>Últimos contatos</h2><p>Mensagens enviadas pelo formulário público.</p></div><a href="/admin/contatos" class="admin-btn-ghost">Ver tudo</a></div>
+      <% if (recentContacts.length > 0) { %>
+        <div style="display:grid;gap:14px;">
+          <% recentContacts.forEach(contact => { %>
+            <div style="padding:16px;border:1px solid var(--admin-border);border-radius:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;"><strong><%= contact.name %></strong><span class="admin-badge <%= contact.status === 'respondido' ? 'success' : (contact.status === 'em_andamento' ? 'warning' : 'neutral') %>"><%= contact.status %></span></div>
+              <div class="admin-help"><%= contact.email %></div>
+              <div style="margin-top:8px;"><span class="<%= getCategoryMeta(contact.category).className %>"><%= getCategoryMeta(contact.category).label %></span></div>
+              <% if (contact.paymentRequired && getPaymentMeta(contact.paymentStatus)) { %><div style="margin-top:8px;"><span class="<%= getPaymentMeta(contact.paymentStatus).className %>"><%= getPaymentMeta(contact.paymentStatus).label %></span></div><div class="admin-help"><strong>Valor:</strong> <%= contact.paymentAmount || 'R$ 25,00' %></div><% } %>
+              <p style="margin:10px 0 0;"><%= contact.message.length > 110 ? contact.message.substring(0, 110) + '...' : contact.message %></p>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="admin-empty">Nenhuma mensagem de contato recebida ainda.</div>
+      <% } %>
+    </article>
+  </section>
+</div>
