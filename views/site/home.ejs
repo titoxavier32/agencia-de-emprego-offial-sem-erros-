@@ -1,6 +1,6 @@
 <%
   const formatDateBr = (value) => value ? new Date(value + 'T00:00:00').toLocaleDateString('pt-BR') : '';
-  const getDisplaySchedule = (start, end, singleLabel = 'Data', rangeLabel = 'Período') => {
+  const getDisplaySchedule = (start, end, singleLabel = 'Data', rangeLabel = 'Periodo') => {
     const startFormatted = formatDateBr(start);
     const endFormatted = formatDateBr(end);
     if (!startFormatted && !endFormatted) return null;
@@ -9,203 +9,30 @@
     }
     return { label: singleLabel, value: startFormatted || endFormatted };
   };
-  const topAds = typeof heroAdvertisements !== 'undefined' ? heroAdvertisements : [];
-  const homeMuralAds = typeof muralAdvertisements !== 'undefined'
-    ? muralAdvertisements
-    : (typeof advertisements !== 'undefined' ? advertisements : []);
+  const topAdGroups = typeof heroAdvertisementGroups !== 'undefined'
+    ? heroAdvertisementGroups
+    : [{ groupName: 'Geral', items: (typeof heroAdvertisements !== 'undefined' ? heroAdvertisements : []) }];
+  const homeMuralAdGroups = typeof muralAdvertisementGroups !== 'undefined'
+    ? muralAdvertisementGroups
+    : [{ groupName: 'Geral', items: (typeof muralAdvertisements !== 'undefined' ? muralAdvertisements : (typeof advertisements !== 'undefined' ? advertisements : [])) }];
+  const rawHomeSectionOrder = globalSetting && globalSetting.homeSectionOrder
+    ? String(globalSetting.homeSectionOrder)
+    : 'top_ads,hero,jobs,mural,company_showcase,contact,courses,public_selections';
+  const allowedHomeSections = ['top_ads', 'hero', 'jobs', 'mural', 'company_showcase', 'contact', 'courses', 'public_selections'];
+  const usedSections = new Set();
+  const homeSectionOrder = rawHomeSectionOrder
+    .split(',')
+    .map((item) => item.trim())
+    .filter((item) => allowedHomeSections.includes(item) && !usedSections.has(item) && usedSections.add(item));
+  allowedHomeSections.forEach((item) => { if (!usedSections.has(item)) homeSectionOrder.push(item); });
 %>
-<% if (topAds.length > 0) { %>
-  <section class="site-section site-section--compact site-home-top-ads site-home-top-ads--<%= globalSetting && globalSetting.topAdsAlignment ? globalSetting.topAdsAlignment : 'center' %>">
-    <div class="ad-mural-grid ad-mural-grid--triple">
-      <% topAds.forEach(ad => { %>
-        <article class="ad-mural-card ad-anim-<%= ad.animation %>" style="--ad-width:<%= ad.width %>px; --ad-height:<%= ad.height %>px;">
-          <% if (ad.link) { %><a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="ad-mural-link"><% } %>
-            <div class="ad-mural-media">
-              <img src="/uploads/<%= ad.image %>" alt="Propaganda" class="ad-mural-image">
-            </div>
-          <% if (ad.link) { %></a><% } %>
-        </article>
-      <% }) %>
-    </div>
-  </section>
-<% } %>
-
-<section class="site-hero site-home-hero site-home-hero--<%= globalSetting && globalSetting.heroTextAlign ? globalSetting.heroTextAlign : 'left' %>">
-  <div class="site-hero-content">
-    <span class="site-kicker"><%= globalSetting && globalSetting.heroKicker ? globalSetting.heroKicker : 'Plataforma profissional para carreira' %></span>
-    <h1><%= globalSetting && globalSetting.heroTitle ? globalSetting.heroTitle : 'Conecte talento, contratação e qualificação em uma vitrine que transmite confiança.' %></h1>
-    <p class="site-lead">
-      <%= globalSetting && globalSetting.heroDescription ? globalSetting.heroDescription : 'Sua agência agora apresenta vagas e cursos em uma experiência mais forte comercialmente: clara para quem busca oportunidade e convincente para quem quer divulgar serviços e atrair candidatos qualificados.' %>
-    </p>
-    <div class="site-hero-actions">
-      <a href="/vagas" class="site-button">Explorar vagas</a>
-      <a href="/cursos" class="site-button-ghost">Conhecer cursos</a>
-      <a href="/contato" class="site-button-secondary">Falar com a equipe</a>
-    </div>
-    <div class="site-stats">
-      <div class="site-stat"><strong><%= jobs.length %></strong><span>vagas com apresentação mais objetiva</span></div>
-      <div class="site-stat"><strong><%= courses.length %></strong><span>cursos posicionados para conversão</span></div>
-      <div class="site-stat"><strong><%= publicSelections.length %></strong><span>editais públicos com cronograma e quadro de vagas</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="site-section site-home-mural site-home-mural--<%= globalSetting && globalSetting.muralAdsAlignment ? globalSetting.muralAdsAlignment : 'center' %>">
-  <div class="site-section-head">
-    <div class="site-section-heading">
-      <h2>Mural publicitário</h2>
-      <p>Campanhas visuais com formato livre, imagem animada e destaque comercial.</p>
-    </div>
-    <a href="/mural-publicitario" class="site-section-link">Ver mural <i class="fas fa-arrow-right"></i></a>
-  </div>
-
-  <% if (homeMuralAds.length > 0) { %>
-    <div class="ad-mural-grid ad-mural-grid--triple">
-      <% homeMuralAds.forEach(ad => { %>
-        <article class="ad-mural-card ad-anim-<%= ad.animation %>" style="--ad-width:<%= ad.width %>px; --ad-height:<%= ad.height %>px;">
-          <% if (ad.link) { %><a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="ad-mural-link"><% } %>
-            <div class="ad-mural-media">
-              <img src="/uploads/<%= ad.image %>" alt="Propaganda" class="ad-mural-image">
-            </div>
-          <% if (ad.link) { %></a><% } %>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty"><i class="fas fa-bullhorn"></i><p>Nenhuma propaganda publicada no momento.</p></div>
-  <% } %>
-</section>
-
-<section class="site-section">
-  <div class="site-panel site-contact-banner">
-    <div>
-      <h2>Contato, suporte e feedback em um canal único</h2>
-      <p>Se o visitante quiser tirar dúvidas, enviar feedback, propor parceria ou falar com a equipe, agora existe uma página de contato mais completa e profissional.</p>
-    </div>
-    <div class="site-section-actions">
-      <a href="/contato" class="site-button">Enviar mensagem</a>
-      <a href="/contato" class="site-button-ghost">Enviar feedback</a>
-    </div>
-  </div>
-</section>
-
-<section class="site-section">
-  <div class="site-section-head">
-    <div class="site-section-heading">
-      <h2>Vagas em destaque</h2>
-      <p>As oportunidades são exibidas com mais peso visual, leitura mais rápida e chamada de ação mais clara.</p>
-    </div>
-    <a href="/vagas" class="site-section-link">Ver todas <i class="fas fa-arrow-right"></i></a>
-  </div>
-
-  <% if (jobs.length > 0) { %>
-    <div class="site-card-grid">
-      <% jobs.forEach(job => { const jobSchedule = getDisplaySchedule(job.startDate, job.endDate); %>
-        <article class="site-card" data-preview-item data-preview-badge="Vaga" data-preview-title="<%= job.title %>" data-preview-description="<%= job.description.replace(/\"/g, '&quot;') %>" data-preview-image="<%= job.image ? '/uploads/' + job.image : '' %>" data-preview-meta-label="Publicado em" data-preview-meta-value="<%= new Date(job.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= jobSchedule ? jobSchedule.value : '' %>" data-preview-period-label="<%= jobSchedule ? jobSchedule.label : 'Período' %>" data-preview-link="<%= job.link || '' %>" data-preview-link-label="Ver detalhes">
-          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar vaga">
-            <% if (job.image) { %>
-              <img src="/uploads/<%= job.image %>" alt="<%= job.title %>">
-            <% } else { %>
-              <div class="site-card-icon"><i class="fas fa-briefcase"></i></div>
-            <% } %>
-            <span class="site-card-badge">Nova vaga</span>
-          </div>
-          <div class="site-card-body">
-            <h3><%= job.title %></h3>
-            <p class="site-card-text"><%= job.description.length > 150 ? job.description.substring(0, 150) + '...' : job.description %></p>
-            <% if (jobSchedule) { %>
-              <p class="site-card-text"><%= jobSchedule.label %>: <%= jobSchedule.value %></p>
-            <% } %>
-            <div class="site-card-meta">
-              <span><i class="fas fa-calendar-days"></i> <%= new Date(job.createdAt).toLocaleDateString('pt-BR') %></span>
-              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
-            </div>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty"><i class="fas fa-briefcase"></i><p>Nenhuma vaga publicada no momento.</p></div>
-  <% } %>
-</section>
-
-<section class="site-section">
-  <div class="site-section-head">
-    <div class="site-section-heading">
-      <h2>Últimos cursos</h2>
-      <p>Capacitação apresentada como extensão natural da jornada de carreira do visitante.</p>
-    </div>
-    <a href="/cursos" class="site-section-link">Ver todos <i class="fas fa-arrow-right"></i></a>
-  </div>
-
-  <% if (courses.length > 0) { %>
-    <div class="site-card-grid">
-      <% courses.forEach(course => { const courseSchedule = getDisplaySchedule(course.startDate, course.endDate); %>
-        <article class="site-card" data-preview-item data-preview-badge="Curso" data-preview-title="<%= course.title %>" data-preview-description="<%= course.description.replace(/\"/g, '&quot;') %>" data-preview-image="<%= course.image ? '/uploads/' + course.image : '' %>" data-preview-meta-label="Adicionado em" data-preview-meta-value="<%= new Date(course.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= courseSchedule ? courseSchedule.value : '' %>" data-preview-period-label="<%= courseSchedule ? courseSchedule.label : 'Período' %>" data-preview-link="<%= course.link || '' %>" data-preview-link-label="Acessar curso">
-          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar curso">
-            <% if (course.image) { %>
-              <img src="/uploads/<%= course.image %>" alt="<%= course.title %>">
-            <% } else { %>
-              <div class="site-card-icon"><i class="fas fa-graduation-cap"></i></div>
-            <% } %>
-            <span class="site-card-badge -accent">Curso</span>
-          </div>
-          <div class="site-card-body">
-            <h3><%= course.title %></h3>
-            <p class="site-card-text"><%= course.description.length > 150 ? course.description.substring(0, 150) + '...' : course.description %></p>
-            <% if (courseSchedule) { %>
-              <p class="site-card-text"><%= courseSchedule.label %>: <%= courseSchedule.value %></p>
-            <% } %>
-            <div class="site-card-meta">
-              <span><i class="fas fa-calendar-days"></i> <%= new Date(course.createdAt).toLocaleDateString('pt-BR') %></span>
-              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
-            </div>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty"><i class="fas fa-graduation-cap"></i><p>Nenhum curso publicado no momento.</p></div>
-  <% } %>
-</section>
-
-<section class="site-section">
-  <div class="site-section-head">
-    <div class="site-section-heading">
-      <h2>Concursos e processos seletivos</h2>
-      <p>A plataforma agora divulga seleções públicas com mais contexto, datas e quadro de cargos.</p>
-    </div>
-    <a href="/selecoes-publicas" class="site-section-link">Ver tudo <i class="fas fa-arrow-right"></i></a>
-  </div>
-
-  <% if (publicSelections.length > 0) { %>
-    <div class="site-card-grid">
-      <% publicSelections.forEach(item => { const selectionSchedule = getDisplaySchedule(item.registrationStartDate, item.registrationEndDate, 'Inscrição', 'Inscrições'); %>
-        <article class="site-card" data-preview-item data-preview-badge="<%= item.category === 'concurso_publico' ? 'Concurso' : 'Processo seletivo' %>" data-preview-title="<%= item.title %>" data-preview-description="<%= (item.description || '').replace(/\"/g, '&quot;') %>" data-preview-image="<%= item.image ? '/uploads/' + item.image : '' %>" data-preview-meta-label="Situação" data-preview-meta-value="<%= item.status || 'Publicado' %>" data-preview-period="<%= selectionSchedule ? selectionSchedule.value : '' %>" data-preview-period-label="<%= selectionSchedule ? selectionSchedule.label : 'Inscrições' %>" data-preview-link="<%= item.noticePdf ? '/uploads/' + item.noticePdf : '/selecoes-publicas/' + item.id %>" data-preview-link-label="<%= item.noticePdf ? 'Ver edital completo' : 'Ver edital' %>" data-preview-link-target="<%= item.noticePdf ? '_blank' : '' %>">
-          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar seleção pública">
-            <% if (item.image) { %>
-              <img src="/uploads/<%= item.image %>" alt="<%= item.title %>">
-            <% } else { %>
-              <div class="site-card-icon"><i class="fas fa-file-signature"></i></div>
-            <% } %>
-            <span class="site-card-badge -accent"><%= item.category === 'concurso_publico' ? 'Concurso' : 'Processo seletivo' %></span>
-          </div>
-          <div class="site-card-body">
-            <h3><%= item.title %></h3>
-            <p class="site-card-text"><%= (item.description || '').length > 150 ? item.description.substring(0, 150) + '...' : (item.description || '') %></p>
-            <div class="site-detail-list">
-              <% if (item.processNumber) { %><span><strong>Processo:</strong> <%= item.processNumber %></span><% } %>
-              <% if (selectionSchedule) { %><span><strong><%= selectionSchedule.label %>:</strong> <%= selectionSchedule.value %></span><% } %>
-            </div>
-            <div class="site-card-meta">
-              <span><i class="fas fa-file-lines"></i> <%= item.status || 'Publicado' %></span>
-              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
-            </div>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty"><i class="fas fa-file-signature"></i><p>Nenhuma seleção pública publicada no momento.</p></div>
-  <% } %>
-</section>
+<% homeSectionOrder.forEach((sectionKey) => { %>
+  <% if (sectionKey === 'top_ads') { %><%- include('partials/home-top-ads', { topAdGroups, globalSetting }) %><% } %>
+  <% if (sectionKey === 'hero' && (!globalSetting || globalSetting.heroEnabled !== false)) { %><%- include('partials/home-hero', { globalSetting, jobs, courses, publicSelections }) %><% } %>
+  <% if (sectionKey === 'jobs') { %><%- include('partials/home-jobs', { jobs, getDisplaySchedule }) %><% } %>
+  <% if (sectionKey === 'mural') { %><%- include('partials/home-mural', { homeMuralAdGroups, globalSetting }) %><% } %>
+  <% if (sectionKey === 'company_showcase') { %><%- include('partials/company-showcase', { globalSetting, publicCompanies }) %><% } %>
+  <% if (sectionKey === 'contact') { %><%- include('partials/home-contact-banner') %><% } %>
+  <% if (sectionKey === 'courses') { %><%- include('partials/home-courses', { courses, getDisplaySchedule }) %><% } %>
+  <% if (sectionKey === 'public_selections') { %><%- include('partials/home-public-selections', { publicSelections, getDisplaySchedule }) %><% } %>
+<% }) %>

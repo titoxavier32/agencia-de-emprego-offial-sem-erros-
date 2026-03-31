@@ -1,0 +1,174 @@
+﻿<%
+const brandName = globalSetting && globalSetting.brandName ? globalSetting.brandName : 'Agencia de Emprego';
+const structurePhoto = globalSetting && globalSetting.backgroundImage ? '/uploads/' + globalSetting.backgroundImage : '/uploads/image-1774527401963.png';
+%>
+<div class="admin-page admin-structure-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Mapa visual do portal</div>
+    <h1>Estrutura e fluxo do site</h1>
+    <p>Esta aba mostra, de forma clara e bonita, como o visitante entra, navega, converte e depois retorna ao painel administrativo.</p>
+    <div class="admin-structure-chip-grid" style="margin-top:18px;">
+      <span class="admin-structure-chip"><i class="fas fa-sitemap"></i> <%= brandName %></span>
+      <span class="admin-structure-chip"><i class="fas fa-layer-group"></i> <%= summaryCards[0].value %> secoes na home</span>
+      <span class="admin-structure-chip"><i class="fas fa-folder-open"></i> <%= menus.length %> menus ativos</span>
+      <span class="admin-structure-chip"><i class="fas fa-bullseye"></i> Fluxo editorial + conversao</span>
+    </div>
+  </section>
+
+  <section class="admin-stats admin-structure-summary">
+    <% summaryCards.forEach((card) => { %>
+      <article class="admin-stat">
+        <i class="fas fa-chart-pie"></i>
+        <strong><%= card.value %></strong>
+        <span><%= card.label %></span>
+        <small class="admin-structure-footnote"><%= card.note %></small>
+      </article>
+    <% }) %>
+  </section>
+
+  <section class="admin-structure-grid">
+    <article class="admin-panel admin-structure-panel">
+      <div class="admin-section-head">
+        <div>
+          <h2>Fluxo principal</h2>
+          <p>Como o usuario atravessa o site, do primeiro contato ate a administracao.</p>
+        </div>
+      </div>
+
+      <div class="admin-structure-flow">
+        <% flowNodes.forEach((node, index) => { %>
+          <div class="admin-flow-step">
+            <div class="admin-flow-step-index"><%= index + 1 %></div>
+            <div>
+              <strong><%= node.title %></strong>
+              <p><%= node.description %></p>
+              <div class="admin-flow-step-tags">
+                <% node.tags.forEach((tag) => { %>
+                  <span class="admin-flow-step-tag"><%= tag %></span>
+                <% }) %>
+              </div>
+            </div>
+          </div>
+          <% if (index < flowNodes.length - 1) { %>
+            <div class="admin-flow-arrow"><i class="fas fa-chevron-down"></i></div>
+          <% } %>
+        <% }) %>
+      </div>
+    </article>
+
+    <article class="admin-panel admin-structure-panel">
+      <div class="admin-section-head">
+        <div>
+          <h2>Grafico do fluxo</h2>
+          <p>Leitura visual da intensidade de cada etapa da jornada. Os percentuais abaixo sao ilustrativos.</p>
+        </div>
+      </div>
+
+      <div class="admin-flow-chart">
+        <% flowChart.forEach((bar) => { %>
+          <div class="admin-flow-chart-row">
+            <div class="admin-flow-chart-label">
+              <strong><%= bar.label %></strong>
+              <span><%= bar.note %></span>
+            </div>
+            <div class="admin-flow-chart-track"><i style="width:<%= bar.value %>%"></i></div>
+            <strong class="admin-flow-chart-value"><%= bar.value %>%</strong>
+          </div>
+        <% }) %>
+      </div>
+    </article>
+  </section>
+
+  <section class="admin-structure-photo">
+    <div>
+      <div class="admin-kicker">Foto e contexto</div>
+      <h2>Imagem de apoio para a leitura visual do sistema</h2>
+      <p>Use este espaco como referencia do estilo do portal, da identidade visual e da consistencia do layout. A imagem ao lado ajuda a conectar o mapa com a experiencia real.</p>
+      <ul class="admin-structure-points">
+        <li><i class="fas fa-check-circle"></i> A home conduz o usuario por blocos sequenciais e objetivos.</li>
+        <li><i class="fas fa-check-circle"></i> O menu publica a navegacao essencial sem poluir a tela.</li>
+        <li><i class="fas fa-check-circle"></i> Os pontos de contato e candidatura aparecem como chamadas de acao.</li>
+        <li><i class="fas fa-check-circle"></i> O painel administrativo concentra operacao, conteudo e monitoramento.</li>
+      </ul>
+    </div>
+
+    <figure class="admin-structure-photo-frame">
+      <img src="<%= structurePhoto %>" alt="Foto ilustrativa da estrutura visual do site">
+      <figcaption>Foto usada como apoio visual da aba. Se quiser, depois podemos trocar por uma captura real da home ou por uma imagem institucional do projeto.</figcaption>
+    </figure>
+  </section>
+
+  <section class="admin-structure-columns">
+    <article class="admin-panel admin-structure-section">
+      <div class="admin-section-head">
+        <div>
+          <h2>Estrutura publica da home</h2>
+          <p>Ordem editorial que organiza a primeira pagina do site.</p>
+        </div>
+      </div>
+
+      <div class="admin-timeline">
+        <% homeSections.forEach((section) => { %>
+          <div class="admin-timeline-item">
+            <span class="admin-timeline-order"><%= section.order %></span>
+            <div>
+              <strong><%= section.label %></strong>
+              <p><%= section.description %></p>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </article>
+
+    <article class="admin-panel admin-structure-section">
+      <div class="admin-section-head">
+        <div>
+          <h2>Fluxo por perfil</h2>
+          <p>O que cada publico faz dentro da plataforma.</p>
+        </div>
+      </div>
+
+      <div class="admin-path-grid">
+        <div class="admin-path-card">
+          <h3>Candidato</h3>
+          <ol>
+            <li>Entra pela home ou por uma vaga destacada.</li>
+            <li>Compara oportunidades, cursos e selecoes publicas.</li>
+            <li>Envie contato, monte candidatura ou siga para login.</li>
+          </ol>
+        </div>
+        <div class="admin-path-card">
+          <h3>Empresa</h3>
+          <ol>
+            <li>Consulta a vitrine institucional e os menus publicos.</li>
+            <li>Publica vagas, acompanha candidaturas e administra o perfil.</li>
+            <li>Retorna para atualizar dados, pagar ou validar informacoes.</li>
+          </ol>
+        </div>
+        <div class="admin-path-card">
+          <h3>Administrador</h3>
+          <ol>
+            <li>Controla menus, configuracoes e a estrutura da home.</li>
+            <li>Monitora empresas, vagas, cursos, selecoes e contatos.</li>
+            <li>Usa o painel como centro operacional de conteudo e conversao.</li>
+          </ol>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="admin-panel admin-structure-section">
+    <div class="admin-section-head">
+      <div>
+        <h2>Menus e entradas do site</h2>
+        <p>Links ativos que formam a navegacao publica e ajudam o usuario a encontrar a rota certa mais rapido.</p>
+      </div>
+    </div>
+
+    <div class="admin-structure-chip-grid">
+      <% menus.forEach((menu) => { %>
+        <a href="<%= menu.url %>" class="admin-structure-chip" <%= menu.target === '_blank' ? 'target="_blank" rel="noopener noreferrer"' : '' %>><i class="fas <%= menu.icon || 'fa-link' %>"></i> <%= menu.label %></a>
+      <% }) %>
+    </div>
+  </section>
+</div>

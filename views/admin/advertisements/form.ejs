@@ -3,73 +3,81 @@
     <div class="admin-section-head">
       <div>
         <h2><%= title %></h2>
-        <p>Gerencie banners com grupo, posição, tamanho livre e ordem de exibição.</p>
+        <p>O banner agora nasce a partir do mapa visual. Aqui voce cuida do conteudo, do tamanho e do comportamento.</p>
       </div>
-      <a href="/admin/propagandas" class="admin-btn-ghost">Voltar</a>
+      <a href="/admin/propagandas" class="admin-btn-ghost">Voltar ao mapa visual</a>
     </div>
 
     <% if (typeof formError !== 'undefined' && formError) { %>
       <div class="admin-alert"><%= formError %></div>
     <% } %>
 
-    <form action="<%= advertisement ? '/admin/propagandas/editar/' + advertisement.id : '/admin/propagandas/nova' %>" method="POST" enctype="multipart/form-data" class="admin-form">
-      <div class="admin-form-grid">
-        <div class="admin-form-row">
-          <label for="placement">Local de exibição</label>
-          <select id="placement" name="placement">
-            <option value="hero_top" <%= advertisement && advertisement.placement === 'hero_top' ? 'selected' : '' %>>Acima da plataforma profissional</option>
-            <option value="mural_home" <%= !advertisement || advertisement.placement === 'mural_home' ? 'selected' : '' %>>Mural publicitário da home</option>
-          </select>
-          <div class="admin-help">Cada área mostra até 3 quadros por vez, em 3 colunas e 1 linha.</div>
+    <%
+      const placementLabel = advertisement && advertisement.placement === 'hero_top'
+        ? 'Acima da plataforma profissional'
+        : 'Mural publicitario da home';
+    %>
+
+    <form action="<%= advertisement && advertisement.id ? '/admin/propagandas/editar/' + advertisement.id : '/admin/propagandas/nova' %>" method="POST" enctype="multipart/form-data" class="admin-form">
+      <input type="hidden" name="placement" value="<%= advertisement ? advertisement.placement : 'mural_home' %>">
+      <input type="hidden" name="groupName" value="<%= advertisement ? (advertisement.groupName || 'Geral') : 'Geral' %>">
+      <input type="hidden" name="position" value="<%= advertisement ? (advertisement.position || 1) : 1 %>">
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Posicionamento visual</h2>
+            <p>Para trocar o local do banner, use o mapa visual da pagina de propagandas e arraste ou clique no slot desejado.</p>
+          </div>
+          <a href="/admin/propagandas" class="admin-btn-secondary">Abrir mapa visual</a>
         </div>
 
-        <div class="admin-form-row">
-          <label for="groupName">Grupo</label>
-          <input type="text" id="groupName" name="groupName" value="<%= advertisement ? (advertisement.groupName || 'Geral') : 'Geral' %>" placeholder="Ex.: Grupo 1, Campanha principal, Lateral">
-          <div class="admin-help">Use o grupo para separar os banners que você quer gerenciar juntos.</div>
-        </div>
-      </div>
-
-      <div class="admin-form-grid">
-        <div class="admin-form-row">
-          <label for="image">Imagem animada ou estática <span class="admin-help"><%= advertisement ? '(opcional na edição)' : '(obrigatória)' %></span></label>
-          <input type="file" id="image" name="image" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" <%= advertisement ? '' : 'required' %>>
-          <div class="admin-help">Aceita PNG, JPEG, JPG, GIF e WEBP com até 50 MB.</div>
-        </div>
-
-        <div class="admin-form-row">
-          <label for="position">Posição no grupo</label>
-          <input type="number" id="position" name="position" min="1" max="999" value="<%= advertisement ? (advertisement.position || 1) : 1 %>">
-          <div class="admin-help">Esta posição define a ordem principal do banner dentro do grupo.</div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label>Area escolhida</label>
+            <input type="text" value="<%= placementLabel %>" readonly>
+          </div>
+          <div class="admin-form-row">
+            <label>Grupo visual</label>
+            <input type="text" value="<%= advertisement ? (advertisement.groupName || 'Geral') : 'Geral' %>" readonly>
+          </div>
+          <div class="admin-form-row">
+            <label>Posicao visual</label>
+            <input type="text" value="<%= advertisement ? (advertisement.position || 1) : 1 %>" readonly>
+          </div>
         </div>
       </div>
 
       <div class="admin-form-row">
-        <label for="title">Título interno da propaganda <span class="admin-help">(opcional)</span></label>
-        <input type="text" id="title" name="title" value="<%= advertisement ? advertisement.title : '' %>" placeholder="Use apenas para identificar no painel administrativo">
-        <div class="admin-help">Este título não aparece no site. Ele serve apenas para organização no modo administrador.</div>
+        <label for="image">Imagem animada ou estatica <span class="admin-help"><%= advertisement && advertisement.id ? '(opcional na edicao)' : '(obrigatoria)' %></span></label>
+        <input type="file" id="image" name="image" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" <%= advertisement && advertisement.id ? '' : 'required' %>>
+        <div class="admin-help">Aceita PNG, JPEG, JPG, GIF e WEBP com ate 50 MB.</div>
       </div>
 
       <div class="admin-form-row">
-        <label for="description">Descrição interna <span class="admin-help">(opcional)</span></label>
-        <textarea id="description" name="description" placeholder="Observação opcional para sua organização no painel"><%= advertisement ? advertisement.description : '' %></textarea>
-        <div class="admin-help">Use este campo como observação administrativa. O banner público prioriza a imagem.</div>
+        <label for="title">Titulo interno da propaganda <span class="admin-help">(opcional)</span></label>
+        <input type="text" id="title" name="title" value="<%= advertisement ? (advertisement.title || '') : '' %>" placeholder="Use apenas para identificar no painel administrativo">
+      </div>
+
+      <div class="admin-form-row">
+        <label for="description">Descricao interna <span class="admin-help">(opcional)</span></label>
+        <textarea id="description" name="description" placeholder="Observacao opcional para sua organizacao no painel"><%= advertisement ? (advertisement.description || '') : '' %></textarea>
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
           <label for="link">Link ao clicar <span class="admin-help">(opcional)</span></label>
-          <input type="url" id="link" name="link" value="<%= advertisement ? advertisement.link : '' %>" placeholder="https://seusite.com">
+          <input type="url" id="link" name="link" value="<%= advertisement ? (advertisement.link || '') : '' %>" placeholder="https://seusite.com">
         </div>
 
         <div class="admin-form-row">
-          <label for="animation">Animação <span class="admin-help">(opcional)</span></label>
+          <label for="animation">Animacao <span class="admin-help">(opcional)</span></label>
           <select id="animation" name="animation">
             <option value="pulse" <%= !advertisement || advertisement.animation === 'pulse' ? 'selected' : '' %>>Pulse</option>
             <option value="float" <%= advertisement && advertisement.animation === 'float' ? 'selected' : '' %>>Float</option>
             <option value="glow" <%= advertisement && advertisement.animation === 'glow' ? 'selected' : '' %>>Glow</option>
             <option value="zoom" <%= advertisement && advertisement.animation === 'zoom' ? 'selected' : '' %>>Zoom</option>
-            <option value="none" <%= advertisement && advertisement.animation === 'none' ? 'selected' : '' %>>Sem animação</option>
+            <option value="none" <%= advertisement && advertisement.animation === 'none' ? 'selected' : '' %>>Sem animacao</option>
           </select>
         </div>
       </div>
@@ -94,7 +102,7 @@
       <div class="admin-form-checkbox">
         <label><input type="checkbox" name="isActive" <%= !advertisement || advertisement.isActive ? 'checked' : '' %>> Exibir no site</label>
       </div>
-      <div class="admin-help">Desative esta opção quando quiser manter a propaganda cadastrada no painel sem mostrar no site.</div>
+      <div class="admin-help">Desative esta opcao quando quiser manter a propaganda cadastrada no painel sem mostrar no site.</div>
 
       <% if (advertisement && advertisement.image) { %>
         <div class="admin-image-preview">
@@ -102,7 +110,7 @@
         </div>
       <% } %>
 
-      <div class="admin-help">Somente a imagem é obrigatória. Use grupo, posição e ordem para organizar exatamente como cada banner deve aparecer.</div>
+      <div class="admin-help">Somente a imagem e obrigatoria. O mapa visual controla area, grupo e posicao principal do banner.</div>
 
       <div class="admin-actions">
         <button type="submit" class="admin-btn">Salvar propaganda</button>

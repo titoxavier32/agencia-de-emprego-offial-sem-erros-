@@ -1,0 +1,99 @@
+<%
+const statusMeta = {
+  recebida: { label: 'Recebida', className: 'admin-badge neutral' },
+  em_analise: { label: 'Em an?lise', className: 'admin-badge warning' },
+  entrevista: { label: 'Entrevista', className: 'admin-badge payment-review' },
+  aprovada: { label: 'Aprovada', className: 'admin-badge success' },
+  reprovada: { label: 'Reprovada', className: 'admin-badge danger' },
+  banco_de_talentos: { label: 'Banco de talentos', className: 'admin-badge category-partnership' }
+};
+const getStatusMeta = (value) => statusMeta[value] || { label: value || 'Recebida', className: 'admin-badge neutral' };
+%>
+<div class="admin-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Recrutamento</div>
+    <h1>Gerencie candidaturas e currículos recebidos em um único fluxo.</h1>
+    <p>O administrador agora acompanha a vaga, o candidato, a empresa responsavel e o status completo de cada inscricao.</p>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-section-head">
+      <div>
+        <h2>Candidaturas da plataforma</h2>
+        <p>Edite o andamento do processo, abra o currículo em PDF e exclua registros quando necessário.</p>
+      </div>
+      <a href="/admin/vagas" class="admin-btn-ghost"><i class="fas fa-briefcase"></i><span>Ver vagas</span></a>
+    </div>
+
+    <% if (errorMessage) { %>
+      <div class="admin-alert" style="margin-bottom:18px;"><%= errorMessage %></div>
+    <% } %>
+    <% if (statusMessage) { %>
+      <div class="admin-success" style="margin-bottom:18px;"><%= statusMessage %></div>
+    <% } %>
+
+    <% if (applications.length > 0) { %>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Candidato</th>
+              <th>Vaga</th>
+              <th>Empresa</th>
+              <th>Curr?culo</th>
+              <th>Status</th>
+              <th>Inscricao</th>
+              <th>Acoes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% applications.forEach(application => { const candidate = application.candidate; const job = application.job; const company = application.company; %>
+              <tr>
+                <td>
+                  <strong><%= candidate ? candidate.name : 'Candidato removido' %></strong>
+                  <small><%= candidate ? candidate.email : 'Sem e-mail' %></small>
+                </td>
+                <td>
+                  <strong><%= job ? job.title : 'Vaga removida' %></strong>
+                  <small><%= job ? (job.location || 'Local nao informado') : 'Sem vaga vinculada' %></small>
+                </td>
+                <td>
+                  <strong><%= company ? (company.companyTradeName || company.companyLegalName || company.name) : (job ? (job.companyName || 'Empresa nao informada') : 'Empresa nao informada') %></strong>
+                  <small><%= company ? (company.email || '-') : '-' %></small>
+                </td>
+                <td>
+                  <% if (candidate && candidate.resumePdf) { %>
+                    <a href="/uploads/<%= candidate.resumePdf %>" target="_blank" rel="noopener noreferrer" class="admin-btn-secondary">Abrir PDF</a>
+                  <% } else { %>
+                    <span class="admin-badge neutral">Sem PDF</span>
+                  <% } %>
+                </td>
+                <td>
+                  <span class="<%= getStatusMeta(application.status).className %>"><%= getStatusMeta(application.status).label %></span>
+                </td>
+                <td><%= new Date(application.createdAt).toLocaleDateString('pt-BR') %></td>
+                <td>
+                  <div class="admin-actions" style="flex-direction:column;align-items:stretch;">
+                    <form action="/admin/candidaturas/<%= application.id %>/status" method="POST" class="admin-inline-form" style="display:grid;grid-template-columns:minmax(180px,1fr) auto;gap:10px;">
+                      <select name="status">
+                        <% applicationStatusOptions.forEach(option => { %>
+                          <option value="<%= option %>" <%= application.status === option ? 'selected' : '' %>><%= getStatusMeta(option).label %></option>
+                        <% }) %>
+                      </select>
+                      <button type="submit" class="admin-btn-secondary">Salvar</button>
+                    </form>
+                    <form action="/admin/candidaturas/<%= application.id %>/deletar" method="POST" onsubmit="return confirm('Excluir esta candidatura?');">
+                      <button type="submit" class="admin-btn-danger">Excluir</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="admin-empty">Nenhuma candidatura registrada ainda.</div>
+    <% } %>
+  </section>
+</div>

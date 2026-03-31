@@ -55,12 +55,23 @@
     --site-hero-text-align: <%= globalSetting && globalSetting.heroTextAlign ? globalSetting.heroTextAlign : 'left' %>;
     --site-hero-offset-x: <%= globalSetting && globalSetting.heroContentOffsetX ? globalSetting.heroContentOffsetX : 0 %>px;
     --site-hero-offset-y: <%= globalSetting && globalSetting.heroContentOffsetY ? globalSetting.heroContentOffsetY : 0 %>px;
+    --site-home-hero-enabled: <%= !globalSetting || globalSetting.heroEnabled !== false ? 'block' : 'none' %>;
+    --site-home-hero-max-width: <%= globalSetting && globalSetting.heroMaxWidth ? globalSetting.heroMaxWidth + 'px' : '100%' %>;
+    --site-home-hero-radius: <%= globalSetting && globalSetting.heroBorderRadius ? globalSetting.heroBorderRadius : 28 %>px;
+    --site-home-hero-bg: <%= globalSetting && globalSetting.heroBackgroundColor ? globalSetting.heroBackgroundColor : 'linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(' + hexToRgb(primaryHex, defaultPrimaryRgb) + ', 0.92))' %>;
+    --site-home-hero-content-bg: <%= globalSetting && globalSetting.heroContentBackgroundColor ? globalSetting.heroContentBackgroundColor : 'transparent' %>;
+    --site-home-hero-text: <%= globalSetting && globalSetting.heroTextColor ? globalSetting.heroTextColor : '#ffffff' %>;
+    --site-home-hero-muted: <%= globalSetting && globalSetting.heroMutedTextColor ? globalSetting.heroMutedTextColor : 'rgba(255, 255, 255, 0.82)' %>;
     --site-top-ads-offset-x: <%= globalSetting && globalSetting.topAdsOffsetX ? globalSetting.topAdsOffsetX : 0 %>px;
     --site-top-ads-offset-y: <%= globalSetting && globalSetting.topAdsOffsetY ? globalSetting.topAdsOffsetY : 0 %>px;
     --site-top-ads-max-width: <%= globalSetting && globalSetting.topAdsMaxWidth ? globalSetting.topAdsMaxWidth : 1200 %>px;
     --site-mural-ads-offset-x: <%= globalSetting && globalSetting.muralAdsOffsetX ? globalSetting.muralAdsOffsetX : 0 %>px;
     --site-mural-ads-offset-y: <%= globalSetting && globalSetting.muralAdsOffsetY ? globalSetting.muralAdsOffsetY : 0 %>px;
     --site-mural-ads-max-width: <%= globalSetting && globalSetting.muralAdsMaxWidth ? globalSetting.muralAdsMaxWidth : 1200 %>px;
+    --site-preview-dialog-max-width: <%= globalSetting && globalSetting.previewDialogMaxWidth ? globalSetting.previewDialogMaxWidth : 1380 %>px;
+    --site-preview-dialog-min-height: <%= globalSetting && globalSetting.previewDialogMinHeight ? globalSetting.previewDialogMinHeight : 82 %>vh;
+    --site-preview-info-width: <%= globalSetting && globalSetting.previewInfoPanelWidth ? globalSetting.previewInfoPanelWidth : 380 %>px;
+    --site-detail-pdf-min-height: <%= globalSetting && globalSetting.detailPdfMinHeight ? globalSetting.detailPdfMinHeight : 1200 %>px;
   }
 </style>
 <link rel="stylesheet" href="/css/site-professional.css">

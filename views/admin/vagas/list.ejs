@@ -1,12 +1,14 @@
 <div class="admin-page">
   <section class="admin-hero"><div class="admin-kicker">Publicacao de vagas</div><h1>Gerencie oportunidades com mais clareza.</h1><p>A listagem foi reorganizada para facilitar leitura, edicao e exclusao sem ruido visual.</p></section>
   <section class="admin-table-wrap">
-    <div class="admin-section-head"><div><h2>Vagas publicadas</h2><p>Controle central de todas as oportunidades cadastradas.</p></div><a href="/admin/vagas/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Nova vaga</span></a></div>
+    <div class="admin-section-head"><div><h2>Vagas publicadas</h2><p>Controle central das oportunidades do administrador e das empresas cadastradas.</p></div><a href="/admin/vagas/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Nova vaga</span></a></div>
     <% if (jobs.length > 0) { %>
-      <table class="admin-table"><thead><tr><th>Imagem</th><th>Titulo</th><th>Periodo</th><th>Link</th><th>Data</th><th>Acoes</th></tr></thead><tbody>
+      <table class="admin-table"><thead><tr><th>Imagem</th><th>Titulo</th><th>Empresa</th><th>Perfil</th><th>Periodo</th><th>Status</th><th>Data</th><th>Acoes</th></tr></thead><tbody>
       <% jobs.forEach(job => { %><tr>
         <td><% if (job.image) { %><img src="/uploads/<%= job.image %>" alt="<%= job.title %>" class="admin-thumb" data-lightbox-src="/uploads/<%= job.image %>"><% } else { %><div class="admin-thumb-fallback"><i class="fas fa-image"></i></div><% } %></td>
         <td><strong><%= job.title %></strong><div class="admin-help"><%= job.description.length > 90 ? job.description.substring(0, 90) + '...' : job.description %></div></td>
+        <td><%= job.companyName || 'Administrador' %></td>
+        <td><span class="admin-help"><%= job.location || 'Nao informado' %><br><%= job.workplaceMode || 'Modalidade livre' %></span></td>
         <td>
           <% if (job.startDate || job.endDate) { %>
             <span class="admin-help">
@@ -18,7 +20,7 @@
             <span class="admin-help">Não informado</span>
           <% } %>
         </td>
-        <td><% if (job.link) { %><a href="<%= job.link %>" target="_blank" class="admin-inline-note">Abrir link</a><% } else { %><span class="admin-help">Sem link externo</span><% } %></td>
+        <td><span class="admin-badge <%= job.status === 'encerrada' ? 'warning' : 'success' %>"><%= job.status || 'ativa' %></span></td>
         <td><%= new Date(job.createdAt).toLocaleDateString('pt-BR') %></td>
         <td><div class="admin-actions"><a href="/admin/vagas/editar/<%= job.id %>" class="admin-btn-secondary">Editar</a><form action="/admin/vagas/deletar/<%= job.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta vaga?');"><button type="submit" class="admin-btn-danger">Excluir</button></form></div></td>
       </tr><% }) %>

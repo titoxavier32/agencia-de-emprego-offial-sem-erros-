@@ -1,0 +1,41 @@
+<section class="site-section">
+  <div class="site-section-head">
+    <div class="site-section-heading">
+      <h2>Concursos e processos seletivos</h2>
+      <p>A plataforma agora divulga selecoes publicas com mais contexto, datas e quadro de cargos.</p>
+    </div>
+    <a href="/selecoes-publicas" class="site-section-link">Ver tudo <i class="fas fa-arrow-right"></i></a>
+  </div>
+
+  <% if (publicSelections.length > 0) { %>
+    <div class="site-card-grid">
+      <% publicSelections.forEach(item => { const selectionSchedule = getDisplaySchedule(item.registrationStartDate, item.registrationEndDate, 'Inscricao', 'Inscricoes'); %>
+        <article class="site-card" data-preview-item data-preview-badge="<%= item.category === 'concurso_p?blico' ? 'Concurso' : 'Processo seletivo' %>" data-preview-title="<%= item.title %>" data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" data-preview-image="<%= item.image ? '/uploads/' + item.image : '' %>" data-preview-meta-label="Situacao" data-preview-meta-value="<%= item.status || 'Publicado' %>" data-preview-period="<%= selectionSchedule ? selectionSchedule.value : '' %>" data-preview-period-label="<%= selectionSchedule ? selectionSchedule.label : 'Inscricoes' %>" data-preview-link="<%= item.noticePdf ? '/uploads/' + item.noticePdf : '' %>" data-preview-link-label="Ver edital" data-preview-link-target="<%= item.noticePdf ? '_blank' : '' %>">
+          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar seleção pública">
+            <% if (item.image) { %>
+              <img src="/uploads/<%= item.image %>" alt="<%= item.title %>">
+            <% } else { %>
+              <div class="site-card-icon"><i class="fas fa-file-signature"></i></div>
+            <% } %>
+            <span class="site-card-badge -accent"><%= item.category === 'concurso_p?blico' ? 'Concurso' : 'Processo seletivo' %></span>
+          </div>
+          <div class="site-card-body">
+            <h3><%= item.title %></h3>
+            <p class="site-card-text"><%= (item.description || '').length > 150 ? item.description.substring(0, 150) + '...' : (item.description || '') %></p>
+            <div class="site-detail-list">
+              <% if (item.processNumber) { %><span><strong>Processo:</strong> <%= item.processNumber %></span><% } %>
+              <% if (selectionSchedule) { %><span><strong><%= selectionSchedule.label %>:</strong> <%= selectionSchedule.value %></span><% } %>
+              <% if (item.noticePdf) { %><span><strong>Edital:</strong> PDF anexado</span><% } %>
+            </div>
+            <div class="site-card-meta">
+              <span><i class="fas fa-file-lines"></i> <%= item.status || 'Publicado' %></span>
+              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="site-empty"><i class="fas fa-file-signature"></i><p>Nenhuma seleção pública publicada no momento.</p></div>
+  <% } %>
+</section>

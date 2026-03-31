@@ -1,0 +1,79 @@
+<div class="admin-page">
+  <section class="admin-form-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Editar empresa</h2>
+        <p>Ajuste dados da empresa, logo, ordenação manual e controle sua participação no painel público com consentimento LGPD.</p>
+      </div>
+      <a href="/admin/empresas" class="admin-btn-ghost">Voltar</a>
+    </div>
+
+    <% if (formError) { %><div class="admin-alert"><%= formError %></div><% } %>
+    <% if (formStatus) { %><div class="site-access-status"><%= formStatus %></div><% } %>
+
+    <form action="/admin/empresas/editar/<%= company.id %>" method="POST" enctype="multipart/form-data" class="admin-form">
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Cadastro da empresa</h2>
+            <p>Edite os dados institucionais principais usados na plataforma.</p>
+          </div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Status</label><select name="status"><option value="ativo" <%= company.status === 'ativo' ? 'selected' : '' %>>Ativo</option><option value="pendente" <%= company.status === 'pendente' ? 'selected' : '' %>>Pendente</option><option value="bloqueado" <%= company.status === 'bloqueado' ? 'selected' : '' %>>Bloqueado</option></select></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="companyPaymentValidated" <%= company.companyPaymentValidated ? 'checked' : '' %>><span>Pagamento validado pelo administrador</span></label></div>
+          <div class="admin-form-row"><label>Última aprovação</label><input type="text" value="<%= company.companyApprovedAt ? new Date(company.companyApprovedAt).toLocaleDateString('pt-BR') : 'Ainda não aprovada' %>" disabled></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Tipo de empresa</label><input type="text" name="companyProfileType" value="<%= company.companyProfileType || '' %>"></div>
+          <div class="admin-form-row"><label>Tipo de documento</label><input type="text" name="companyDocumentType" value="<%= company.companyDocumentType || '' %>"></div>
+          <div class="admin-form-row"><label>Documento</label><input type="text" name="companyDocument" value="<%= company.companyDocument || '' %>"></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Razao social</label><input type="text" name="companyLegalName" value="<%= company.companyLegalName || '' %>"></div>
+          <div class="admin-form-row"><label>Nome fantasia</label><input type="text" name="companyTradeName" value="<%= company.companyTradeName || '' %>"></div>
+          <div class="admin-form-row"><label>Observações da aprovação</label><textarea name="companyApprovalNotes"><%= company.companyApprovalNotes || '' %></textarea></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Inscricao estadual</label><input type="text" name="companyStateRegistration" value="<%= company.companyStateRegistration || '' %>"></div>
+          <div class="admin-form-row"><label>Setor</label><input type="text" name="companySector" value="<%= company.companySector || '' %>"></div>
+          <div class="admin-form-row"><label>Responsavel</label><input type="text" name="companyResponsibleName" value="<%= company.companyResponsibleName || company.name || '' %>"></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>CPF do responsavel</label><input type="text" name="companyResponsibleCpf" value="<%= company.companyResponsibleCpf || '' %>"></div>
+          <div class="admin-form-row"><label>Telefone</label><input type="text" name="companyPhone" value="<%= company.companyPhone || '' %>"></div>
+          <div class="admin-form-row"><label>E-mail corporativo</label><input type="email" name="email" value="<%= company.email || company.companyCorporateEmail || '' %>"></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Endereco</label><input type="text" name="address" value="<%= company.address || '' %>"></div>
+          <div class="admin-form-row"><label>Cidade</label><input type="text" name="city" value="<%= company.city || '' %>"></div>
+          <div class="admin-form-row"><label>Estado</label><input type="text" name="state" value="<%= company.state || '' %>"></div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>CEP</label><input type="text" name="companyZipCode" value="<%= company.companyZipCode || '' %>"></div>
+          <div class="admin-form-row"><label>Site</label><input type="url" name="companyWebsite" value="<%= company.companyWebsite || '' %>"></div>
+          <div class="admin-form-row"><label>Ordem manual no painel</label><input type="number" name="companyShowcaseOrder" value="<%= company.companyShowcaseOrder || 0 %>"></div>
+        </div>
+      </div>
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Painel público e LGPD</h2>
+            <p>Somente dados empresariais institucionais entram no painel. Dados sensíveis e pessoais não são exibidos.</p>
+          </div>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label>Logo da empresa</label><input type="file" name="companyLogo" accept="image/*"></div>
+          <div class="admin-form-row"><label>Nome exibido no painel</label><input type="text" name="companyPublicDisplayName" value="<%= company.companyPublicDisplayName || company.companyTradeName || company.companyLegalName || '' %>"></div>
+          <div class="admin-form-row"><label>Resumo institucional</label><textarea name="companyPublicSummary"><%= company.companyPublicSummary || '' %></textarea></div>
+        </div>
+        <% if (company.avatar) { %><div class="admin-image-preview"><img src="<%= company.avatar %>" alt="Logo atual"></div><% } %>
+        <div class="admin-form-grid">
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="companyShowcaseEnabled" <%= company.companyShowcaseEnabled ? 'checked' : '' %>><span>Empresa participa do painel público</span></label></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="companyShowcaseLgpdConsent" <%= company.companyShowcaseLgpdConsent ? 'checked' : '' %>><span>Consentimento LGPD para divulgacao institucional</span></label></div>
+        </div>
+      </div>
+      <div class="admin-actions"><button type="submit" class="admin-btn">Salvar empresa</button></div>
+    </form>
+  </section>
+</div>

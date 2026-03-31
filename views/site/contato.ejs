@@ -64,7 +64,7 @@
 
         <div class="site-form-grid">
           <div class="site-form-row">
-            <label for="phone">Telefone ou WhatsApp</label>
+            <label for="phone">Telefone</label>
             <input type="text" id="phone" name="phone" value="<%= formData && formData.phone ? formData.phone : '' %>" placeholder="(69) 99999-9999">
           </div>
           <div class="site-form-row">
@@ -72,7 +72,6 @@
             <select id="preferredReply" name="preferredReply">
               <option value="email" <%= !formData || formData.preferredReply === 'email' ? 'selected' : '' %>>E-mail</option>
               <option value="telefone" <%= formData && formData.preferredReply === 'telefone' ? 'selected' : '' %>>Telefone</option>
-              <option value="whatsapp" <%= formData && formData.preferredReply === 'whatsapp' ? 'selected' : '' %>>WhatsApp</option>
             </select>
           </div>
         </div>
@@ -124,3 +123,4 @@
     </aside>
   </div>
 </section>
+

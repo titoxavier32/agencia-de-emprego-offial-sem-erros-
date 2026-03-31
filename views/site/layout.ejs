@@ -11,8 +11,13 @@
 <body class="site-shell">
   <% const brandKicker = globalSetting && globalSetting.brandKicker ? globalSetting.brandKicker : 'Carreira e cursos'; %>
   <% const brandName = globalSetting && globalSetting.brandName ? globalSetting.brandName : 'Agência de Emprego'; %>
+  <% const adminAccessMode = globalSetting && globalSetting.adminAccessMode ? globalSetting.adminAccessMode : 'lock'; %>
+  <% const floatingAdminButtonLabel = globalSetting && globalSetting.floatingAdminButtonLabel ? globalSetting.floatingAdminButtonLabel : 'Acesso admin'; %>
+  <% const adminLoginModalOpen = typeof adminLoginOpen !== 'undefined' && adminLoginOpen; %>
+  <% const adminLoginModalError = typeof adminLoginError !== 'undefined' ? adminLoginError : null; %>
   <div id="root" class="min-h-screen">
-    <% if (typeof globalSetting !== 'undefined' && globalSetting.navbarPosition !== 'top') { %>
+    <% const navbarPosition = typeof globalSetting !== 'undefined' && globalSetting.navbarPosition ? globalSetting.navbarPosition : 'top'; %>
+    <% if (navbarPosition === 'sidebar') { %>
       <div class="site-sidebar-shell">
         <aside class="site-sidebar">
           <div class="h-full flex flex-col">
@@ -65,11 +70,27 @@
     <% } %>
   </div>
 
+  <% if ((!user || user.role !== 'admin') && adminAccessMode === 'lock') { %>
+    <button
+      id="site-admin-lock-trigger"
+      class="site-admin-lock-trigger"
+      type="button"
+      aria-label="<%= floatingAdminButtonLabel %>"
+      title="<%= floatingAdminButtonLabel %>"
+      aria-controls="site-admin-access-modal"
+      aria-expanded="<%= adminLoginModalOpen ? 'true' : 'false' %>">
+      <span class="site-admin-lock-icon" aria-hidden="true">
+        <i class="fas fa-lock"></i>
+      </span>
+    </button>
+  <% } %>
+
   <div id="site-preview-modal" class="site-preview-modal">
     <div class="site-preview-dialog">
       <button id="site-preview-close" class="site-preview-close" type="button" aria-label="Fechar visualizacao"><i class="fas fa-times"></i></button>
       <div class="site-preview-media-wrap">
         <img id="site-preview-image" class="site-preview-image" src="" alt="">
+        <iframe id="site-preview-pdf" class="site-preview-pdf" src="" title="Visualização do edital" style="display:none;"></iframe>
         <div id="site-preview-fallback" class="site-preview-fallback"><i class="fas fa-image"></i></div>
       </div>
       <div class="site-preview-content">
@@ -86,6 +107,34 @@
       </div>
     </div>
   </div>
+
+  <% if ((!user || user.role !== 'admin') && adminAccessMode === 'lock') { %>
+    <div id="site-admin-access-modal" class="site-admin-access-modal <%= adminLoginModalOpen ? 'is-open' : '' %>">
+      <div class="site-admin-access-dialog">
+        <button id="site-admin-access-close" class="site-preview-close" type="button" aria-label="Fechar acesso admin"><i class="fas fa-times"></i></button>
+        <div class="site-admin-access-content">
+          <div class="site-kicker">Modo administrador</div>
+          <h2>Acesso restrito</h2>
+          <p class="site-card-text">Entre com e-mail e senha do administrador para acessar o painel.</p>
+          <% if (adminLoginModalError) { %>
+            <div class="admin-alert"><%= adminLoginModalError %></div>
+          <% } %>
+          <form action="/auth/admin-login" method="POST" class="site-form">
+            <input type="hidden" name="returnTo" value="<%= currentPath %>">
+            <div class="site-form-row">
+              <label for="site-admin-email">E-mail</label>
+              <input type="email" id="site-admin-email" name="email" required placeholder="admin@agencia.com">
+            </div>
+            <div class="site-form-row">
+              <label for="site-admin-password">Senha</label>
+              <input type="password" id="site-admin-password" name="password" required>
+            </div>
+            <button type="submit" class="site-button">Entrar no administrador</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  <% } %>
 
   <script src="/js/frontend-script.js"></script>
 </body>

@@ -4,7 +4,10 @@ const ContactMessage = require('../models/ContactMessage');
 const PublicSelection = require('../models/PublicSelection');
 const Advertisement = require('../models/Advertisement');
 const Setting = require('../models/Setting');
+const User = require('../models/User');
 const crypto = require('crypto');
+const { createPaymentPreference, getAccessToken } = require('../utils/mercadopagoService');
+const { parseCurrencyToNumber } = require('./admin/helpers');
 const PAID_CONTACT_CATEGORIES = new Set([
   'parceria_comercial',
   'divulgacao_curso',
@@ -28,6 +31,12 @@ const getCategoryLabel = (category) => {
 };
 
 const requiresPayment = (category) => PAID_CONTACT_CATEGORIES.has(category);
+const createNotFoundError = (message) => {
+  const error = new Error(message);
+  error.statusCode = 404;
+  return error;
+};
+
 const buildContactFormData = (data = {}) => ({
   name: data.name || '',
   email: data.email || '',
@@ -81,97 +90,140 @@ const parsePipeTable = (content) => {
     .filter((columns) => columns.length > 0);
 };
 
+const buildAdvertisementGroups = (advertisements) => {
+  const grouped = advertisements.reduce((accumulator, advertisement) => {
+    const groupName = advertisement.groupName || 'Geral';
+
+    if (!accumulator[groupName]) {
+      accumulator[groupName] = [];
+    }
+
+    accumulator[groupName].push(advertisement);
+    return accumulator;
+  }, {});
+
+  return Object.keys(grouped)
+    .sort((left, right) => left.localeCompare(right, 'pt-BR'))
+    .map((groupName) => ({
+      groupName,
+      items: grouped[groupName].sort((left, right) => {
+        if ((left.position || 1) !== (right.position || 1)) {
+          return (left.position || 1) - (right.position || 1);
+        }
+
+        if ((left.order || 0) !== (right.order || 0)) {
+          return (left.order || 0) - (right.order || 0);
+        }
+
+        return new Date(left.createdAt) - new Date(right.createdAt);
+      })
+    }));
+};
+
+const findOrderedAdvertisements = (placement) => Advertisement.findAll({
+  where: { isActive: true, placement },
+  order: [['groupName', 'ASC'], ['position', 'ASC'], ['order', 'ASC'], ['createdAt', 'ASC']]
+});
+
+const findPublicCompanies = (options = {}) => User.findAll({
+  where: { role: 'empresa', status: 'ativo', companyShowcaseEnabled: true, companyShowcaseLgpdConsent: true },
+  order: [['companyShowcaseOrder', 'ASC'], ['createdAt', 'DESC']],
+  ...(options.limit ? { limit: options.limit } : {})
+});
+
+const buildPublicCompanyShowcaseItems = (companies) => companies.map((company) => ({
+  id: company.id,
+  displayName: company.companyPublicDisplayName || company.companyTradeName || company.companyLegalName || company.name || 'Empresa cadastrada',
+  summary: company.companyPublicSummary || 'Empresa cadastrada na plataforma com vagas em divulgacao.',
+  sector: company.companySector || '',
+  city: company.city || '',
+  state: company.state || '',
+  website: company.companyWebsite || '',
+  logo: company.avatar || '',
+  order: company.companyShowcaseOrder || 0
+})).sort((left, right) => left.order - right.order || left.displayName.localeCompare(right.displayName, 'pt-BR'));
+
 exports.home = async (req, res) => {
-  try {
-    const [heroAdvertisements, muralAdvertisements, courses, jobs, publicSelections] = await Promise.all([
-      Advertisement.findAll({ where: { isActive: true, placement: 'hero_top' }, order: [['groupName', 'ASC'], ['position', 'ASC'], ['order', 'ASC'], ['createdAt', 'DESC']], limit: 3 }),
-      Advertisement.findAll({ where: { isActive: true, placement: 'mural_home' }, order: [['groupName', 'ASC'], ['position', 'ASC'], ['order', 'ASC'], ['createdAt', 'DESC']], limit: 3 }),
-      Course.findAll({ order: [['createdAt', 'DESC']], limit: 6 }),
-      Job.findAll({ order: [['createdAt', 'DESC']], limit: 6 }),
-      PublicSelection.findAll({ order: [['createdAt', 'DESC']], limit: 4 })
-    ]);
-    res.render('site/home', { title: 'Página inicial', heroAdvertisements, muralAdvertisements, courses, jobs, publicSelections });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erro no servidor');
-  }
+  const [heroAdvertisements, muralAdvertisements, courses, jobs, publicSelections, companies] = await Promise.all([
+    findOrderedAdvertisements('hero_top'),
+    findOrderedAdvertisements('mural_home'),
+    Course.findAll({ order: [['createdAt', 'DESC']], limit: 6 }),
+    Job.findAll({ where: { status: 'ativa' }, order: [['createdAt', 'DESC']], limit: 6 }),
+    PublicSelection.findAll({ order: [['createdAt', 'DESC']], limit: 4 }),
+    findPublicCompanies({ limit: 18 })
+  ]);
+
+  return res.render('site/home', {
+    title: 'Página inicial',
+    heroAdvertisements,
+    muralAdvertisements,
+    heroAdvertisementGroups: buildAdvertisementGroups(heroAdvertisements),
+    muralAdvertisementGroups: buildAdvertisementGroups(muralAdvertisements),
+    courses,
+    jobs,
+    publicSelections,
+    publicCompanies: buildPublicCompanyShowcaseItems(companies)
+  });
+};
+
+exports.partnerCompanies = async (req, res) => {
+  const companies = await findPublicCompanies();
+
+  return res.render('site/partner-companies', {
+    title: 'Empresas parceiras',
+    publicCompanies: buildPublicCompanyShowcaseItems(companies)
+  });
+};
+
+exports.privacyPolicy = (req, res) => {
+  res.render('site/privacy-policy', { title: 'Política de privacidade' });
+};
+
+exports.termsOfUse = (req, res) => {
+  res.render('site/terms-of-use', { title: 'Termos de uso' });
 };
 
 exports.vagas = async (req, res) => {
-  try {
-    const jobs = await Job.findAll({ order: [['createdAt', 'DESC']] });
-    res.render('site/vagas', { title: 'Vagas de Emprego', jobs });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erro no servidor');
-  }
+  const jobs = await Job.findAll({ where: { status: 'ativa' }, order: [['createdAt', 'DESC']] });
+  return res.render('site/vagas', { title: 'Vagas de Emprego', jobs, status: req.query.status || null, error: req.query.error || null });
 };
 
 exports.cursos = async (req, res) => {
-  try {
-    const courses = await Course.findAll({ order: [['createdAt', 'DESC']] });
-    res.render('site/cursos', { title: 'Cursos disponíveis', courses });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erro no servidor');
-  }
+  const courses = await Course.findAll({ order: [['createdAt', 'DESC']] });
+  return res.render('site/cursos', { title: 'Cursos disponíveis', courses });
 };
 
 exports.publicSelections = async (req, res) => {
-  try {
-    const publicSelections = await PublicSelection.findAll({ order: [['createdAt', 'DESC']] });
-    res.render('site/public-selections', {
-      title: 'Concursos e Processos Seletivos',
-      publicSelections
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erro no servidor');
-  }
+  const publicSelections = await PublicSelection.findAll({ order: [['createdAt', 'DESC']] });
+  return res.render('site/public-selections', {
+    title: 'Concursos e Processos Seletivos',
+    publicSelections
+  });
 };
 
 exports.advertisements = async (req, res) => {
-  try {
-    const advertisements = await Advertisement.findAll({
-      where: { isActive: true, placement: 'mural_home' },
-      order: [['groupName', 'ASC'], ['position', 'ASC'], ['order', 'ASC'], ['createdAt', 'DESC']]
-    });
-    const advertisementGroups = advertisements.reduce((accumulator, advertisement) => {
-      const groupName = advertisement.groupName || 'Geral';
+  const advertisements = await findOrderedAdvertisements('mural_home');
 
-      if (!accumulator[groupName]) {
-        accumulator[groupName] = [];
-      }
-
-      accumulator[groupName].push(advertisement);
-      return accumulator;
-    }, {});
-
-    res.render('site/advertisements', { title: 'Mural publicitário', advertisements, advertisementGroups });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erro no servidor');
-  }
+  return res.render('site/advertisements', {
+    title: 'Mural publicitário',
+    advertisements,
+    advertisementGroups: buildAdvertisementGroups(advertisements)
+  });
 };
 
 exports.publicSelectionDetail = async (req, res) => {
-  try {
-    const publicSelection = await PublicSelection.findByPk(req.params.id);
+  const publicSelection = await PublicSelection.findByPk(req.params.id);
 
-    if (!publicSelection) {
-      return res.status(404).render('site/sobre', { title: 'Seleção não encontrada' });
-    }
-
-    res.render('site/public-selection-detail', {
-      title: publicSelection.title,
-      publicSelection,
-      scheduleRows: parsePipeTable(publicSelection.schedule),
-      vacancyRows: parsePipeTable(publicSelection.vacancies)
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Erro no servidor');
+  if (!publicSelection) {
+    throw createNotFoundError('Seleção não encontrada.');
   }
+
+  return res.render('site/public-selection-detail', {
+    title: publicSelection.title,
+    publicSelection,
+    scheduleRows: parsePipeTable(publicSelection.schedule),
+    vacancyRows: parsePipeTable(publicSelection.vacancies)
+  });
 };
 
 exports.sobre = (req, res) => {
@@ -179,7 +231,7 @@ exports.sobre = (req, res) => {
 };
 
 exports.contato = async (req, res) => {
-  return await renderContactForm(
+  return renderContactForm(
     res,
     buildContactFormData(),
     req.query.status || null,
@@ -191,7 +243,7 @@ exports.submitContato = async (req, res) => {
   const { name, email, phone, category, subject, preferredReply, message } = req.body;
 
   if (!name || !email || !message) {
-    return await renderContactForm(res, buildContactFormData({
+    return renderContactForm(res, buildContactFormData({
       name,
       email,
       phone,
@@ -239,8 +291,7 @@ exports.submitContato = async (req, res) => {
 
     res.redirect('/contato?status=success');
   } catch (error) {
-    console.error(error);
-    return await renderContactForm(
+    return renderContactForm(
       res,
       buildContactFormData({ name, email, phone, category, subject, preferredReply, message }),
       'error',
@@ -251,7 +302,7 @@ exports.submitContato = async (req, res) => {
 };
 
 exports.contactUploadError = async (req, res) => {
-  return await renderContactForm(
+  return renderContactForm(
     res,
     buildContactFormData(req.body),
     'error',
@@ -269,10 +320,35 @@ exports.contactPaymentStep = async (req, res) => {
       return res.redirect('/contato?error=Pagamento não encontrado');
     }
 
+    let paymentLink = contact.paymentLink || paymentConfig.paymentLink;
+    let initPoint = null;
+
+    const mpAccessToken = await getAccessToken();
+    if (mpAccessToken) {
+      try {
+        const priceValue = parseCurrencyToNumber(paymentConfig.paymentAmount);
+        const preference = await createPaymentPreference({
+          title: `Divulgação ${getCategoryLabel(contact.category)}`,
+          description: `Plano ${paymentConfig.paymentPlan} - ${contact.name}`,
+          price: priceValue,
+          quantity: 1,
+          externalReference: contact.id.toString(),
+          notificationUrl: `${req.protocol}://${req.get('host')}/webhooks/mercadopago`
+        });
+        if (preference && preference.init_point) {
+          initPoint = preference.init_point;
+          paymentLink = initPoint;
+          await contact.update({ paymentLink });
+        }
+      } catch (mpError) {
+        console.error('Erro ao criar preferência MercadoPago:', mpError.message);
+      }
+    }
+
     return res.render('site/contact-payment', {
       title: 'Pagamento da divulgação',
       contact,
-      paymentLink: contact.paymentLink || paymentConfig.paymentLink,
+      paymentLink,
       paymentAmount: contact.paymentAmount || paymentConfig.paymentAmount,
       paymentPlan: paymentConfig.paymentPlan,
       commercialFreeTrialMonths: paymentConfig.freeTrialMonths,

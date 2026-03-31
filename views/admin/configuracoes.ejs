@@ -51,13 +51,55 @@
               <option value="pink" <%= (s && s.themeColor === 'pink') ? 'selected' : '' %>>Rosa</option>
             </select>
           </div>
-          <div class="admin-form-row"><label for="primaryColor">Cor primária</label><input type="color" id="primaryColor" name="primaryColor" value="<%= s && s.primaryColor ? s.primaryColor : '#2563eb' %>"></div>
-          <div class="admin-form-row"><label for="accentColor">Cor de destaque</label><input type="color" id="accentColor" name="accentColor" value="<%= s && s.accentColor ? s.accentColor : '#f97316' %>"></div>
-          <div class="admin-form-row"><label for="surfaceColor">Cor dos cartões</label><input type="color" id="surfaceColor" name="surfaceColor" value="<%= s && s.surfaceColor ? s.surfaceColor : '#ffffff' %>"></div>
-          <div class="admin-form-row"><label for="backgroundBaseColor">Cor de fundo</label><input type="color" id="backgroundBaseColor" name="backgroundBaseColor" value="<%= s && s.backgroundBaseColor ? s.backgroundBaseColor : '#f8fafc' %>"></div>
-          <div class="admin-form-row"><label for="textColor">Cor do texto</label><input type="color" id="textColor" name="textColor" value="<%= s && s.textColor ? s.textColor : '#0f172a' %>"></div>
-          <div class="admin-form-row"><label for="mutedColor">Cor do texto secundário</label><input type="color" id="mutedColor" name="mutedColor" value="<%= s && s.mutedColor ? s.mutedColor : '#475569' %>"></div>
-          <div class="admin-form-row"><label for="headingColor">Cor dos títulos</label><input type="color" id="headingColor" name="headingColor" value="<%= s && s.headingColor ? s.headingColor : '#020617' %>"></div>
+          <div class="admin-form-row admin-color-field">
+            <label for="primaryColorText">Cor primaria</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="primaryColorPicker" value="<%= s && s.primaryColor ? s.primaryColor : '#2563eb' %>" data-color-input="primaryColorText">
+              <input type="text" id="primaryColorText" name="primaryColor" value="<%= s && s.primaryColor ? s.primaryColor : '#2563eb' %>" placeholder="#2563eb" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="accentColorText">Cor de destaque</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="accentColorPicker" value="<%= s && s.accentColor ? s.accentColor : '#f97316' %>" data-color-input="accentColorText">
+              <input type="text" id="accentColorText" name="accentColor" value="<%= s && s.accentColor ? s.accentColor : '#f97316' %>" placeholder="#f97316" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="surfaceColorText">Cor dos cartoes</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="surfaceColorPicker" value="<%= s && s.surfaceColor ? s.surfaceColor : '#ffffff' %>" data-color-input="surfaceColorText">
+              <input type="text" id="surfaceColorText" name="surfaceColor" value="<%= s && s.surfaceColor ? s.surfaceColor : '#ffffff' %>" placeholder="#ffffff" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="backgroundBaseColorText">Cor de fundo</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="backgroundBaseColorPicker" value="<%= s && s.backgroundBaseColor ? s.backgroundBaseColor : '#f8fafc' %>" data-color-input="backgroundBaseColorText">
+              <input type="text" id="backgroundBaseColorText" name="backgroundBaseColor" value="<%= s && s.backgroundBaseColor ? s.backgroundBaseColor : '#f8fafc' %>" placeholder="#f8fafc" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="textColorText">Cor do texto</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="textColorPicker" value="<%= s && s.textColor ? s.textColor : '#0f172a' %>" data-color-input="textColorText">
+              <input type="text" id="textColorText" name="textColor" value="<%= s && s.textColor ? s.textColor : '#0f172a' %>" placeholder="#0f172a" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="mutedColorText">Cor do texto secundario</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="mutedColorPicker" value="<%= s && s.mutedColor ? s.mutedColor : '#475569' %>" data-color-input="mutedColorText">
+              <input type="text" id="mutedColorText" name="mutedColor" value="<%= s && s.mutedColor ? s.mutedColor : '#475569' %>" placeholder="#475569" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="headingColorText">Cor dos títulos</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="headingColorPicker" value="<%= s && s.headingColor ? s.headingColor : '#020617' %>" data-color-input="headingColorText">
+              <input type="text" id="headingColorText" name="headingColor" value="<%= s && s.headingColor ? s.headingColor : '#020617' %>" placeholder="#020617" data-color-text>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -181,17 +223,124 @@
           <textarea id="heroDescription" name="heroDescription"><%= s && s.heroDescription ? s.heroDescription : 'Sua agência agora apresenta vagas e cursos em uma experiência mais forte comercialmente: clara para quem busca oportunidade e convincente para quem quer divulgar serviços e atrair candidatos qualificados.' %></textarea>
         </div>
 
-        <div class="admin-form-grid admin-form-grid-3">
-          <div class="admin-form-row"><label for="heroHeight">Altura mínima do banner</label><input type="number" id="heroHeight" name="heroHeight" min="0" max="900" value="<%= s && s.heroHeight !== undefined ? s.heroHeight : 0 %>"></div>
-          <div class="admin-form-row"><label for="heroPadding">Espaçamento interno</label><input type="number" id="heroPadding" name="heroPadding" min="20" max="120" value="<%= s && s.heroPadding ? s.heroPadding : 42 %>"></div>
-          <div class="admin-form-row"><label for="heroTitleSize">Tamanho máximo do título</label><input type="number" id="heroTitleSize" name="heroTitleSize" min="36" max="120" value="<%= s && s.heroTitleSize ? s.heroTitleSize : 72 %>"></div>
+        <div class="admin-structured-block">
+          <div class="admin-section-head">
+            <div>
+              <h2>Botões do banner</h2>
+              <p>Edite os quatro botões exibidos ao lado do texto principal do painel inicial.</p>
+            </div>
+          </div>
+
+          <div class="admin-form-grid admin-form-grid-3">
+            <div class="admin-form-row"><label for="heroActionPrimaryLabel">Botão 1</label><input type="text" id="heroActionPrimaryLabel" name="heroActionPrimaryLabel" value="<%= s && s.heroActionPrimaryLabel ? s.heroActionPrimaryLabel : 'Cadastrar currículo' %>"></div>
+            <div class="admin-form-row"><label for="heroActionPrimaryLink">Link do botão 1</label><input type="text" id="heroActionPrimaryLink" name="heroActionPrimaryLink" value="<%= s && s.heroActionPrimaryLink ? s.heroActionPrimaryLink : '/acesso-candidato?section=register-candidate' %>"></div>
+          </div>
+          <div class="admin-form-grid admin-form-grid-3">
+            <div class="admin-form-row"><label for="heroActionSecondaryLabel">Botão 2</label><input type="text" id="heroActionSecondaryLabel" name="heroActionSecondaryLabel" value="<%= s && s.heroActionSecondaryLabel ? s.heroActionSecondaryLabel : 'Explorar vagas' %>"></div>
+            <div class="admin-form-row"><label for="heroActionSecondaryLink">Link do botão 2</label><input type="text" id="heroActionSecondaryLink" name="heroActionSecondaryLink" value="<%= s && s.heroActionSecondaryLink ? s.heroActionSecondaryLink : '/vagas' %>"></div>
+          </div>
+          <div class="admin-form-grid admin-form-grid-3">
+            <div class="admin-form-row"><label for="heroActionTertiaryLabel">Botão 3</label><input type="text" id="heroActionTertiaryLabel" name="heroActionTertiaryLabel" value="<%= s && s.heroActionTertiaryLabel ? s.heroActionTertiaryLabel : 'Conhecer cursos' %>"></div>
+            <div class="admin-form-row"><label for="heroActionTertiaryLink">Link do botão 3</label><input type="text" id="heroActionTertiaryLink" name="heroActionTertiaryLink" value="<%= s && s.heroActionTertiaryLink ? s.heroActionTertiaryLink : '/cursos' %>"></div>
+          </div>
+          <div class="admin-form-grid admin-form-grid-3">
+            <div class="admin-form-row"><label for="heroActionQuaternaryLabel">Botão 4</label><input type="text" id="heroActionQuaternaryLabel" name="heroActionQuaternaryLabel" value="<%= s && s.heroActionQuaternaryLabel ? s.heroActionQuaternaryLabel : 'Falar com a equipe' %>"></div>
+            <div class="admin-form-row"><label for="heroActionQuaternaryLink">Link do botão 4</label><input type="text" id="heroActionQuaternaryLink" name="heroActionQuaternaryLink" value="<%= s && s.heroActionQuaternaryLink ? s.heroActionQuaternaryLink : '/contato' %>"></div>
+          </div>
+        </div>
+
+        <div class="admin-structured-block">
+          <div class="admin-section-head">
+            <div>
+              <h2>Indicadores do banner</h2>
+              <p>Edite os textos e, se quiser, informe números fixos. Se deixar vazio, o sistema usa a quantidade real cadastrada.</p>
+            </div>
+          </div>
+
+          <div class="admin-form-grid admin-form-grid-3">
+            <div class="admin-form-row"><label for="heroStat1Value">Número 1</label><input type="text" id="heroStat1Value" name="heroStat1Value" value="<%= s && s.heroStat1Value ? s.heroStat1Value : '' %>" placeholder="Ex.: 1"></div>
+            <div class="admin-form-row"><label for="heroStat1Label">Texto 1</label><input type="text" id="heroStat1Label" name="heroStat1Label" value="<%= s && s.heroStat1Label ? s.heroStat1Label : 'vagas com apresentação mais objetiva' %>"></div>
+          </div>
+          <div class="admin-form-grid admin-form-grid-3">
+            <div class="admin-form-row"><label for="heroStat2Value">Número 2</label><input type="text" id="heroStat2Value" name="heroStat2Value" value="<%= s && s.heroStat2Value ? s.heroStat2Value : '' %>" placeholder="Ex.: 2"></div>
+            <div class="admin-form-row"><label for="heroStat2Label">Texto 2</label><input type="text" id="heroStat2Label" name="heroStat2Label" value="<%= s && s.heroStat2Label ? s.heroStat2Label : 'cursos posicionados para conversão' %>"></div>
+          </div>
+          <div class="admin-form-grid admin-form-grid-3">
+            <div class="admin-form-row"><label for="heroStat3Value">Número 3</label><input type="text" id="heroStat3Value" name="heroStat3Value" value="<%= s && s.heroStat3Value ? s.heroStat3Value : '' %>" placeholder="Ex.: 1"></div>
+            <div class="admin-form-row"><label for="heroStat3Label">Texto 3</label><input type="text" id="heroStat3Label" name="heroStat3Label" value="<%= s && s.heroStat3Label ? s.heroStat3Label : 'editais públicos com cronograma e quadro de vagas' %>"></div>
+          </div>
         </div>
 
         <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="heroPlacement">Posição do painel inicial na home</label>
+            <select id="heroPlacement" name="heroPlacement">
+              <option value="before_top_ads" <%= (s && s.heroPlacement === 'before_top_ads') ? 'selected' : '' %>>Antes das propagandas superiores</option>
+              <option value="after_top_ads" <%= (!s || !s.heroPlacement || s.heroPlacement === 'after_top_ads') ? 'selected' : '' %>>Entre propagandas superiores e mural</option>
+              <option value="after_mural" <%= (s && s.heroPlacement === 'after_mural') ? 'selected' : '' %>>Depois do mural publicitário</option>
+            </select>
+          </div>
+          <div class="admin-form-row"><label for="heroHeight">Altura mínima do banner</label><input type="number" id="heroHeight" name="heroHeight" min="0" max="900" value="<%= s && s.heroHeight !== undefined ? s.heroHeight : 0 %>"></div>
+          <div class="admin-form-row"><label for="heroPadding">Espa?amento interno</label><input type="number" id="heroPadding" name="heroPadding" min="20" max="120" value="<%= s && s.heroPadding ? s.heroPadding : 42 %>"></div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label for="heroTitleSize">Tamanho máximo do título</label><input type="number" id="heroTitleSize" name="heroTitleSize" min="36" max="120" value="<%= s && s.heroTitleSize ? s.heroTitleSize : 72 %>"></div>
           <div class="admin-form-row"><label for="heroContentWidth">Largura máxima do quadro de informações</label><input type="number" id="heroContentWidth" name="heroContentWidth" min="320" max="1100" value="<%= s && s.heroContentWidth ? s.heroContentWidth : 720 %>"></div>
           <div class="admin-form-row"><label for="heroKickerSize">Tamanho da linha superior</label><input type="number" id="heroKickerSize" name="heroKickerSize" min="10" max="28" value="<%= s && s.heroKickerSize ? s.heroKickerSize : 12 %>"></div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
           <div class="admin-form-row"><label for="heroDescriptionSize">Tamanho do texto descritivo</label><input type="number" id="heroDescriptionSize" name="heroDescriptionSize" min="13" max="28" value="<%= s && s.heroDescriptionSize ? s.heroDescriptionSize : 17 %>"></div>
         </div>
+
+        <div class="admin-form-row">
+          <small class="admin-form-help">Escolha em que ponto da home o painel inicial sera exibido. Isso permite reorganizar a entrada principal do site sem alterar codigo.</small>
+        </div>
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="heroEnabled" <%= (!s || s.heroEnabled !== false) ? 'checked' : '' %>><span>Exibir painel inicial</span></label></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="heroShowKicker" <%= (!s || s.heroShowKicker !== false) ? 'checked' : '' %>><span>Mostrar linha superior</span></label></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="heroShowDescription" <%= (!s || s.heroShowDescription !== false) ? 'checked' : '' %>><span>Mostrar descrição</span></label></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="heroShowActions" <%= (!s || s.heroShowActions !== false) ? 'checked' : '' %>><span>Mostrar bot?es</span></label></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="heroShowStats" <%= (!s || s.heroShowStats !== false) ? 'checked' : '' %>><span>Mostrar indicadores</span></label></div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label for="heroMaxWidth">Largura máxima do painel</label><input type="number" id="heroMaxWidth" name="heroMaxWidth" min="0" max="1600" value="<%= s && s.heroMaxWidth ? s.heroMaxWidth : 0 %>"></div>
+          <div class="admin-form-row"><label for="heroBorderRadius">Arredondamento do painel</label><input type="number" id="heroBorderRadius" name="heroBorderRadius" min="0" max="80" value="<%= s && s.heroBorderRadius ? s.heroBorderRadius : 28 %>"></div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row admin-color-field">
+            <label for="heroBackgroundColorText">Cor de fundo do painel</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="heroBackgroundColorPicker" value="<%= s && s.heroBackgroundColor && /^#([0-9a-fA-F]{6})$/.test(s.heroBackgroundColor) ? s.heroBackgroundColor : '#0f172a' %>" data-color-input="heroBackgroundColorText">
+              <input type="text" id="heroBackgroundColorText" name="heroBackgroundColor" value="<%= s && s.heroBackgroundColor ? s.heroBackgroundColor : '' %>" placeholder="#0f172a ou linear-gradient(...)" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="heroContentBackgroundColorText">Cor do quadro interno</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="heroContentBackgroundColorPicker" value="<%= s && s.heroContentBackgroundColor && /^#([0-9a-fA-F]{6})$/.test(s.heroContentBackgroundColor) ? s.heroContentBackgroundColor : '#ffffff' %>" data-color-input="heroContentBackgroundColorText">
+              <input type="text" id="heroContentBackgroundColorText" name="heroContentBackgroundColor" value="<%= s && s.heroContentBackgroundColor ? s.heroContentBackgroundColor : '' %>" placeholder="rgba(255,255,255,0.08)" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="heroTextColorText">Cor principal do texto</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="heroTextColorPicker" value="<%= s && s.heroTextColor ? s.heroTextColor : '#ffffff' %>" data-color-input="heroTextColorText">
+              <input type="text" id="heroTextColorText" name="heroTextColor" value="<%= s && s.heroTextColor ? s.heroTextColor : '#ffffff' %>" placeholder="#ffffff" data-color-text>
+            </div>
+          </div>
+          <div class="admin-form-row admin-color-field">
+            <label for="heroMutedTextColorText">Cor do texto secundario</label>
+            <div class="admin-color-field-control">
+              <input type="color" id="heroMutedTextColorPicker" value="<%= s && s.heroMutedTextColor && /^#([0-9a-fA-F]{6})$/.test(s.heroMutedTextColor) ? s.heroMutedTextColor : '#cbd5e1' %>" data-color-input="heroMutedTextColorText">
+              <input type="text" id="heroMutedTextColorText" name="heroMutedTextColor" value="<%= s && s.heroMutedTextColor ? s.heroMutedTextColor : '' %>" placeholder="rgba(255,255,255,0.82)" data-color-text>
+            </div>
+          </div>
+        </div>
+
 
         <div class="admin-form-grid admin-form-grid-3">
           <div class="admin-form-row">
@@ -261,11 +410,187 @@
         </div>
       </div>
 
-      <div class="admin-form-grid">
-        <div class="admin-form-row"><label for="socialInstagram">Instagram</label><input type="url" id="socialInstagram" name="socialInstagram" value="<%= s ? s.socialInstagram : '' %>" placeholder="https://instagram.com/agencia"></div>
-        <div class="admin-form-row"><label for="socialFacebook">Facebook</label><input type="url" id="socialFacebook" name="socialFacebook" value="<%= s ? s.socialFacebook : '' %>" placeholder="https://facebook.com/agencia"></div>
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Estrutura da home</h2>
+            <p>Defina a ordem dos blocos da p?gina inicial. Quanto menor o numero, mais acima a secao aparece.</p>
+          </div>
+        </div>
+
+        <% const homeOrderRaw = s && s.homeSectionOrder ? String(s.homeSectionOrder) : 'top_ads,hero,jobs,mural,company_showcase,contact,courses,public_selections'; %>
+        <% const homeOrderList = homeOrderRaw.split(',').map(item => item.trim()); %>
+        <% const homeOrderValue = (key, fallback) => { const index = homeOrderList.indexOf(key); return index >= 0 ? index + 1 : fallback; }; %>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row"><label for="homeOrder_top_ads">Propagandas superiores</label><input type="number" id="homeOrder_top_ads" name="homeOrder_top_ads" min="1" max="20" value="<%= homeOrderValue('top_ads', 1) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_hero">Painel inicial</label><input type="number" id="homeOrder_hero" name="homeOrder_hero" min="1" max="20" value="<%= homeOrderValue('hero', 2) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_jobs">Vagas em destaque</label><input type="number" id="homeOrder_jobs" name="homeOrder_jobs" min="1" max="20" value="<%= homeOrderValue('jobs', 3) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_mural">Mural publicitário</label><input type="number" id="homeOrder_mural" name="homeOrder_mural" min="1" max="20" value="<%= homeOrderValue('mural', 4) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_company_showcase">Painel das empresas</label><input type="number" id="homeOrder_company_showcase" name="homeOrder_company_showcase" min="1" max="20" value="<%= homeOrderValue('company_showcase', 5) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_contact">Contato</label><input type="number" id="homeOrder_contact" name="homeOrder_contact" min="1" max="20" value="<%= homeOrderValue('contact', 6) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_courses">Cursos</label><input type="number" id="homeOrder_courses" name="homeOrder_courses" min="1" max="20" value="<%= homeOrderValue('courses', 7) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_public_selections">Seleções públicas</label><input type="number" id="homeOrder_public_selections" name="homeOrder_public_selections" min="1" max="20" value="<%= homeOrderValue('public_selections', 8) %>"></div>
+        </div>
       </div>
-      <div class="admin-form-row"><label for="socialThreads">Threads</label><input type="url" id="socialThreads" name="socialThreads" value="<%= s ? s.socialThreads : '' %>" placeholder="https://threads.net/@agencia"></div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Painel p?blico das empresas</h2>
+            <p>Controle a vitrine institucional das empresas que divulgam vagas na plataforma com rolagem horizontal e consentimento LGPD.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card">
+            <label><input type="checkbox" name="companyShowcaseEnabled" <%= (!s || s.companyShowcaseEnabled !== false) ? 'checked' : '' %>><span>Exibir painel p?blico das empresas</span></label>
+          </div>
+          <div class="admin-form-row">
+            <label for="companyShowcasePlacement">Posição do painel na home</label>
+            <select id="companyShowcasePlacement" name="companyShowcasePlacement">
+              <option value="after_hero" <%= (s && s.companyShowcasePlacement === 'after_hero') ? 'selected' : '' %>>Depois do painel inicial</option>
+              <option value="after_mural" <%= (!s || !s.companyShowcasePlacement || s.companyShowcasePlacement === 'after_mural') ? 'selected' : '' %>>Depois do mural publicitário</option>
+              <option value="after_jobs" <%= (s && s.companyShowcasePlacement === 'after_jobs') ? 'selected' : '' %>>Depois das vagas em destaque</option>
+            </select>
+          </div>
+          <div class="admin-form-row">
+            <label for="companyShowcaseDirection">Direção da rolagem</label>
+            <select id="companyShowcaseDirection" name="companyShowcaseDirection">
+              <option value="left" <%= (!s || !s.companyShowcaseDirection || s.companyShowcaseDirection === 'left') ? 'selected' : '' %>>Direita para a esquerda</option>
+              <option value="right" <%= (s && s.companyShowcaseDirection === 'right') ? 'selected' : '' %>>Esquerda para direita</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="companyShowcaseTitle">T?tulo do painel</label>
+          <input type="text" id="companyShowcaseTitle" name="companyShowcaseTitle" value="<%= s && s.companyShowcaseTitle ? s.companyShowcaseTitle : 'Empresas que divulgam vagas na plataforma' %>">
+        </div>
+        <div class="admin-form-row">
+          <label for="companyShowcaseDescription">Descrição do painel</label>
+          <textarea id="companyShowcaseDescription" name="companyShowcaseDescription"><%= s && s.companyShowcaseDescription ? s.companyShowcaseDescription : 'Painel institucional com empresas que autorizaram a divulgacao publica de dados corporativos para fortalecer a confianca de quem busca vagas.' %></textarea>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="companyShowcaseSpeed">Velocidade da rolagem (segundos)</label>
+            <input type="number" id="companyShowcaseSpeed" name="companyShowcaseSpeed" min="12" max="120" value="<%= s && s.companyShowcaseSpeed ? s.companyShowcaseSpeed : 38 %>">
+          </div>
+          <div class="admin-form-row">
+            <label for="companyShowcaseCardMinWidth">Largura mínima de cada card</label>
+            <input type="number" id="companyShowcaseCardMinWidth" name="companyShowcaseCardMinWidth" min="180" max="420" value="<%= s && s.companyShowcaseCardMinWidth ? s.companyShowcaseCardMinWidth : 240 %>">
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="companyShowcaseShowSector" <%= (!s || s.companyShowcaseShowSector !== false) ? 'checked' : '' %>><span>Mostrar setor da empresa</span></label></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="companyShowcaseShowLocation" <%= (!s || s.companyShowcaseShowLocation !== false) ? 'checked' : '' %>><span>Mostrar cidade e estado</span></label></div>
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card"><label><input type="checkbox" name="companyShowcaseShowWebsite" <%= (s && s.companyShowcaseShowWebsite) ? 'checked' : '' %>><span>Mostrar site da empresa</span></label></div>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Visualizador do edital</h2>
+            <p>Controle o tamanho do modal ao clicar na foto e o tamanho do PDF exibido na página do edital.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="previewDialogMaxWidth">Largura máxima da janela</label>
+            <input type="number" id="previewDialogMaxWidth" name="previewDialogMaxWidth" min="900" max="1800" value="<%= s && s.previewDialogMaxWidth ? s.previewDialogMaxWidth : 1380 %>">
+          </div>
+          <div class="admin-form-row">
+            <label for="previewDialogMinHeight">Altura útil da janela (vh)</label>
+            <input type="number" id="previewDialogMinHeight" name="previewDialogMinHeight" min="50" max="95" value="<%= s && s.previewDialogMinHeight ? s.previewDialogMinHeight : 82 %>">
+          </div>
+          <div class="admin-form-row">
+            <label for="previewInfoPanelWidth">Largura do painel lateral</label>
+            <input type="number" id="previewInfoPanelWidth" name="previewInfoPanelWidth" min="240" max="560" value="<%= s && s.previewInfoPanelWidth ? s.previewInfoPanelWidth : 380 %>">
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="detailPdfMinHeight">Altura mínima do PDF na página do edital</label>
+          <input type="number" id="detailPdfMinHeight" name="detailPdfMinHeight" min="700" max="2200" value="<%= s && s.detailPdfMinHeight ? s.detailPdfMinHeight : 1200 %>">
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Acesso do administrador</h2>
+            <p>Escolha se o acesso admin aparece no botão atual ou por cadeado flutuante com janela de login.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-row">
+            <label for="adminAccessMode">Modo de acesso admin</label>
+            <select id="adminAccessMode" name="adminAccessMode">
+              <option value="button" <%= (!s || !s.adminAccessMode || s.adminAccessMode === 'button') ? 'selected' : '' %>>Botão e menu atual</option>
+              <option value="lock" <%= (!s || !s.adminAccessMode || s.adminAccessMode === 'lock') ? 'selected' : '' %>>Cadeado flutuante com login</option>
+            </select>
+          </div>
+          <div class="admin-form-row">
+            <label for="floatingAdminButtonLabel">Texto do cadeado</label>
+            <input type="text" id="floatingAdminButtonLabel" name="floatingAdminButtonLabel" value="<%= s && s.floatingAdminButtonLabel ? s.floatingAdminButtonLabel : 'Acesso admin' %>">
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Estrutura do painel administrativo</h2>
+            <p>Gerencie os itens do menu lateral do admin. Aqui voce pode mover por ordem, renomear, trocar de grupo e ativar ou desativar cada entrada.</p>
+          </div>
+        </div>
+
+        <div class="admin-sidebar-settings-list">
+          <% const sidebarItems = typeof adminSidebarItems !== 'undefined' && adminSidebarItems.length > 0 ? adminSidebarItems : []; %>
+          <% sidebarItems.forEach((item) => { %>
+            <div class="admin-sidebar-setting-card">
+              <input type="hidden" name="adminSidebarKey" value="<%= item.key %>">
+              <div class="admin-form-grid admin-form-grid-3">
+                <div class="admin-form-row">
+                  <label>Item do painel</label>
+                  <input type="text" value="<%= item.href %>" disabled>
+                </div>
+                <div class="admin-form-row">
+                  <label>Nome exibido</label>
+                  <input type="text" name="adminSidebarLabel" value="<%= item.label %>">
+                </div>
+                <div class="admin-form-row">
+                  <label>Grupo</label>
+                  <input type="text" name="adminSidebarGroup" value="<%= item.group %>" placeholder="Estrutura do painel">
+                </div>
+              </div>
+
+              <div class="admin-form-grid">
+                <div class="admin-form-row">
+                  <label>Ordem dentro do grupo</label>
+                  <input type="number" name="adminSidebarOrder" min="1" max="99" value="<%= item.order %>">
+                </div>
+                <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card">
+                  <label>
+                    <input type="checkbox" name="adminSidebarActive" value="<%= item.key %>" <%= item.isActive ? 'checked' : '' %>>
+                    <span>Item ativo no menu lateral</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="socialInstagram">Instagram</label><input type="url" id="socialInstagram" name="socialInstagram" value="<%= s ? s.socialInstagram : '' %>" placeholder="https://instagram.com/ag?ncia"></div>
+        <div class="admin-form-row"><label for="socialFacebook">Facebook</label><input type="url" id="socialFacebook" name="socialFacebook" value="<%= s ? s.socialFacebook : '' %>" placeholder="https://facebook.com/ag?ncia"></div>
+      </div>
+      <div class="admin-form-row"><label for="socialThreads">Threads</label><input type="url" id="socialThreads" name="socialThreads" value="<%= s ? s.socialThreads : '' %>" placeholder="https://threads.net/@ag?ncia"></div>
 
       <div class="admin-structured-block">
         <div class="admin-section-head">
@@ -299,8 +624,72 @@
       <div class="admin-structured-block">
         <div class="admin-section-head">
           <div>
+            <h2>SMTP e e-mail</h2>
+            <p>Configure o envio de e-mails automáticos da plataforma, incluindo recuperação de senha e notificações.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="smtpHost">SMTP Host</label>
+            <input type="text" id="smtpHost" name="smtpHost" value="<%= s && s.smtpHost ? s.smtpHost : '' %>" placeholder="smtp.gmail.com">
+          </div>
+          <div class="admin-form-row">
+            <label for="smtpPort">SMTP Port</label>
+            <input type="text" id="smtpPort" name="smtpPort" value="<%= s && s.smtpPort ? s.smtpPort : '' %>" placeholder="587">
+          </div>
+          <div class="admin-form-row">
+            <label for="smtpEncryption">Criptografia</label>
+            <select id="smtpEncryption" name="smtpEncryption">
+              <option value="tls" <%= (!s || !s.smtpEncryption || s.smtpEncryption === 'tls') ? 'selected' : '' %>>TLS</option>
+              <option value="ssl" <%= (s && s.smtpEncryption === 'ssl') ? 'selected' : '' %>>SSL</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-form-grid admin-form-grid-3">
+          <div class="admin-form-row">
+            <label for="smtpUser">SMTP Username</label>
+            <input type="text" id="smtpUser" name="smtpUser" value="<%= s && s.smtpUser ? s.smtpUser : '' %>" placeholder="seuemail@dominio.com">
+          </div>
+          <div class="admin-form-row">
+            <label for="smtpPass">SMTP Password</label>
+            <input type="password" id="smtpPass" name="smtpPass" value="<%= s && s.smtpPass ? s.smtpPass : '' %>" placeholder="Senha ou chave de aplicativo">
+          </div>
+          <div class="admin-form-row">
+            <label for="smtpFrom">From Email</label>
+            <input type="text" id="smtpFrom" name="smtpFrom" value="<%= s && s.smtpFrom ? s.smtpFrom : '' %>" placeholder="noreply@seusite.com">
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <small class="admin-form-help">Essas credenciais serão usadas no envio de recuperação de senha e nos próximos módulos de notificação por e-mail.</small>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>MercadoPago</h2>
+            <p>Configure a integração com MercadoPago para processar pagamentos de forma automática.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="mercadoPagoAccessToken">Access Token do MercadoPago</label>
+          <input type="text" id="mercadoPagoAccessToken" name="mercadoPagoAccessToken" value="<%= s && s.mercadoPagoAccessToken ? s.mercadoPagoAccessToken : '' %>" placeholder="APP_USR-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+        </div>
+
+        <div class="admin-form-row">
+          <small class="admin-form-help">Encontre seu Access Token em: MercadoPago Dev Center > Suas integrações > Credenciais de produção/teste.</small>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
             <h2>CSS personalizado</h2>
-            <p>Use este campo para fazer ajustes livres no site sem abrir o código-fonte.</p>
+            <p>Use este campo para fazer ajustes livres no site sem abrir o codigo-fonte.</p>
           </div>
         </div>
         <div class="admin-form-row">
@@ -309,7 +698,23 @@
         </div>
       </div>
 
-      <div class="admin-actions"><button type="submit" class="admin-btn">Salvar configurações</button></div>
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Revisao de textos</h2>
+            <p>Use este recurso para revisar ortografia e acentuacao dos textos cadastrados no sistema pelo administrador.</p>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <small class="admin-form-help">A correcao automatica atua sobre textos salvos em configuracoes, menus, vagas, cursos, selecoes publicas, propagandas e cadastros internos.</small>
+        </div>
+      </div>
+
+      <div class="admin-actions"><button type="submit" class="admin-btn">Salvar configuracoes</button></div>
+    </form>
+
+    <form action="/admin/configuracoes/corrigir-textos" method="POST" class="admin-actions">
+      <button type="submit" class="admin-btn admin-btn-secondary">Corrigir textos salvos</button>
     </form>
   </section>
 </div>

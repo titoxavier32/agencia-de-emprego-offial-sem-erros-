@@ -1,0 +1,172 @@
+<section class="site-hero">
+  <div class="site-hero-content">
+    <span class="site-kicker">Painel da empresa</span>
+    <h1>Complete os dados da sua empresa para publicar vagas na plataforma.</h1>
+    <p class="site-lead">Este espaço concentra as informações principais da empresa e deixa a base pronta para os próximos módulos de recrutamento.</p>
+  </div>
+</section>
+
+<section class="site-section">
+  <div class="site-grid-2">
+    <article class="site-panel">
+      <h2>Dados da empresa</h2>
+      <div class="site-hero-actions" style="margin-bottom:18px;">
+        <a href="/perfil/empresa/vagas" class="site-button-secondary">Gerenciar vagas</a>
+        <a href="/perfil/empresa/vagas/nova" class="site-button">Publicar vaga</a>
+      </div>
+
+      <% if (profileError) { %>
+        <div class="admin-alert"><%= profileError %></div>
+      <% } %>
+      <% if (profileStatus) { %>
+        <div class="site-access-status"><%= profileStatus %></div>
+      <% } %>
+
+      <form action="/perfil" method="POST" enctype="multipart/form-data" class="site-form" data-required-summary="company-profile">
+        <div class="site-form-alert" data-form-alert hidden></div>
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="company-profile-type">Tipo de empresa</label>
+            <select id="company-profile-type" name="companyProfileType" required data-required-label="Tipo de empresa">
+              <option value="">Selecione</option>
+              <option value="Empresa com CNPJ" <%= user.companyProfileType === 'Empresa com CNPJ' ? 'selected' : '' %>>Empresa com CNPJ</option>
+              <option value="MEI" <%= user.companyProfileType === 'MEI' ? 'selected' : '' %>>MEI</option>
+              <option value="Profissional autonomo" <%= user.companyProfileType === 'Profissional autonomo' ? 'selected' : '' %>>Profissional autonomo</option>
+            </select>
+          </div>
+          <div class="site-form-row">
+            <label for="company-document-type">Tipo de documento</label>
+            <select id="company-document-type" name="companyDocumentType" required data-required-label="Tipo de documento">
+              <option value="">Selecione</option>
+              <option value="CNPJ" <%= user.companyDocumentType === 'CNPJ' ? 'selected' : '' %>>CNPJ</option>
+              <option value="CPF" <%= user.companyDocumentType === 'CPF' ? 'selected' : '' %>>CPF</option>
+            </select>
+          </div>
+          <div class="site-form-row">
+            <label for="company-document">Documento</label>
+            <input type="text" id="company-document" data-required-label="Documento" name="companyDocument" value="<%= user.companyDocument || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-legal-name">Razao social</label>
+            <input type="text" id="company-legal-name" data-required-label="Razao social" name="companyLegalName" value="<%= user.companyLegalName || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-trade-name">Nome fantasia</label>
+            <input type="text" id="company-trade-name" name="companyTradeName" value="<%= user.companyTradeName || '' %>">
+          </div>
+          <div class="site-form-row">
+            <label for="company-state-registration">Inscricao estadual</label>
+            <input type="text" id="company-state-registration" name="companyStateRegistration" value="<%= user.companyStateRegistration || '' %>">
+          </div>
+          <div class="site-form-row">
+            <label for="company-sector">Ramo de atividade</label>
+            <select id="company-sector" name="companySector">
+              <option value="">Selecione</option>
+              <option value="Administracao" <%= user.companySector === 'Administracao' ? 'selected' : '' %>>Administracao</option>
+              <option value="Agronegocio" <%= user.companySector === 'Agronegocio' ? 'selected' : '' %>>Agronegocio</option>
+              <option value="Comercio" <%= user.companySector === 'Comercio' ? 'selected' : '' %>>Comercio</option>
+              <option value="Construcao civil" <%= user.companySector === 'Construcao civil' ? 'selected' : '' %>>Construcao civil</option>
+              <option value="Educacao" <%= user.companySector === 'Educacao' ? 'selected' : '' %>>Educacao</option>
+              <option value="Industria" <%= user.companySector === 'Industria' ? 'selected' : '' %>>Industria</option>
+              <option value="Logistica" <%= user.companySector === 'Logistica' ? 'selected' : '' %>>Logistica</option>
+              <option value="Saude" <%= user.companySector === 'Saude' ? 'selected' : '' %>>Saude</option>
+              <option value="Servicos" <%= user.companySector === 'Servicos' ? 'selected' : '' %>>Servicos</option>
+              <option value="Tecnologia" <%= user.companySector === 'Tecnologia' ? 'selected' : '' %>>Tecnologia</option>
+            </select>
+          </div>
+          <div class="site-form-row">
+            <label for="company-responsible-name">Responsavel</label>
+            <input type="text" id="company-responsible-name" data-required-label="Responsavel" name="companyResponsibleName" value="<%= user.companyResponsibleName || user.name || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-responsible-cpf">CPF do responsavel</label>
+            <input type="text" id="company-responsible-cpf" name="companyResponsibleCpf" value="<%= user.companyResponsibleCpf || '' %>">
+          </div>
+          <div class="site-form-row">
+            <label for="company-phone">Telefone</label>
+            <input type="text" id="company-phone" data-required-label="Telefone" name="companyPhone" value="<%= user.companyPhone || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-email">E-mail corporativo</label>
+            <input type="email" id="company-email" data-required-label="E-mail corporativo" name="email" value="<%= user.email || user.companyCorporateEmail || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-address">Endereco</label>
+            <input type="text" id="company-address" data-required-label="Endereco" name="address" value="<%= user.address || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-city">Cidade</label>
+            <input type="text" id="company-city" data-required-label="Cidade" name="city" value="<%= user.city || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-state">Estado</label>
+            <select id="company-state" name="state" required data-required-label="Estado">
+              <option value="">Selecione</option>
+              <% ['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO'].forEach(function(uf) { %>
+                <option value="<%= uf %>" <%= user.state === uf ? 'selected' : '' %>><%= uf %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="site-form-row">
+            <label for="company-zip-code">CEP</label>
+            <input type="text" id="company-zip-code" data-required-label="CEP" name="companyZipCode" value="<%= user.companyZipCode || '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="company-website">Site</label>
+            <input type="url" id="company-website" name="companyWebsite" value="<%= user.companyWebsite || '' %>">
+          </div>
+        </div>
+        <div class="site-panel" style="margin-top:18px;">
+          <h3>Vitrine institucional da empresa</h3>
+          <p class="site-card-text">Somente dados institucionais autorizados serão usados na vitrine pública do site. Nenhum CPF, e-mail pessoal ou dado sensível será divulgado. A participação da empresa na vitrine é aprovada e habilitada exclusivamente pelo administrador.</p>
+          <div class="site-form-grid">
+            <div class="site-form-row">
+              <label for="company-logo">Logo da empresa</label>
+              <input type="file" id="company-logo" name="companyLogo" accept="image/*">
+              <% if (user.avatar) { %><img src="<%= user.avatar %>" alt="Logo da empresa" style="max-width:140px;border-radius:18px;margin-top:10px;"> <% } %>
+            </div>
+            <div class="site-form-row">
+              <label for="company-public-display-name">Nome exibido na vitrine</label>
+              <input type="text" id="company-public-display-name" name="companyPublicDisplayName" value="<%= user.companyPublicDisplayName || user.companyTradeName || user.companyLegalName || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="company-public-summary">Resumo institucional</label>
+              <input type="text" id="company-public-summary" name="companyPublicSummary" value="<%= user.companyPublicSummary || '' %>" placeholder="Ex.: Empresa com vagas ativas na ?rea administrativa e operacional.">
+            </div>
+            <div class="site-form-row">
+              <label><input type="checkbox" name="companyShowcaseLgpdConsent" <%= user.companyShowcaseLgpdConsent ? 'checked' : '' %>> Autorizo a divulgacao publica de dados institucionais da empresa conforme LGPD</label>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="site-button">Salvar dados da empresa</button>
+      </form>
+    </article>
+
+    <article class="site-info-card">
+      <h3>Resumo da conta</h3>
+      <p><strong>Responsavel:</strong> <%= user.companyResponsibleName || user.name %></p>
+      <p><strong>E-mail:</strong> <%= user.email %></p>
+      <p><strong>Perfil:</strong> Empresa</p>
+      <p><strong>Status:</strong> <%= user.status || 'ativo' %></p>
+      <p><strong>Pagamento validado:</strong> <%= user.companyPaymentValidated ? 'Sim' : 'Não' %></p>
+      <p><strong>Documento:</strong> <%= user.companyDocument || '-' %></p>
+      <p><strong>Cadastro:</strong> <%= new Date(user.createdAt).toLocaleDateString('pt-BR') %></p>
+      <div class="site-contact-cta">
+        <strong>Proximo passo</strong>
+        <span><%= user.status === 'ativo' ? 'Depois dessa base, publique vagas para que os candidatos possam se candidatar pela plataforma.' : 'Sua empresa aguarda validacao de pagamento e aprovacao do administrador antes de publicar vagas.' %></span>
+      </div>
+      <% if (typeof companyJobs !== 'undefined' && companyJobs.length > 0) { %>
+        <div class="site-contact-cta">
+          <strong>Vagas recentes</strong>
+          <span><%= companyJobs.length %> vaga(s) recente(s) cadastrada(s).</span>
+          <div class="site-section-actions">
+            <a href="/perfil/empresa/vagas" class="site-button-secondary">Ver minhas vagas</a>
+          </div>
+        </div>
+      <% } %>
+      <div class="site-section-actions">
+        <a href="/auth/logout" class="site-button-ghost">Sair do sistema</a>
+      </div>
+    </article>
+  </div>
+</section>

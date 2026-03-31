@@ -8,15 +8,15 @@
 
 <section class="site-section">
   <% if (advertisements.length > 0) { %>
-    <% Object.keys(advertisementGroups || {}).forEach(groupName => { %>
+    <% (advertisementGroups || []).forEach(group => { %>
       <div class="site-section-head">
         <div class="site-section-heading">
-          <h2><%= groupName %></h2>
+          <h2><%= group.groupName %></h2>
           <p>Grupo de propagandas organizado pelo administrador.</p>
         </div>
       </div>
       <div class="ad-mural-grid">
-        <% advertisementGroups[groupName].forEach(ad => { %>
+        <% group.items.forEach(ad => { %>
           <article class="ad-mural-card ad-anim-<%= ad.animation %>" style="--ad-width:<%= ad.width %>px; --ad-height:<%= ad.height %>px;">
             <% if (ad.link) { %><a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="ad-mural-link"><% } %>
               <div class="ad-mural-media">

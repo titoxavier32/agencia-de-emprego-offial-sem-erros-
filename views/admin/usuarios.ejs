@@ -1,13 +1,108 @@
 <div class="admin-page">
+  <section class="admin-form-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Cadastro de usuarios</h2>
+        <p>Cadastre novas contas locais e defina quem pode gerenciar a plataforma como administrador.</p>
+      </div>
+    </div>
+
+    <% if (typeof formError !== 'undefined' && formError) { %>
+      <div class="admin-alert"><%= formError %></div>
+    <% } %>
+
+    <% if (typeof formStatus !== 'undefined' && formStatus) { %>
+      <div class="admin-alert" style="background:rgba(15,159,110,0.08);color:var(--admin-success);"><%= formStatus %></div>
+    <% } %>
+
+    <form action="/admin/usuarios" method="POST" class="admin-form">
+      <div class="admin-form-grid admin-form-grid-3">
+        <div class="admin-form-row">
+          <label for="name">Nome</label>
+          <input type="text" id="name" name="name" required placeholder="Nome do usuario">
+        </div>
+        <div class="admin-form-row">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" required placeholder="usuario@agencia.com">
+        </div>
+        <div class="admin-form-row">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" required placeholder="Minimo 6 caracteres">
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="admin-form-row">
+          <label for="role">Nivel de acesso</label>
+          <select id="role" name="role">
+            <option value="admin">Administrador da plataforma</option>
+            <option value="empresa">Gestor da empresa</option>
+            <option value="candidato">Candidato</option>
+          </select>
+        </div>
+        <div class="admin-form-row">
+          <label for="status">Status da conta</label>
+          <select id="status" name="status">
+            <option value="ativo">Ativo</option>
+            <option value="pendente">Pendente</option>
+            <option value="bloqueado">Bloqueado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <button type="submit" class="admin-btn"><i class="fas fa-user-plus"></i><span>Cadastrar usuario</span></button>
+      </div>
+    </form>
+  </section>
+
   <section class="admin-table-wrap">
-    <div class="admin-section-head"><div><h2>Usuários registrados</h2><p>Base de usuários autenticados via plataforma.</p></div></div>
+    <div class="admin-section-head">
+      <div>
+        <h2>Usuarios registrados</h2>
+        <p>Lista de contas locais e autenticadas na plataforma, incluindo administradores.</p>
+      </div>
+    </div>
+
     <% if (users.length > 0) { %>
-      <table class="admin-table"><thead><tr><th>Avatar</th><th>Nome</th><th>E-mail</th><th>Cadastro</th></tr></thead><tbody>
-      <% users.forEach(u => { %><tr>
-        <td><% if (u.avatar) { %><img src="<%= u.avatar %>" alt="<%= u.name %>" class="admin-avatar"><% } else { %><div class="admin-avatar-fallback"><i class="fas fa-user"></i></div><% } %></td>
-        <td><strong><%= u.name %></strong></td><td><%= u.email %></td><td><%= new Date(u.createdAt).toLocaleDateString('pt-BR') %></td>
-      </tr><% }) %>
-      </tbody></table>
-    <% } else { %><div class="admin-empty">Nenhum usuario cadastrado.</div><% } %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Avatar</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Acesso</th>
+            <th>Status</th>
+            <th>Login</th>
+            <th>Cadastro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(u => { %>
+            <tr>
+              <td>
+                <% if (u.avatar) { %>
+                  <img src="<%= u.avatar %>" alt="<%= u.name %>" class="admin-avatar">
+                <% } else { %>
+                  <div class="admin-avatar-fallback"><i class="fas fa-user"></i></div>
+                <% } %>
+              </td>
+              <td><strong><%= u.name %></strong></td>
+              <td><%= u.email %></td>
+              <td>
+                <span class="admin-badge <%= u.role === 'admin' ? 'danger' : 'neutral' %>">
+                  <%= u.role === 'admin' ? 'Administrador' : (u.role === 'empresa' ? 'Gestor da empresa' : 'Candidato') %>
+                </span>
+              </td>
+              <td><span class="admin-badge <%= u.status === 'ativo' ? 'success' : (u.status === 'bloqueado' ? 'danger' : 'warning') %>"><%= u.status || 'ativo' %></span></td>
+              <td><span class="admin-badge neutral"><%= u.providerLogin || (u.googleId ? 'google' : 'email') %></span></td>
+              <td><%= new Date(u.createdAt).toLocaleDateString('pt-BR') %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="admin-empty">Nenhum usuario cadastrado.</div>
+    <% } %>
   </section>
 </div>

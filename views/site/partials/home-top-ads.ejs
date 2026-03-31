@@ -1,0 +1,19 @@
+<% if (topAdGroups.some(group => group.items && group.items.length > 0)) { %>
+  <section class="site-section site-section--compact site-home-top-ads site-home-top-ads--<%= globalSetting && globalSetting.topAdsAlignment ? globalSetting.topAdsAlignment : 'center' %>">
+    <% topAdGroups.forEach(group => { %>
+      <% if (group.items && group.items.length > 0) { %>
+        <div class="ad-mural-grid ad-mural-grid--triple" style="margin-top:18px;">
+          <% group.items.forEach(ad => { %>
+            <article class="ad-mural-card ad-anim-<%= ad.animation %>" style="--ad-width:<%= ad.width %>px; --ad-height:<%= ad.height %>px;">
+              <% if (ad.link) { %><a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="ad-mural-link"><% } %>
+                <div class="ad-mural-media">
+                  <img src="/uploads/<%= ad.image %>" alt="Propaganda" class="ad-mural-image">
+                </div>
+              <% if (ad.link) { %></a><% } %>
+            </article>
+          <% }) %>
+        </div>
+      <% } %>
+    <% }) %>
+  </section>
+<% } %>

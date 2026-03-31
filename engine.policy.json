@@ -1,0 +1,15 @@
+{
+    "allowNewDependencies": true,
+    "allowDeleteFiles": false,
+    "allowReplaceCriticalFiles": false,
+    "requireTestsForBusinessLogic": true,
+    "requireTestsForAuthChanges": true,
+    "requireLintSuccess": true,
+    "requireBuildSuccess": true,
+    "requireSmokeTestSuccess": true,
+    "autoRollbackOnFailure": true,
+    "maxFilesChangedPerRun": 25,
+    "maxCriticalFilesChangedPerRun": 3,
+    "denyUnsafePaths": true,
+    "enforcePatchMode": true
+}

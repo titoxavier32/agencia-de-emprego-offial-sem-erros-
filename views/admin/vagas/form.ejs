@@ -5,8 +5,22 @@
       <div class="admin-form-row"><label for="title">Titulo da vaga</label><input type="text" id="title" name="title" value="<%= job ? job.title : '' %>" required></div>
       <div class="admin-form-row"><label for="description">Descricao completa</label><textarea id="description" name="description" required><%= job ? job.description : '' %></textarea></div>
       <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="location">Local da vaga</label><input type="text" id="location" name="location" value="<%= job ? (job.location || '') : '' %>" placeholder="Ex.: Cujubim - RO" required></div>
+        <div class="admin-form-row"><label for="vacancies">Quantidade de vagas</label><input type="number" id="vacancies" name="vacancies" min="1" value="<%= job ? (job.vacancies || 1) : 1 %>"></div>
+      </div>
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="salary">Salario</label><input type="text" id="salary" name="salary" value="<%= job ? (job.salary || '') : '' %>" placeholder="A combinar"></div>
+        <div class="admin-form-row"><label for="employmentType">Tipo de contratacao</label><select id="employmentType" name="employmentType"><option value="">Selecione</option><option value="CLT" <%= job && job.employmentType === 'CLT' ? 'selected' : '' %>>CLT</option><option value="PJ" <%= job && job.employmentType === 'PJ' ? 'selected' : '' %>>PJ</option><option value="Temporario" <%= job && job.employmentType === 'Temporario' ? 'selected' : '' %>>Temporario</option><option value="Estagio" <%= job && job.employmentType === 'Estagio' ? 'selected' : '' %>>Estagio</option></select></div>
+        <div class="admin-form-row"><label for="workplaceMode">Modalidade</label><select id="workplaceMode" name="workplaceMode"><option value="">Selecione</option><option value="Presencial" <%= job && job.workplaceMode === 'Presencial' ? 'selected' : '' %>>Presencial</option><option value="Hibrido" <%= job && job.workplaceMode === 'Hibrido' ? 'selected' : '' %>>Hibrido</option><option value="Remoto" <%= job && job.workplaceMode === 'Remoto' ? 'selected' : '' %>>Remoto</option></select></div>
+      </div>
+      <div class="admin-form-grid">
+        <div class="admin-form-row"><label for="requirements">Requisitos</label><textarea id="requirements" name="requirements"><%= job ? (job.requirements || '') : '' %></textarea></div>
+        <div class="admin-form-row"><label for="benefits">Beneficios</label><textarea id="benefits" name="benefits"><%= job ? (job.benefits || '') : '' %></textarea></div>
+      </div>
+      <div class="admin-form-grid">
         <div class="admin-form-row"><label for="startDate">Data de inicio <span class="admin-form-help">opcional</span></label><input type="date" id="startDate" name="startDate" value="<%= job && job.startDate ? job.startDate : '' %>"></div>
         <div class="admin-form-row"><label for="endDate">Data de fim <span class="admin-form-help">opcional</span></label><input type="date" id="endDate" name="endDate" value="<%= job && job.endDate ? job.endDate : '' %>"></div>
+        <div class="admin-form-row"><label for="status">Status</label><select id="status" name="status"><option value="ativa" <%= !job || job.status === 'ativa' ? 'selected' : '' %>>Ativa</option><option value="encerrada" <%= job && job.status === 'encerrada' ? 'selected' : '' %>>Encerrada</option></select></div>
       </div>
       <div class="admin-form-grid">
         <div class="admin-form-row"><label for="link">Link externo</label><input type="url" id="link" name="link" value="<%= job ? job.link : '' %>" placeholder="https://empresa.com/vaga"></div>

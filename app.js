@@ -21,6 +21,9 @@ require('./models/Menu');
 const Setting = require('./models/Setting');
 const Menu = require('./models/Menu');
 const { ensureDefaultMenus } = require('./utils/menuDefaults');
+const { parseAdminSidebarConfig, forceAdminSidebarVisibility, groupAdminSidebarItems } = require('./utils/adminSidebarDefaults');
+const notFound = require('./middlewares/notFound');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 const sessionStore = new SequelizeStore({ db: sequelize });
@@ -56,6 +59,8 @@ app.use(passport.session());
 app.use(async (req, res, next) => {
   res.locals.user = req.user || null;
   res.locals.currentPath = req.path;
+  res.locals.adminLoginError = req.query.adminLoginError || null;
+  res.locals.adminLoginOpen = req.query.adminLoginOpen === '1';
 
   try {
     let setting = await Setting.findOne();
@@ -72,10 +77,12 @@ app.use(async (req, res, next) => {
 
     res.locals.globalSetting = setting;
     res.locals.menus = menus;
+    res.locals.adminSidebarGroups = groupAdminSidebarItems(forceAdminSidebarVisibility(parseAdminSidebarConfig(setting.adminSidebarConfig)), req.path);
   } catch (error) {
     console.error('Erro ao carregar configurações globais:', error);
     res.locals.globalSetting = {};
     res.locals.menus = [];
+    res.locals.adminSidebarGroups = groupAdminSidebarItems(forceAdminSidebarVisibility(parseAdminSidebarConfig('')), req.path);
   }
 
   next();
@@ -85,10 +92,8 @@ app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/perfil', require('./routes/user'));
 app.use('/admin', require('./routes/admin'));
-
-app.use((req, res) => {
-  res.status(404).render('site/sobre', { title: 'Página não encontrada' });
-});
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
@@ -106,3 +111,4 @@ startServer().catch((error) => {
   console.error('Error starting server:', error);
   process.exit(1);
 });
+

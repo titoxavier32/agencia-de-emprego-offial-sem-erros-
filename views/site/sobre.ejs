@@ -1,10 +1,14 @@
 <section class="site-hero">
   <div class="site-hero-content">
     <span class="site-kicker">Quem somos</span>
-    <h1>Uma agência pensada para gerar mais conexões, mais qualificação e mais resultado.</h1>
-    <p class="site-lead">
-      Posicionamos sua presença digital para parecer uma operação confiável, ativa e pronta para conectar empresas, profissionais e oportunidades reais de crescimento.
-    </p>
+    <h1><%= errorMessage ? 'Nao foi possivel concluir a solicitacao.' : 'Uma agência pensada para gerar mais conexões, mais qualificação e mais resultado.' %></h1>
+    <% if (errorMessage) { %>
+      <p class="site-lead"><%= errorMessage %></p>
+    <% } else { %>
+      <p class="site-lead">
+        Posicionamos sua presença digital para parecer uma operação confiável, ativa e pronta para conectar empresas, profissionais e oportunidades reais de crescimento.
+      </p>
+    <% } %>
   </div>
 </section>
 

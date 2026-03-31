@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="/css/admin-professional.css">
 </head>
 <body class="admin-body">
+  <% const adminMenuGroups = (typeof adminSidebarGroups !== 'undefined' && Array.isArray(adminSidebarGroups) && adminSidebarGroups.length > 0) ? adminSidebarGroups : []; %>
+
   <div class="admin-shell">
     <aside class="admin-sidebar">
       <div style="display:flex;flex-direction:column;height:100%;gap:18px;">
@@ -15,20 +17,24 @@
           <span class="admin-brand-mark"><i class="fas fa-compass-drafting"></i></span>
           <span class="admin-brand-copy">
             <small>Painel administrativo</small>
-            <strong>Agência de Emprego</strong>
+            <strong>Agencia de Emprego</strong>
           </span>
         </a>
 
         <nav class="admin-nav">
-          <a href="/admin/dashboard" class="admin-nav-link <%= currentPath === '/admin/dashboard' ? 'is-active' : '' %>"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
-          <a href="/admin/vagas" class="admin-nav-link <%= currentPath.indexOf('/admin/vagas') === 0 ? 'is-active' : '' %>"><i class="fas fa-briefcase"></i><span>Vagas</span></a>
-          <a href="/admin/cursos" class="admin-nav-link <%= currentPath.indexOf('/admin/cursos') === 0 ? 'is-active' : '' %>"><i class="fas fa-graduation-cap"></i><span>Cursos</span></a>
-          <a href="/admin/propagandas" class="admin-nav-link <%= currentPath.indexOf('/admin/propagandas') === 0 ? 'is-active' : '' %>"><i class="fas fa-bullhorn"></i><span>Propagandas</span></a>
-          <a href="/admin/selecoes-publicas" class="admin-nav-link <%= currentPath.indexOf('/admin/selecoes-publicas') === 0 ? 'is-active' : '' %>"><i class="fas fa-file-signature"></i><span>Seleções públicas</span></a>
-          <a href="/admin/contatos" class="admin-nav-link <%= currentPath.indexOf('/admin/contatos') === 0 ? 'is-active' : '' %>"><i class="fas fa-envelope-open-text"></i><span>Contatos</span></a>
-          <a href="/admin/menus" class="admin-nav-link <%= currentPath.indexOf('/admin/menus') === 0 ? 'is-active' : '' %>"><i class="fas fa-bars-staggered"></i><span>Menus</span></a>
-          <a href="/admin/usuarios" class="admin-nav-link <%= currentPath.indexOf('/admin/usuarios') === 0 ? 'is-active' : '' %>"><i class="fas fa-users"></i><span>Usuários</span></a>
-          <a href="/admin/configuracoes" class="admin-nav-link <%= currentPath.indexOf('/admin/configuracoes') === 0 ? 'is-active' : '' %>"><i class="fas fa-sliders"></i><span>Configurações</span></a>
+          <% adminMenuGroups.forEach(group => { %>
+            <section class="admin-nav-group">
+              <div class="admin-nav-group-title"><%= group.title %></div>
+              <div class="admin-nav-group-links">
+                <% group.items.forEach(item => { %>
+                  <a href="<%= item.href %>" class="admin-nav-link <%= item.active ? 'is-active' : '' %>">
+                    <i class="fas <%= item.icon %>"></i>
+                    <span><%= item.label %></span>
+                  </a>
+                <% }) %>
+              </div>
+            </section>
+          <% }) %>
         </nav>
 
         <div class="admin-sidebar-footer">
@@ -61,22 +67,22 @@
       <div class="admin-topbar">
         <div class="admin-topbar-card" style="flex:1;">
           <div>
-            <div class="admin-kicker">Operação e conteúdo</div>
+            <div class="admin-kicker">Operacao e conteudo</div>
             <strong style="font-size:1.15rem;"><%= typeof title !== 'undefined' ? title : 'Painel de controle' %></strong>
           </div>
-          <div style="color:var(--admin-muted);font-size:14px;">Controle visual, publicações e atendimento em um único fluxo.</div>
+          <div style="color:var(--admin-muted);font-size:14px;">Controle visual, publicacoes e atendimento em um unico fluxo.</div>
         </div>
       </div>
 
       <%- body %>
 
-      <div class="admin-footer">&copy; <%= new Date().getFullYear() %> Agência de Emprego. Painel administrativo renovado.</div>
+      <div class="admin-footer">&copy; <%= new Date().getFullYear() %> Agencia de Emprego. Painel administrativo renovado.</div>
     </main>
   </div>
 
   <div id="admin-lightbox" class="admin-lightbox">
     <button id="admin-lightbox-close" class="admin-lightbox-close" type="button"><i class="fas fa-times"></i></button>
-    <img id="admin-lightbox-image" src="" alt="Pré-visualização">
+    <img id="admin-lightbox-image" src="" alt="Pre-visualizacao">
   </div>
 
   <script src="/js/admin-professional.js"></script>

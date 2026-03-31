@@ -1,39 +1,488 @@
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card shadow border-0">
-      <div class="card-header bg-primary text-white">
-        <h4 class="mb-0">Meu Perfil</h4>
-      </div>
-      <div class="card-body">
-        <div class="row align-items-center mb-4">
-          <div class="col-auto">
-            <% if (user.avatar) { %>
-              <img src="<%= user.avatar %>" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-            <% } else { %>
-              <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
-                <i class="fas fa-user fa-3x"></i>
-              </div>
-            <% } %>
-          </div>
-          <div class="col">
-            <h2 class="mb-1"><%= user.name %></h2>
-            <p class="text-muted mb-0"><%= user.email %></p>
-            <span class="badge bg-<%= user.role === 'admin' ? 'danger' : 'info' %> mt-2"><%= user.role.toUpperCase() %></span>
-          </div>
-        </div>
-        <hr>
-        <h5 class="mb-3">Dados da Conta</h5>
-        <p><strong>Cadastrado em:</strong> <%= new Date(user.createdAt).toLocaleDateString() %></p>
-        <% if (user.googleId) { %>
-           <p class="text-success"><i class="fab fa-google"></i> Conta vinculada ao Google</p>
-        <% } %>
-        <div class="d-flex justify-content-end mt-4">
-           <% if (user.role === 'admin') { %>
-             <a href="/admin/dashboard" class="btn btn-outline-primary me-2">Ir para o Painel Admin</a>
-           <% } %>
-           <a href="/auth/logout" class="btn btn-danger">Sair do Sistema</a>
-        </div>
-      </div>
-    </div>
+<%
+  const roleLabelMap = {
+    admin: 'Administrador',
+    empresa: 'Gestor da empresa',
+    candidato: 'Candidato',
+    user: 'Candidato'
+  };
+  const providerLabelMap = {
+    email: 'E-mail',
+    google: 'Google',
+    linkedin: 'LinkedIn'
+  };
+  const storedCourses = typeof courseHistory !== 'undefined' && courseHistory.length > 0 ? courseHistory : [];
+  const storedExperiences = typeof experienceHistory !== 'undefined' && experienceHistory.length > 0 ? experienceHistory : [];
+  const ufOptions = ['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE','SP','TO'];
+  const applicationStatusMap = {
+    recebida: 'Recebida',
+    em_analise: 'Em análise',
+    entrevista: 'Entrevista',
+    aprovada: 'Aprovada',
+    reprovada: 'Reprovada',
+    banco_de_talentos: 'Banco de talentos'
+  };
+%>
+<section class="site-hero">
+  <div class="site-hero-content">
+    <span class="site-kicker">Cadastro de currículo</span>
+    <h1>Preencha o formulário abaixo para cadastrar o seu currículo no site.</h1>
+    <p class="site-lead">Este documento é um breve relato da sua vida profissional. O objetivo é apresentar seu perfil para o mercado de trabalho e abrir espaço para novas oportunidades.</p>
   </div>
-</div>
+</section>
+
+<section class="site-section">
+  <div class="site-grid-2">
+    <article class="site-panel">
+      <h2>Currículo do candidato</h2>
+      <p class="site-form-note">Somente nome e e-mail são obrigatórios para salvar. O anexo do currículo em PDF é opcional.</p>
+
+      <% if (profileError) { %>
+        <div class="admin-alert"><%= profileError %></div>
+      <% } %>
+      <% if (profileStatus) { %>
+        <div class="site-access-status"><%= profileStatus %></div>
+      <% } %>
+
+      <form action="/perfil" method="POST" enctype="multipart/form-data" class="site-form" data-required-summary="candidate-profile">
+        <div class="site-form-alert" data-form-alert hidden></div>
+
+        <div class="site-profile-section">
+          <div class="site-profile-section-head">
+            <h3>DADOS PESSOAIS</h3>
+          </div>
+
+          <div class="site-form-grid">
+            <div class="site-form-row">
+              <label for="candidate-name">* Nome</label>
+              <input type="text" id="candidate-name" data-required-label="Nome" name="name" value="<%= user.name || '' %>" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-email">* E-mail</label>
+              <input type="email" id="candidate-email" data-required-label="E-mail" name="email" value="<%= user.email || '' %>" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-sex">* Sexo</label>
+              <select id="candidate-sex" data-required-label="Sexo" name="sex" required>
+                <option value="">Selecione</option>
+                <option value="Feminino" <%= user.sex === 'Feminino' ? 'selected' : '' %>>Feminino</option>
+                <option value="Masculino" <%= user.sex === 'Masculino' ? 'selected' : '' %>>Masculino</option>
+                <option value="Outro" <%= user.sex === 'Outro' ? 'selected' : '' %>>Outro</option>
+                <option value="Prefiro nao informar" <%= user.sex === 'Prefiro nao informar' ? 'selected' : '' %>>Prefiro não informar</option>
+              </select>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-marital-status">* Estado civil</label>
+              <select id="candidate-marital-status" data-required-label="Estado civil" name="maritalStatus" required>
+                <option value="">Selecione</option>
+                <option value="Solteiro" <%= user.maritalStatus === 'Solteiro' ? 'selected' : '' %>>Solteiro</option>
+                <option value="Casado" <%= user.maritalStatus === 'Casado' ? 'selected' : '' %>>Casado</option>
+                <option value="Divorciado" <%= user.maritalStatus === 'Divorciado' ? 'selected' : '' %>>Divorciado</option>
+                <option value="Viuvo" <%= user.maritalStatus === 'Viuvo' ? 'selected' : '' %>>Viúvo</option>
+              </select>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-cpf">* CPF</label>
+              <input type="text" id="candidate-cpf" data-required-label="CPF" name="cpf" value="<%= user.cpf || '' %>" placeholder="somente numeros. Ex: 00000000099" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-birth-date">* Data de nascimento</label>
+              <input type="date" id="candidate-birth-date" data-required-label="Data de nascimento" name="birthDate" value="<%= user.birthDate || '' %>" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-employed">* Empregado atualmente</label>
+              <select id="candidate-employed" data-required-label="Empregado atualmente" name="currentlyEmployed" required>
+                <option value="">Selecione</option>
+                <option value="Sim" <%= user.currentlyEmployed === 'Sim' ? 'selected' : '' %>>Sim</option>
+                <option value="Não" <%= user.currentlyEmployed === 'Não' ? 'selected' : '' %>>Não</option>
+              </select>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-disability">* Deficiência</label>
+              <select id="candidate-disability" name="disability" required data-required-label="Deficiência">
+                <option value="">Selecione</option>
+                <option value="Nenhuma" <%= (user.disability || 'Nenhuma') === 'Nenhuma' ? 'selected' : '' %>>Nenhuma</option>
+                <option value="Fisica" <%= user.disability === 'Fisica' ? 'selected' : '' %>>Física</option>
+                <option value="Auditiva" <%= user.disability === 'Auditiva' ? 'selected' : '' %>>Auditiva</option>
+                <option value="Visual" <%= user.disability === 'Visual' ? 'selected' : '' %>>Visual</option>
+                <option value="Intelectual" <%= user.disability === 'Intelectual' ? 'selected' : '' %>>Intelectual</option>
+                <option value="Multipla" <%= user.disability === 'Multipla' ? 'selected' : '' %>>Múltipla</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="site-form-grid site-form-grid-license">
+            <div class="site-form-row">
+              <label>* Possui carteira motorista</label>
+              <div class="site-inline-options">
+                <label><input type="radio" name="hasDriverLicense" value="sim" <%= user.hasDriverLicense ? 'checked' : '' %>> Sim</label>
+                <label><input type="radio" name="hasDriverLicense" value="nao" <%= !user.hasDriverLicense ? 'checked' : '' %>> Não</label>
+              </div>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-license-category">Categoria</label>
+              <select id="candidate-license-category" name="driverLicenseCategory">
+                <option value="">Selecione</option>
+                <option value="A" <%= user.driverLicenseCategory === 'A' ? 'selected' : '' %>>A</option>
+                <option value="B" <%= user.driverLicenseCategory === 'B' ? 'selected' : '' %>>B</option>
+                <option value="AB" <%= user.driverLicenseCategory === 'AB' ? 'selected' : '' %>>AB</option>
+                <option value="C" <%= user.driverLicenseCategory === 'C' ? 'selected' : '' %>>C</option>
+                <option value="D" <%= user.driverLicenseCategory === 'D' ? 'selected' : '' %>>D</option>
+                <option value="E" <%= user.driverLicenseCategory === 'E' ? 'selected' : '' %>>E</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-profile-section">
+          <div class="site-profile-section-head"><h3>DADOS DE CONTATO</h3></div>
+          <div class="site-form-grid">
+            <div class="site-form-row">
+              <label for="candidate-home-phone">Telefone residencial</label>
+              <input type="text" id="candidate-home-phone" name="homePhone" value="<%= user.homePhone || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-commercial-phone">Telefone comercial</label>
+              <input type="text" id="candidate-commercial-phone" name="commercialPhone" value="<%= user.commercialPhone || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-extension">Ramal</label>
+              <input type="text" id="candidate-extension" name="commercialPhoneExtension" value="<%= user.commercialPhoneExtension || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-mobile-phone">Telefone celular</label>
+              <input type="text" id="candidate-mobile-phone" name="mobilePhone" value="<%= user.mobilePhone || user.whatsapp || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-phone">Telefone principal</label>
+              <input type="text" id="candidate-phone" name="phone" value="<%= user.phone || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-website">Home-page pessoal</label>
+              <input type="url" id="candidate-website" name="personalWebsite" value="<%= user.personalWebsite || '' %>" placeholder="http://">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-linkedin">LinkedIn</label>
+              <input type="url" id="candidate-linkedin" name="linkedinUrl" value="<%= user.linkedinUrl || '' %>" placeholder="https://linkedin.com/in/seu-perfil">
+            </div>
+          </div>
+        </div>
+
+        <div class="site-profile-section">
+          <div class="site-profile-section-head"><h3>ENDEREÇO</h3></div>
+          <div class="site-form-grid">
+            <div class="site-form-row">
+              <label for="candidate-address">* Endereço</label>
+              <input type="text" id="candidate-address" data-required-label="Endereço" name="address" value="<%= user.address || '' %>" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-address-number">Número</label>
+              <input type="text" id="candidate-address-number" name="addressNumber" value="<%= user.addressNumber || '' %>" placeholder="Opcional para sítio, chácara ou endereço sem número">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-address-complement">Complemento</label>
+              <input type="text" id="candidate-address-complement" name="addressComplement" value="<%= user.addressComplement || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-neighborhood">* Bairro</label>
+              <input type="text" id="candidate-neighborhood" data-required-label="Bairro" name="neighborhood" value="<%= user.neighborhood || '' %>" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-zip-code">* CEP</label>
+              <input type="text" id="candidate-zip-code" data-required-label="CEP" name="zipCode" value="<%= user.zipCode || '' %>" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-state">* Estado</label>
+              <select id="candidate-state" name="state" required data-required-label="Estado">
+                <option value="">Selecione</option>
+                <% ufOptions.forEach(function(uf) { %>
+                  <option value="<%= uf %>" <%= user.state === uf ? 'selected' : '' %>><%= uf %></option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-city">* Cidade</label>
+              <input type="text" id="candidate-city" data-required-label="Cidade" name="city" value="<%= user.city || '' %>" required>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-country">* País</label>
+              <select id="candidate-country" name="country" required data-required-label="País">
+                <option value="Brasil" <%= (!user.country || user.country === 'Brasil') ? 'selected' : '' %>>Brasil</option>
+                <option value="Bolivia" <%= user.country === 'Bolivia' ? 'selected' : '' %>>Bolívia</option>
+                <option value="Peru" <%= user.country === 'Peru' ? 'selected' : '' %>>Peru</option>
+                <option value="Outro" <%= user.country === 'Outro' ? 'selected' : '' %>>Outro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-profile-section">
+          <div class="site-profile-section-head"><h3>OBJETIVOS</h3></div>
+          <div class="site-form-grid">
+            <div class="site-form-row">
+              <label for="candidate-objective">Objetivo</label>
+              <textarea id="candidate-objective" name="objective" maxlength="255"><%= user.objective || '' %></textarea>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-work-cities">Cidades em que deseja trabalhar</label>
+              <textarea id="candidate-work-cities" name="desiredWorkCities" maxlength="255"><%= user.desiredWorkCities || '' %></textarea>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-area">Área pretendida</label>
+              <select id="candidate-area" name="intendedArea">
+                <option value="">Selecione</option>
+                <option value="Administrativo" <%= user.intendedArea === 'Administrativo' ? 'selected' : '' %>>Administrativo</option>
+                <option value="Atendimento" <%= user.intendedArea === 'Atendimento' ? 'selected' : '' %>>Atendimento</option>
+                <option value="Comercial e vendas" <%= user.intendedArea === 'Comercial e vendas' ? 'selected' : '' %>>Comercial e vendas</option>
+                <option value="Educacao" <%= user.intendedArea === 'Educacao' ? 'selected' : '' %>>Educação</option>
+                <option value="Financeiro" <%= user.intendedArea === 'Financeiro' ? 'selected' : '' %>>Financeiro</option>
+                <option value="Industria" <%= user.intendedArea === 'Industria' ? 'selected' : '' %>>Indústria</option>
+                <option value="Logistica" <%= user.intendedArea === 'Logistica' ? 'selected' : '' %>>Logística</option>
+                <option value="Saude" <%= user.intendedArea === 'Saude' ? 'selected' : '' %>>Saúde</option>
+                <option value="Tecnologia" <%= user.intendedArea === 'Tecnologia' ? 'selected' : '' %>>Tecnologia</option>
+              </select>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-hierarchy">Nível hierárquico</label>
+              <select id="candidate-hierarchy" name="hierarchyLevel">
+                <option value="">Selecione</option>
+                <option value="Operacional" <%= user.hierarchyLevel === 'Operacional' ? 'selected' : '' %>>Operacional</option>
+                <option value="Assistente" <%= user.hierarchyLevel === 'Assistente' ? 'selected' : '' %>>Assistente</option>
+                <option value="Tecnico" <%= user.hierarchyLevel === 'Tecnico' ? 'selected' : '' %>>Técnico</option>
+                <option value="Analista" <%= user.hierarchyLevel === 'Analista' ? 'selected' : '' %>>Analista</option>
+                <option value="Supervisao" <%= user.hierarchyLevel === 'Supervisao' ? 'selected' : '' %>>Supervisão</option>
+                <option value="Coordenacao" <%= user.hierarchyLevel === 'Coordenacao' ? 'selected' : '' %>>Coordenação</option>
+                <option value="Gerencia" <%= user.hierarchyLevel === 'Gerencia' ? 'selected' : '' %>>Gerência</option>
+              </select>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-role">Cargo pretendido</label>
+              <input type="text" id="candidate-role" name="desiredRole" value="<%= user.desiredRole || '' %>">
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-salary">Pretensão salarial</label>
+              <select id="candidate-salary" name="salaryExpectation">
+                <option value="A Combinar" <%= (!user.salaryExpectation || user.salaryExpectation === 'A Combinar') ? 'selected' : '' %>>A Combinar</option>
+                <option value="Ate R$ 1.500" <%= user.salaryExpectation === 'Ate R$ 1.500' ? 'selected' : '' %>>Até R$ 1.500</option>
+                <option value="R$ 1.500 a R$ 2.500" <%= user.salaryExpectation === 'R$ 1.500 a R$ 2.500' ? 'selected' : '' %>>R$ 1.500 a R$ 2.500</option>
+                <option value="R$ 2.500 a R$ 4.000" <%= user.salaryExpectation === 'R$ 2.500 a R$ 4.000' ? 'selected' : '' %>>R$ 2.500 a R$ 4.000</option>
+                <option value="Acima de R$ 4.000" <%= user.salaryExpectation === 'Acima de R$ 4.000' ? 'selected' : '' %>>Acima de R$ 4.000</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="site-profile-section">
+          <div class="site-profile-section-head site-profile-section-head--actions"><h3>CURSOS</h3><button type="button" class="site-button-secondary site-button-secondary--small" data-repeat-add="course">Adicionar curso</button></div>
+          <p class="site-form-note">Inclua suas formações da mais recente até a mais antiga. Se não tiver cursos para informar agora, deixe esta área vazia.</p>
+          <div class="site-repeat-list" data-repeat-list="course">
+            <% storedCourses.forEach((course, index) => { %>
+              <div class="site-repeat-card" data-repeat-item="course">
+                <div class="site-repeat-card-head">
+                  <strong data-repeat-title="course">Curso <%= index + 1 %></strong>
+                  <button type="button" class="site-button-ghost site-button-ghost--danger" data-repeat-remove="course">Remover</button>
+                </div>
+                <div class="site-form-grid">
+                  <div class="site-form-row">
+                    <label>Grau de formação</label>
+                    <input type="text" name="courseDegreeLevel" value="<%= course.degreeLevel || '' %>" placeholder="Graduacao/Ensino Superior">
+                  </div>
+                  <div class="site-form-row">
+                    <label>Curso</label>
+                    <input type="text" name="courseName" value="<%= course.courseName || '' %>">
+                  </div>
+                  <div class="site-form-row">
+                    <label>Início</label>
+                    <input type="month" name="courseStartDate" value="<%= course.startDate || '' %>">
+                  </div>
+                  <div class="site-form-row">
+                    <label>Término</label>
+                    <input type="month" name="courseEndDate" value="<%= course.endDate || '' %>">
+                  </div>
+                  <div class="site-form-row site-form-checkbox-card-inline">
+                    <label><input type="checkbox" name="courseCurrent" value="<%= index %>" <%= course.isCurrent ? 'checked' : '' %> data-repeat-checkbox="course"> Ano atual</label>
+                  </div>
+                  <div class="site-form-row">
+                    <label>Instituição</label>
+                    <input type="text" name="courseInstitution" value="<%= course.institution || '' %>">
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+          <div class="site-repeat-empty" data-repeat-empty="course" <%= storedCourses.length ? 'hidden' : '' %>>Nenhum curso adicionado. Clique em <strong>Adicionar curso</strong> se quiser informar suas formações.</div>
+          <template data-repeat-template="course">
+            <div class="site-repeat-card" data-repeat-item="course">
+              <div class="site-repeat-card-head">
+                <strong data-repeat-title="course">Curso __INDEX__</strong>
+                <button type="button" class="site-button-ghost site-button-ghost--danger" data-repeat-remove="course">Remover</button>
+              </div>
+              <div class="site-form-grid">
+                <div class="site-form-row">
+                  <label>Grau de formação</label>
+                  <input type="text" name="courseDegreeLevel" placeholder="Graduacao/Ensino Superior">
+                </div>
+                <div class="site-form-row">
+                  <label>Curso</label>
+                  <input type="text" name="courseName">
+                </div>
+                <div class="site-form-row">
+                  <label>Início</label>
+                  <input type="month" name="courseStartDate">
+                </div>
+                <div class="site-form-row">
+                  <label>Término</label>
+                  <input type="month" name="courseEndDate">
+                </div>
+                <div class="site-form-row site-form-checkbox-card-inline">
+                  <label><input type="checkbox" name="courseCurrent" value="__CHECKBOX_INDEX__" data-repeat-checkbox="course"> Ano atual</label>
+                </div>
+                <div class="site-form-row">
+                  <label>Instituição</label>
+                  <input type="text" name="courseInstitution">
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <div class="site-profile-section">
+          <div class="site-profile-section-head site-profile-section-head--actions"><h3>EXPERIÊNCIA PROFISSIONAL</h3><button type="button" class="site-button-secondary site-button-secondary--small" data-repeat-add="experience">Adicionar experiência</button></div>
+          <p class="site-form-note">Inclua suas experiências da mais recente até a mais antiga. Se ainda não trabalhou, deixe esta área vazia.</p>
+          <div class="site-repeat-list" data-repeat-list="experience">
+            <% storedExperiences.forEach((experience, index) => { %>
+              <div class="site-repeat-card" data-repeat-item="experience">
+                <div class="site-repeat-card-head">
+                  <strong data-repeat-title="experience">Experiência profissional <%= index + 1 %></strong>
+                  <button type="button" class="site-button-ghost site-button-ghost--danger" data-repeat-remove="experience">Remover</button>
+                </div>
+                <div class="site-form-grid">
+                  <div class="site-form-row">
+                    <label>Data de entrada</label>
+                    <input type="month" name="experienceStartDate" value="<%= experience.startDate || '' %>">
+                  </div>
+                  <div class="site-form-row">
+                    <label>Data de saída</label>
+                    <input type="month" name="experienceEndDate" value="<%= experience.endDate || '' %>">
+                  </div>
+                  <div class="site-form-row">
+                    <label>Nome da empresa</label>
+                    <input type="text" name="experienceCompanyName" value="<%= experience.companyName || '' %>">
+                  </div>
+                  <div class="site-form-row">
+                    <label>Último cargo</label>
+                    <input type="text" name="experienceRole" value="<%= experience.role || '' %>">
+                  </div>
+                </div>
+                <div class="site-form-row">
+                  <label>Principais atribuições / realizações no cargo</label>
+                  <textarea name="experienceDescription" maxlength="250"><%= experience.description || '' %></textarea>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+          <div class="site-repeat-empty" data-repeat-empty="experience" <%= storedExperiences.length ? 'hidden' : '' %>>Nenhuma experiência adicionada. Clique em <strong>Adicionar experiência</strong> se quiser informar sua trajetória profissional.</div>
+          <template data-repeat-template="experience">
+            <div class="site-repeat-card" data-repeat-item="experience">
+              <div class="site-repeat-card-head">
+                <strong data-repeat-title="experience">Experiência profissional __INDEX__</strong>
+                <button type="button" class="site-button-ghost site-button-ghost--danger" data-repeat-remove="experience">Remover</button>
+              </div>
+              <div class="site-form-grid">
+                <div class="site-form-row">
+                  <label>Data de entrada</label>
+                  <input type="month" name="experienceStartDate">
+                </div>
+                <div class="site-form-row">
+                  <label>Data de saída</label>
+                  <input type="month" name="experienceEndDate">
+                </div>
+                <div class="site-form-row">
+                  <label>Nome da empresa</label>
+                  <input type="text" name="experienceCompanyName">
+                </div>
+                <div class="site-form-row">
+                  <label>Último cargo</label>
+                  <input type="text" name="experienceRole">
+                </div>
+              </div>
+              <div class="site-form-row">
+                <label>Principais atribuições / realizações no cargo</label>
+                <textarea name="experienceDescription" maxlength="250"></textarea>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <div class="site-profile-section">
+          <div class="site-profile-section-head"><h3>FINALIZAÇÃO</h3></div>
+          <div class="site-form-grid">
+            <div class="site-form-row">
+              <label for="candidate-portal-referral">* Como ficou sabendo do portal?</label>
+              <select id="candidate-portal-referral" data-required-label="Como ficou sabendo do portal" name="portalReferral" required>
+                <option value="">Selecione</option>
+                <option value="Google" <%= user.portalReferral === 'Google' ? 'selected' : '' %>>Google</option>
+                <option value="Instagram" <%= user.portalReferral === 'Instagram' ? 'selected' : '' %>>Instagram</option>
+                <option value="Facebook" <%= user.portalReferral === 'Facebook' ? 'selected' : '' %>>Facebook</option>
+                <option value="Indicacao" <%= user.portalReferral === 'Indicacao' ? 'selected' : '' %>>Indicacao</option>
+                <option value="Site da prefeitura" <%= user.portalReferral === 'Site da prefeitura' ? 'selected' : '' %>>Site da prefeitura</option>
+                <option value="Outro" <%= user.portalReferral === 'Outro' ? 'selected' : '' %>>Outro</option>
+              </select>
+            </div>
+            <div class="site-form-row">
+              <label for="candidate-resume">Currículo em PDF</label>
+              <input type="file" id="candidate-resume" name="resumePdf" accept="application/pdf">
+              <div class="site-form-note">O anexo do currículo é opcional. Se quiser, envie seu PDF para ficar salvo no perfil.</div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="site-button">Salvar currículo</button>
+      </form>
+    </article>
+
+    <article class="site-info-card">
+      <h3>Resumo da conta</h3>
+      <p><strong>Nome:</strong> <%= user.name %></p>
+      <p><strong>E-mail:</strong> <%= user.email %></p>
+      <p><strong>Perfil:</strong> <%= roleLabelMap[user.role] || 'Candidato' %></p>
+      <p><strong>Status:</strong> <%= user.status || 'ativo' %></p>
+      <p><strong>Login principal:</strong> <%= providerLabelMap[user.providerLogin] || (user.googleId ? 'Google' : 'E-mail') %></p>
+      <p><strong>Cadastro:</strong> <%= new Date(user.createdAt).toLocaleDateString('pt-BR') %></p>
+
+      <% if (user.resumePdf) { %>
+        <div class="site-contact-cta">
+          <strong>Currículo PDF salvo</strong>
+          <span>Você já possui um arquivo anexado ao perfil.</span>
+          <div class="site-section-actions">
+            <a href="/uploads/<%= user.resumePdf %>" target="_blank" rel="noopener noreferrer" class="site-button-secondary">Ver currículo PDF</a>
+          </div>
+        </div>
+      <% } %>
+
+      <% if (user.googleId) { %>
+        <div class="site-contact-cta">
+          <strong>Conta vinculada ao Google</strong>
+          <span>Seu acesso social continua associado a este perfil.</span>
+        </div>
+      <% } %>
+
+      <% if (typeof recentApplications !== 'undefined' && recentApplications.length > 0) { %>
+        <div class="site-contact-cta">
+          <strong>Minhas candidaturas recentes</strong>
+          <div class="site-repeat-list" style="margin-top: 14px;">
+            <% recentApplications.forEach(application => { %>
+              <div class="site-repeat-card">
+                <strong><%= application.job ? application.job.title : 'Vaga removida' %></strong>
+                <span class="site-form-note">Status: <%= applicationStatusMap[application.status] || application.status %></span>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+
+      <div class="site-section-actions">
+        <a href="/auth/logout" class="site-button-ghost">Sair do sistema</a>
+      </div>
+    </article>
+  </div>
+</section>

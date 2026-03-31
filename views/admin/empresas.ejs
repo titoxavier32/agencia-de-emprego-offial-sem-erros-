@@ -1,0 +1,64 @@
+<div class="admin-page">
+  <section class="admin-table-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Empresas cadastradas</h2>
+        <p>Area dedicada para acompanhar os gestores de empresa que terao acesso a publicacao e gestao de vagas.</p>
+      </div>
+      <a href="/admin/usuarios" class="admin-btn-secondary"><i class="fas fa-user-plus"></i><span>Cadastrar empresa</span></a>
+    </div>
+
+    <% if (typeof formStatus !== 'undefined' && formStatus) { %><div class="site-access-status" style="margin-bottom:18px;"><%= formStatus %></div><% } %>
+
+    <% if (companies.length > 0) { %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Status</th>
+            <th>Pagamento</th>
+            <th>Painel público</th>
+            <th>LGPD</th>
+            <th>Login</th>
+            <th>Cadastro</th>
+            <th>Acoes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% companies.forEach(company => { %>
+            <tr>
+              <td><% if (company.avatar) { %><img src="<%= company.avatar %>" alt="Logo" class="admin-avatar"><% } else { %><div class="admin-avatar-fallback"><i class="fas fa-building"></i></div><% } %></td>
+              <td><strong><%= company.companyPublicDisplayName || company.companyTradeName || company.companyLegalName || company.name %></strong><br><small>Ordem: <%= company.companyShowcaseOrder || 0 %></small></td>
+              <td><%= company.email %></td>
+              <td><span class="admin-badge <%= company.status === 'ativo' ? 'success' : (company.status === 'bloqueado' ? 'danger' : 'warning') %>"><%= company.status || 'ativo' %></span></td>
+              <td><span class="admin-badge <%= company.companyPaymentValidated ? 'success' : 'warning' %>"><%= company.companyPaymentValidated ? 'Validado' : 'Pendente' %></span></td>
+              <td><span class="admin-badge <%= company.companyShowcaseEnabled ? 'success' : 'neutral' %>"><%= company.companyShowcaseEnabled ? 'Habilitado' : 'Desativado' %></span></td>
+              <td><span class="admin-badge <%= company.companyShowcaseLgpdConsent ? 'success' : 'warning' %>"><%= company.companyShowcaseLgpdConsent ? 'Autorizado' : 'Pendente' %></span></td>
+              <td><span class="admin-badge neutral"><%= company.providerLogin || (company.googleId ? 'google' : 'email') %></span></td>
+              <td><%= new Date(company.createdAt).toLocaleDateString('pt-BR') %></td>
+              <td>
+                <div class="admin-actions">
+                  <% if (company.status !== 'ativo') { %>
+                    <form action="/admin/empresas/<%= company.id %>/aprovar" method="POST">
+                      <button type="submit" class="admin-btn">Aprovar</button>
+                    </form>
+                  <% } %>
+                  <% if (company.status !== 'bloqueado') { %>
+                    <form action="/admin/empresas/<%= company.id %>/bloquear" method="POST">
+                      <button type="submit" class="admin-btn-danger">Bloquear</button>
+                    </form>
+                  <% } %>
+                  <a href="/admin/empresas/editar/<%= company.id %>" class="admin-btn-secondary">Editar</a>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="admin-empty">Nenhuma empresa cadastrada ainda.</div>
+    <% } %>
+  </section>
+</div>

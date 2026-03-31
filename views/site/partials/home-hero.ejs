@@ -1,0 +1,59 @@
+<%
+  const heroActionPrimaryLabel = globalSetting && globalSetting.heroActionPrimaryLabel ? globalSetting.heroActionPrimaryLabel : 'Cadastrar currículo';
+  const heroActionPrimaryLink = globalSetting && globalSetting.heroActionPrimaryLink ? globalSetting.heroActionPrimaryLink : '/acesso-candidato?section=register-candidate';
+  const heroActionSecondaryLabel = globalSetting && globalSetting.heroActionSecondaryLabel ? globalSetting.heroActionSecondaryLabel : 'Explorar vagas';
+  const heroActionSecondaryLink = globalSetting && globalSetting.heroActionSecondaryLink ? globalSetting.heroActionSecondaryLink : '/vagas';
+  const heroActionTertiaryLabel = globalSetting && globalSetting.heroActionTertiaryLabel ? globalSetting.heroActionTertiaryLabel : 'Conhecer cursos';
+  const heroActionTertiaryLink = globalSetting && globalSetting.heroActionTertiaryLink ? globalSetting.heroActionTertiaryLink : '/cursos';
+  const heroActionQuaternaryLabel = globalSetting && globalSetting.heroActionQuaternaryLabel ? globalSetting.heroActionQuaternaryLabel : 'Falar com a equipe';
+  const heroActionQuaternaryLink = globalSetting && globalSetting.heroActionQuaternaryLink ? globalSetting.heroActionQuaternaryLink : '/contato';
+  const heroStats = [
+    {
+      value: globalSetting && globalSetting.heroStat1Value ? globalSetting.heroStat1Value : String(jobs.length),
+      label: globalSetting && globalSetting.heroStat1Label ? globalSetting.heroStat1Label : 'vagas com apresentação mais objetiva'
+    },
+    {
+      value: globalSetting && globalSetting.heroStat2Value ? globalSetting.heroStat2Value : String(courses.length),
+      label: globalSetting && globalSetting.heroStat2Label ? globalSetting.heroStat2Label : 'cursos posicionados para conversão'
+    },
+    {
+      value: globalSetting && globalSetting.heroStat3Value ? globalSetting.heroStat3Value : String(publicSelections.length),
+      label: globalSetting && globalSetting.heroStat3Label ? globalSetting.heroStat3Label : 'editais públicos com cronograma e quadro de vagas'
+    }
+  ];
+%>
+<section class="site-hero site-home-hero site-home-hero--<%= globalSetting && globalSetting.heroTextAlign ? globalSetting.heroTextAlign : 'left' %>">
+  <div class="site-home-hero-grid">
+    <div class="site-hero-content <%= globalSetting && globalSetting.heroContentBackgroundColor ? 'site-home-hero-content--panel' : '' %>">
+      <% if (!globalSetting || globalSetting.heroShowKicker !== false) { %>
+        <span class="site-kicker"><%= globalSetting && globalSetting.heroKicker ? globalSetting.heroKicker : 'Plataforma profissional para carreira' %></span>
+      <% } %>
+      <h1><%= globalSetting && globalSetting.heroTitle ? globalSetting.heroTitle : 'Conecte talento, contratação e qualificação em uma vitrine que transmite confiança.' %></h1>
+      <% if (!globalSetting || globalSetting.heroShowDescription !== false) { %>
+        <p class="site-lead"><%= globalSetting && globalSetting.heroDescription ? globalSetting.heroDescription : 'Sua agência agora apresenta vagas e cursos em uma experiência mais forte comercialmente: clara para quem busca oportunidade e convincente para quem quer divulgar serviços e atrair candidatos qualificados.' %></p>
+      <% } %>
+    </div>
+
+    <div class="site-home-hero-side <%= globalSetting && globalSetting.heroContentBackgroundColor ? 'site-home-hero-content--panel' : '' %>">
+      <% if (!globalSetting || globalSetting.heroShowActions !== false) { %>
+        <div class="site-home-hero-actions">
+          <a href="<%= heroActionPrimaryLink %>" class="site-button-secondary"><%= heroActionPrimaryLabel %></a>
+          <a href="<%= heroActionSecondaryLink %>" class="site-button"><%= heroActionSecondaryLabel %></a>
+          <a href="<%= heroActionTertiaryLink %>" class="site-button-ghost"><%= heroActionTertiaryLabel %></a>
+          <a href="<%= heroActionQuaternaryLink %>" class="site-button-secondary"><%= heroActionQuaternaryLabel %></a>
+        </div>
+      <% } %>
+
+      <% if (!globalSetting || globalSetting.heroShowStats !== false) { %>
+        <div class="site-home-hero-stats">
+          <% heroStats.forEach(function(stat) { %>
+            <div class="site-stat">
+              <strong><%= stat.value %></strong>
+              <span><%= stat.label %></span>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>

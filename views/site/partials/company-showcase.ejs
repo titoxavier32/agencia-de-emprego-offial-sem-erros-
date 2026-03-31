@@ -1,0 +1,35 @@
+<% const showcaseEnabled = !globalSetting || globalSetting.companyShowcaseEnabled !== false; %>
+<% const companies = typeof publicCompanies !== 'undefined' ? publicCompanies : []; %>
+<% if (showcaseEnabled && companies.length > 0) { %>
+<section class="site-section">
+  <div class="site-section-head">
+    <div class="site-section-heading">
+      <h2><%= globalSetting && globalSetting.companyShowcaseTitle ? globalSetting.companyShowcaseTitle : 'Empresas que divulgam vagas na plataforma' %></h2>
+      <p><%= globalSetting && globalSetting.companyShowcaseDescription ? globalSetting.companyShowcaseDescription : 'Painel institucional com empresas que autorizaram a divulgacao publica de dados corporativos para fortalecer a confianca de quem busca vagas.' %></p>
+    </div>
+    <a href="/empresas-parceiras" class="site-section-link">Ver empresas <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="site-company-showcase" style="--company-card-min-width:<%= globalSetting && globalSetting.companyShowcaseCardMinWidth ? globalSetting.companyShowcaseCardMinWidth : 240 %>px; --company-marquee-duration:<%= globalSetting && globalSetting.companyShowcaseSpeed ? globalSetting.companyShowcaseSpeed : 38 %>s;">
+    <div class="site-company-showcase-track <%= globalSetting && globalSetting.companyShowcaseDirection === 'right' ? 'is-reverse' : '' %>">
+      <% companies.concat(companies).forEach(function(company) { %>
+        <article class="site-company-card">
+          <div class="site-company-card-top">
+            <% if (company.logo) { %><img src="<%= company.logo %>" alt="<%= company.displayName %>" class="site-company-logo"><% } else { %><span class="site-company-mark"><%= (company.displayName || 'E').charAt(0).toUpperCase() %></span><% } %>
+            <div>
+              <strong><%= company.displayName %></strong>
+              <span class="site-company-caption">Empresa autorizada para divulgacao institucional</span>
+            </div>
+          </div>
+          <p class="site-company-summary"><%= company.summary %></p>
+          <div class="site-company-meta">
+            <% if ((!globalSetting || globalSetting.companyShowcaseShowSector !== false) && company.sector) { %><span><i class="fas fa-briefcase"></i> <%= company.sector %></span><% } %>
+            <% if ((!globalSetting || globalSetting.companyShowcaseShowLocation !== false) && (company.city || company.state)) { %><span><i class="fas fa-location-dot"></i> <%= [company.city, company.state].filter(Boolean).join(' / ') %></span><% } %>
+            <% if (globalSetting && globalSetting.companyShowcaseShowWebsite && company.website) { %><span><i class="fas fa-globe"></i> <a href="<%= company.website %>" target="_blank" rel="noopener noreferrer">Site institucional</a></span><% } %>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  </div>
+  <p class="site-company-lgpd-note">Exibimos apenas dados institucionais autorizados pela empresa para divulgacao publica, em conformidade com a LGPD.</p>
+</section>
+<% } %>

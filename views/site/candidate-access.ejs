@@ -1,0 +1,366 @@
+﻿<%
+  const currentAccessView = typeof accessSection !== 'undefined' && accessSection ? accessSection : 'login';
+%>
+<section class="site-access-page page-center">
+  <div class="site-access-feedback-stack site-access-feedback-stack--centered">
+    <% if (accessError) { %>
+      <div class="admin-alert"><%= accessError %></div>
+    <% } %>
+    <% if (accessStatus) { %>
+      <div class="site-access-status"><%= accessStatus %></div>
+    <% } %>
+  </div>
+
+  <div class="site-access-shell site-access-shell--clean" data-access-root data-access-initial-view="<%= currentAccessView %>">
+    <div class="site-access-branding">
+      <a href="/" class="site-brand site-brand--centered">
+        <span class="site-brand-mark"><i class="fas fa-briefcase"></i></span>
+        <span class="site-brand-text">
+          <span>Carreira</span>
+          <strong>Agencia de Emprego</strong>
+        </span>
+      </a>
+    </div>
+
+    <article class="site-panel site-access-stage" data-access-view="login" <%= currentAccessView === 'login' ? '' : 'hidden' %>>
+      <div class="site-section-head site-section-head--stacked">
+        <div class="site-section-heading site-section-heading--centered">
+          <h2>Entrar no sistema</h2>
+          <p>Use CPF, CNPJ ou e-mail para acessar sua conta.</p>
+        </div>
+      </div>
+
+      <form action="/auth/candidate-login" method="POST" class="site-form" data-required-summary="login">
+        <div class="site-form-alert" data-form-alert hidden></div>
+        <div class="site-form-grid site-form-grid--single">
+          <div class="site-form-row">
+            <label for="access-identifier">CPF / CNPJ / E-mail</label>
+            <input type="text" id="access-identifier" name="identifier" required data-required-label="CPF, CNPJ ou E-mail" placeholder="Digite seu CPF, CNPJ ou e-mail">
+          </div>
+          <div class="site-form-row">
+            <label for="access-password">Senha</label>
+            <input type="password" id="access-password" name="password" required data-required-label="Senha" placeholder="Digite sua senha">
+          </div>
+        </div>
+
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <a href="/acesso-candidato?section=forgot-request" class="site-link-inline" data-access-target="forgot-request">Esqueci minha senha</a>
+        </div>
+
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <button type="submit" class="site-button">Entrar</button>
+        </div>
+
+        <p class="site-form-note site-form-note--centered">Ainda nao possui cadastro? Cadastre-se como candidato ou empresa.</p>
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <a href="/acesso-candidato?section=register-type" class="site-button-ghost" data-access-target="register-type">Cadastre-se</a>
+        </div>
+      </form>
+    </article>
+
+    <article class="site-panel site-access-stage" data-access-view="forgot-request" <%= currentAccessView === 'forgot-request' ? '' : 'hidden' %>>
+      <div class="site-section-head site-section-head--stacked">
+        <div class="site-section-heading site-section-heading--centered">
+          <h2>Recuperar acesso à conta</h2>
+          <p>Não se preocupe. Vamos ajudar você a recuperar o acesso à sua conta.</p>
+          <p>Informe o CPF, CNPJ ou e-mail cadastrado para receber um código de verificação.</p>
+        </div>
+      </div>
+
+      <form action="/auth/password-reset/request" method="POST" class="site-form" data-required-summary="forgot-request">
+        <div class="site-form-alert" data-form-alert hidden></div>
+        <div class="site-form-grid site-form-grid--single">
+          <div class="site-form-row">
+            <label for="forgot-identifier">CPF, CNPJ ou E-mail cadastrado</label>
+            <input type="text" id="forgot-identifier" name="identifier" required data-required-label="CPF, CNPJ ou E-mail cadastrado" placeholder="Digite seu CPF, CNPJ ou e-mail">
+          </div>
+        </div>
+
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <button type="submit" class="site-button">Enviar código de verificação</button>
+        </div>
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <a href="/acesso-candidato?section=login" class="site-button-ghost" data-access-target="login">Voltar para login</a>
+        </div>
+      </form>
+    </article>
+
+    <article class="site-panel site-access-stage" data-access-view="forgot-verify" <%= currentAccessView === 'forgot-verify' ? '' : 'hidden' %>>
+      <div class="site-section-head site-section-head--stacked">
+        <div class="site-section-heading site-section-heading--centered">
+          <h2>Verificação de segurança</h2>
+          <p>Digite o código recebido no e-mail para continuar com a redefinição da senha.</p>
+        </div>
+      </div>
+
+      <form action="/auth/password-reset/verify" method="POST" class="site-form" data-required-summary="forgot-verify">
+        <input type="hidden" name="resetToken" value="<%= typeof resetToken !== 'undefined' ? resetToken : '' %>">
+        <div class="site-form-alert" data-form-alert hidden></div>
+        <div class="site-form-grid site-form-grid--single">
+          <div class="site-form-row">
+            <label for="forgot-code">Digite o código recebido no e-mail</label>
+            <input type="text" id="forgot-code" name="code" required data-required-label="Código de verificação" inputmode="numeric" maxlength="6" placeholder="000000">
+          </div>
+        </div>
+
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <button type="submit" class="site-button">Validar código</button>
+        </div>
+      </form>
+
+      <form action="/auth/password-reset/request" method="POST" class="site-access-inline-actions site-access-inline-actions--centered">
+        <input type="hidden" name="resetToken" value="<%= typeof resetToken !== 'undefined' ? resetToken : '' %>">
+        <button type="submit" class="site-button-ghost" <%= typeof passwordResetResendSeconds !== 'undefined' && passwordResetResendSeconds > 0 ? 'disabled' : '' %> data-resend-button data-resend-wait="<%= typeof passwordResetResendSeconds !== 'undefined' ? passwordResetResendSeconds : 0 %>">
+          Reenviar código
+        </button>
+      </form>
+      <p class="site-form-note site-form-note--centered" data-resend-note>
+        <% if (typeof passwordResetResendSeconds !== 'undefined' && passwordResetResendSeconds > 0) { %>
+          Aguarde <span data-resend-seconds><%= passwordResetResendSeconds %></span>s para reenviar.
+        <% } else { %>
+          Você pode reenviar o código se necessário.
+        <% } %>
+      </p>
+    </article>
+
+    <article class="site-panel site-access-stage" data-access-view="forgot-reset" <%= currentAccessView === 'forgot-reset' ? '' : 'hidden' %>>
+      <div class="site-section-head site-section-head--stacked">
+        <div class="site-section-heading site-section-heading--centered">
+          <h2>Criar nova senha</h2>
+          <p>Informe sua nova senha com pelo menos 8 caracteres, incluindo letras e números.</p>
+        </div>
+      </div>
+
+      <form action="/auth/password-reset/reset" method="POST" class="site-form" data-required-summary="forgot-reset">
+        <input type="hidden" name="resetToken" value="<%= typeof resetToken !== 'undefined' ? resetToken : '' %>">
+        <div class="site-form-alert" data-form-alert hidden></div>
+        <div class="site-form-grid site-form-grid--single">
+          <div class="site-form-row">
+            <label for="forgot-new-password">Nova senha</label>
+            <input type="password" id="forgot-new-password" name="newPassword" required data-required-label="Nova senha">
+          </div>
+          <div class="site-form-row">
+            <label for="forgot-confirm-password">Confirmar nova senha</label>
+            <input type="password" id="forgot-confirm-password" name="confirmPassword" required data-required-label="Confirmar nova senha">
+          </div>
+        </div>
+
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <button type="submit" class="site-button">Salvar nova senha</button>
+        </div>
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <a href="/acesso-candidato?section=login" class="site-button-ghost" data-access-target="login">Ir para login</a>
+        </div>
+      </form>
+    </article>
+
+    <article class="site-panel site-access-stage" data-access-view="register-type" <%= currentAccessView === 'register-type' ? '' : 'hidden' %>>
+      <div class="site-section-head site-section-head--stacked">
+        <div class="site-section-heading site-section-heading--centered">
+          <h2>Selecione o tipo de cadastro</h2>
+          <p>Escolha o perfil ideal para entrar na plataforma com o fluxo certo.</p>
+        </div>
+      </div>
+
+      <div class="site-card-grid site-card-grid--dual">
+        <article class="site-panel site-access-choice-card">
+          <div class="site-access-choice-icon"><i class="fas fa-user-tie"></i></div>
+          <h3>Candidato</h3>
+          <p>Crie seu acesso, organize seu perfil profissional e prepare o curriculo para se candidatar as vagas.</p>
+          <a href="/acesso-candidato?section=register-candidate" class="site-button-secondary" data-access-target="register-candidate">Cadastre-se como candidato</a>
+        </article>
+
+        <article class="site-panel site-access-choice-card">
+          <div class="site-access-choice-icon"><i class="fas fa-building"></i></div>
+          <h3>Empresa</h3>
+          <p>Cadastre sua empresa para publicar vagas, acompanhar candidaturas e gerenciar recrutamento.</p>
+          <a href="/acesso-candidato?section=register-company" class="site-button-secondary" data-access-target="register-company">Cadastre-se como empresa</a>
+        </article>
+      </div>
+
+      <div class="site-access-inline-actions site-access-inline-actions--centered">
+        <a href="/acesso-candidato?section=login" class="site-button-ghost" data-access-target="login">Entrar</a>
+      </div>
+    </article>
+
+    <article class="site-panel site-access-stage site-access-stage--wide" data-access-view="register-candidate" <%= currentAccessView === 'register-candidate' ? '' : 'hidden' %>>
+      <div class="site-section-head site-section-head--stacked">
+        <div class="site-section-heading site-section-heading--centered">
+          <h2>Cadastro de candidato</h2>
+          <p>O CPF e validado para evitar duplicidade de cadastro.</p>
+        </div>
+      </div>
+
+      <form action="/auth/candidate-register" method="POST" class="site-form" data-required-summary="candidate-register">
+        <div class="site-form-alert" data-form-alert hidden></div>
+        <div class="site-form-grid site-form-grid--compact">
+          <div class="site-form-row site-form-row--span-3">
+            <label for="candidate-name">Nome completo</label>
+            <input type="text" id="candidate-name" name="name" required data-required-label="Nome completo">
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="candidate-cpf">CPF</label>
+            <input type="text" id="candidate-cpf" name="cpf" required data-required-label="CPF" placeholder="Somente numeros" data-document-check data-document-profile="candidato" data-document-min-length="11">
+            <div id="candidate-cpf-feedback" class="site-inline-feedback" data-document-feedback></div>
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="candidate-email">E-mail</label>
+            <input type="email" id="candidate-email" name="email" required data-required-label="E-mail">
+          </div>
+          <div class="site-form-row site-form-row--span-3">
+            <label for="candidate-password">Criar senha</label>
+            <input type="password" id="candidate-password" name="password" required data-required-label="Criar senha">
+          </div>
+          <div class="site-form-row site-form-row--span-3">
+            <label for="candidate-confirm-password">Confirmar senha</label>
+            <input type="password" id="candidate-confirm-password" name="confirmPassword" required data-required-label="Confirmar senha">
+          </div>
+        </div>
+
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <button type="submit" class="site-button">Cadastrar candidato</button>
+        </div>
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <a href="/acesso-candidato?section=login" class="site-button-ghost" data-access-target="login">Entrar</a>
+          <a href="/acesso-candidato?section=register-type" class="site-button-ghost" data-access-target="register-type">Voltar</a>
+        </div>
+      </form>
+    </article>
+
+    <article class="site-panel site-access-stage site-access-stage--wide" data-access-view="register-company" <%= currentAccessView === 'register-company' ? '' : 'hidden' %>>
+      <div class="site-section-head site-section-head--stacked">
+        <div class="site-section-heading site-section-heading--centered">
+          <h2>Cadastro de empresa</h2>
+          <p>O documento da empresa e validado para impedir duplicidade no sistema.</p>
+        </div>
+      </div>
+
+      <form action="/auth/company-register" method="POST" class="site-form" data-required-summary="company-register">
+        <div class="site-form-alert" data-form-alert hidden></div>
+        <div class="site-form-grid site-form-grid--compact">
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-profile-type">Selecione o tipo de empresa</label>
+            <select id="company-profile-type" data-required-label="Selecione o tipo de empresa" name="companyProfileType" required>
+              <option value="">Selecione</option>
+              <option value="Empresa com CNPJ">Empresa com CNPJ</option>
+              <option value="MEI">MEI</option>
+              <option value="Profissional autonomo">Profissional autonomo</option>
+            </select>
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-document-type">Tipo de documento</label>
+            <select id="company-document-type" data-required-label="Tipo de documento" name="companyDocumentType" required>
+              <option value="">Selecione</option>
+              <option value="CNPJ">CNPJ</option>
+              <option value="CPF">CPF</option>
+            </select>
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-document">CNPJ ou CPF</label>
+            <input type="text" id="company-document" data-required-label="CNPJ ou CPF" name="companyDocument" required placeholder="Somente numeros" data-document-check data-document-profile="empresa" data-document-min-length="11">
+            <div id="company-document-feedback" class="site-inline-feedback" data-document-feedback></div>
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-sector">Ramo de atividade</label>
+            <select id="company-sector" name="companySector">
+              <option value="">Selecione</option>
+              <option value="Administracao">Administracao</option>
+              <option value="Agronegocio">Agronegocio</option>
+              <option value="Comercio">Comercio</option>
+              <option value="Construcao civil">Construcao civil</option>
+              <option value="Educacao">Educacao</option>
+              <option value="Industria">Industria</option>
+              <option value="Logistica">Logistica</option>
+              <option value="Saude">Saude</option>
+              <option value="Servicos">Servicos</option>
+              <option value="Tecnologia">Tecnologia</option>
+            </select>
+          </div>
+          <div class="site-form-row site-form-row--span-3">
+            <label for="company-legal-name">Razao social</label>
+            <input type="text" id="company-legal-name" data-required-label="Razao social" name="companyLegalName" required>
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-trade-name">Nome fantasia</label>
+            <input type="text" id="company-trade-name" name="companyTradeName">
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-state-registration">Inscricao estadual</label>
+            <input type="text" id="company-state-registration" name="companyStateRegistration">
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-responsible-name">Nome do responsavel</label>
+            <input type="text" id="company-responsible-name" data-required-label="Nome do responsavel" name="companyResponsibleName" required>
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-responsible-cpf">CPF do responsavel</label>
+            <input type="text" id="company-responsible-cpf" name="companyResponsibleCpf" placeholder="Somente numeros">
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-phone">Telefone</label>
+            <input type="text" id="company-phone" data-required-label="Telefone" name="companyPhone" required>
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-email">E-mail corporativo</label>
+            <input type="email" id="company-email" data-required-label="E-mail corporativo" name="email" required>
+          </div>
+          <div class="site-form-row site-form-row--span-3">
+            <label for="company-address">Endereco completo</label>
+            <input type="text" id="company-address" data-required-label="Endereco completo" name="address" required>
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-city">Cidade</label>
+            <input type="text" id="company-city" data-required-label="Cidade" name="city" required>
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-state">Estado</label>
+            <select id="company-state" data-required-label="Estado" name="state" required>
+              <option value="">Selecione</option>
+              <option value="AC">AC</option><option value="AL">AL</option><option value="AM">AM</option><option value="AP">AP</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MG">MG</option><option value="MS">MS</option><option value="MT">MT</option><option value="PA">PA</option><option value="PB">PB</option><option value="PE">PE</option><option value="PI">PI</option><option value="PR">PR</option><option value="RJ">RJ</option><option value="RN">RN</option><option value="RO">RO</option><option value="RR">RR</option><option value="RS">RS</option><option value="SC">SC</option><option value="SE">SE</option><option value="SP">SP</option><option value="TO">TO</option>
+            </select>
+          </div>
+          <div class="site-form-row site-form-row--span-1">
+            <label for="company-zip-code">CEP</label>
+            <input type="text" id="company-zip-code" data-required-label="CEP" name="companyZipCode" required>
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-website">Site da empresa</label>
+            <input type="url" id="company-website" name="companyWebsite">
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-password">Senha</label>
+            <input type="password" id="company-password" data-required-label="Senha" name="password" required>
+          </div>
+          <div class="site-form-row site-form-row--span-2">
+            <label for="company-confirm-password">Confirmar senha</label>
+            <input type="password" id="company-confirm-password" data-required-label="Confirmar senha" name="confirmPassword" required>
+          </div>
+        </div>
+
+        <div class="site-form-grid site-form-grid--compact">
+          <div class="site-form-row site-form-row--span-3 site-form-checkbox-card-inline">
+            <label>
+              <input type="checkbox" name="companyPrivacyAccepted" required data-required-label="Política de privacidade">
+              <span>Li e aceito a <a href="/politica-de-privacidade" target="_blank" rel="noopener noreferrer">Política de privacidade</a>.</span>
+            </label>
+          </div>
+          <div class="site-form-row site-form-row--span-3 site-form-checkbox-card-inline">
+            <label>
+              <input type="checkbox" name="companyTermsAccepted" required data-required-label="Termos de uso">
+              <span>Li e aceito os <a href="/termos-de-uso" target="_blank" rel="noopener noreferrer">Termos de uso</a>.</span>
+            </label>
+          </div>
+          <p class="site-form-note site-form-note--compact site-form-row--span-6">O cadastro da empresa só será concluído após o aceite dos dois documentos.</p>
+        </div>
+
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <button type="submit" class="site-button">Cadastrar empresa</button>
+        </div>
+        <div class="site-access-inline-actions site-access-inline-actions--centered">
+          <a href="/acesso-candidato?section=login" class="site-button-ghost" data-access-target="login">Entrar</a>
+          <a href="/acesso-candidato?section=register-type" class="site-button-ghost" data-access-target="register-type">Voltar</a>
+        </div>
+      </form>
+    </article>
+  </div>
+</section>

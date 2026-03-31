@@ -1,9 +1,17 @@
 <%
-  const isSidebar = typeof globalSetting !== 'undefined' && globalSetting.navbarPosition !== 'top';
+  const navbarPosition = typeof globalSetting !== 'undefined' && globalSetting.navbarPosition ? globalSetting.navbarPosition : 'top';
+  const isSidebar = navbarPosition === 'sidebar';
   const brandKicker = globalSetting && globalSetting.brandKicker ? globalSetting.brandKicker : 'Carreira e cursos';
   const brandName = globalSetting && globalSetting.brandName ? globalSetting.brandName : 'Agência de Emprego';
+  const adminAccessMode = globalSetting && globalSetting.adminAccessMode ? globalSetting.adminAccessMode : 'lock';
+  const roleLabelMap = {
+    admin: 'Administrador',
+    empresa: 'Empresa',
+    candidato: 'Candidato',
+    user: 'Candidato'
+  };
   const fallbackLinks = [
-    { href: '/', label: 'Início', icon: 'fa-house', target: '_self' },
+    { href: '/', label: 'Inicio', icon: 'fa-house', target: '_self' },
     { href: '/vagas', label: 'Vagas', icon: 'fa-briefcase', target: '_self' },
     { href: '/cursos', label: 'Cursos', icon: 'fa-graduation-cap', target: '_self' },
     { href: '/selecoes-publicas', label: 'Seleções públicas', icon: 'fa-file-signature', target: '_self' },
@@ -18,6 +26,7 @@
   }));
   const allLinks = configuredLinks.length > 0 ? configuredLinks : fallbackLinks;
   const isLinkActive = (href) => href === '/' ? currentPath === '/' : currentPath === href || currentPath.indexOf(href + '/') === 0;
+  const userRoleLabel = user ? (roleLabelMap[user.role] || user.role) : '';
 %>
 
 <% if (isSidebar) { %>
@@ -44,7 +53,7 @@
         <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=2563eb&color=fff" class="site-avatar" alt="<%= user.name %>">
         <div class="site-chip-text">
           <strong><%= user.name %></strong>
-          <span><%= user.role %></span>
+          <span><%= userRoleLabel %></span>
         </div>
       </div>
       <div class="site-mobile-links mt-4">
@@ -52,6 +61,24 @@
           <a href="/admin/dashboard" class="site-nav-link">
             <i class="fas fa-gauge-high"></i>
             <span>Painel admin</span>
+          </a>
+        <% } else if (user.role === 'empresa') { %>
+          <a href="/perfil" class="site-nav-link">
+            <i class="fas fa-building"></i>
+            <span>Area da empresa</span>
+          </a>
+          <a href="/vagas" class="site-nav-link">
+            <i class="fas fa-briefcase"></i>
+            <span>Vagas</span>
+          </a>
+        <% } else { %>
+          <a href="/perfil" class="site-nav-link">
+            <i class="fas fa-file-lines"></i>
+            <span>Meu currículo</span>
+          </a>
+          <a href="/vagas" class="site-nav-link">
+            <i class="fas fa-magnifying-glass"></i>
+            <span>Buscar vagas</span>
           </a>
         <% } %>
         <a href="/auth/logout" class="site-nav-link">
@@ -61,11 +88,11 @@
       </div>
     <% } else { %>
       <div class="site-mobile-links">
-        <a href="/auth/google" class="site-button">
-          <i class="fab fa-google"></i>
-          <span>Entrar com Google</span>
-        </a>
-        <a href="/admin/login" class="site-button-ghost">Acesso admin</a>
+        <a href="/acesso-candidato?section=login" class="site-button-ghost">Entrar</a>
+        <a href="/acesso-candidato?section=register-type" class="site-button-secondary">Cadastre-se</a>
+        <% if (adminAccessMode === 'button') { %>
+          <a href="/admin/login" class="site-button-ghost">Acesso admin</a>
+        <% } %>
       </div>
     <% } %>
   </div>
@@ -92,37 +119,63 @@
         <div class="site-user-chip">
           <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=2563eb&color=fff" class="site-avatar" alt="<%= user.name %>">
           <div class="site-chip-text">
-            <strong><%= user.name %></strong>
-            <span><%= user.role %></span>
-          </div>
+          <strong><%= user.name %></strong>
+          <span><%= userRoleLabel %></span>
         </div>
+      </div>
         <% if (user.role === 'admin') { %>
           <a href="/admin/dashboard" class="site-button-secondary">Painel admin</a>
+        <% } else if (user.role === 'empresa') { %>
+          <a href="/perfil" class="site-button-secondary">Area da empresa</a>
+          <a href="/vagas" class="site-button-ghost">Vagas</a>
+        <% } else { %>
+          <a href="/perfil" class="site-button-secondary">Meu currículo</a>
+          <a href="/vagas" class="site-button-ghost">Buscar vagas</a>
         <% } %>
         <a href="/auth/logout" class="site-button-ghost">Sair</a>
       <% } else { %>
-        <a href="/auth/google" class="site-button">
-          <i class="fab fa-google"></i>
-          <span>Entrar</span>
+        <a href="/acesso-candidato?section=login" class="site-button-ghost">Entrar</a>
+        <a href="/acesso-candidato?section=register-type" class="site-button-secondary">
+          <i class="fas fa-user-plus"></i>
+          <span>Cadastre-se</span>
         </a>
-        <button class="site-mobile-nav-toggle" type="button" data-mobile-toggle="site-mobile-menu" aria-expanded="false" aria-controls="site-mobile-menu">
-          <i class="fas fa-bars"></i>
-        </button>
+        <% if (adminAccessMode === 'button') { %>
+          <button class="site-mobile-nav-toggle" type="button" data-mobile-toggle="site-mobile-menu" aria-expanded="false" aria-controls="site-mobile-menu">
+            <i class="fas fa-bars"></i>
+          </button>
+        <% } %>
       <% } %>
     </div>
   </div>
 
-  <div id="site-mobile-menu" class="site-mobile-panel">
-    <div class="site-page py-4">
-      <nav class="site-mobile-links">
-        <% allLinks.forEach(link => { %>
-          <a href="<%= link.href %>" target="<%= link.target %>" class="site-nav-link <%= isLinkActive(link.href) ? 'is-active' : '' %>">
-            <i class="fas <%= link.icon %>"></i>
-            <span><%= link.label %></span>
-          </a>
-        <% }) %>
-        <a href="/admin/login" class="site-button-ghost">Acesso admin</a>
-      </nav>
+  <% if (adminAccessMode === 'button') { %>
+    <div id="site-mobile-menu" class="site-mobile-panel">
+      <div class="site-page py-4">
+        <nav class="site-mobile-links">
+          <% allLinks.forEach(link => { %>
+            <a href="<%= link.href %>" target="<%= link.target %>" class="site-nav-link <%= isLinkActive(link.href) ? 'is-active' : '' %>">
+              <i class="fas <%= link.icon %>"></i>
+              <span><%= link.label %></span>
+            </a>
+          <% }) %>
+          <% if (user) { %>
+            <% if (user.role === 'admin') { %>
+              <a href="/admin/dashboard" class="site-button-secondary">Painel admin</a>
+            <% } else if (user.role === 'empresa') { %>
+              <a href="/perfil" class="site-button-secondary">Area da empresa</a>
+              <a href="/perfil/empresa/vagas" class="site-button-ghost">Minhas vagas</a>
+            <% } else { %>
+              <a href="/perfil" class="site-button-secondary">Meu currículo</a>
+              <a href="/vagas" class="site-button-ghost">Buscar vagas</a>
+            <% } %>
+            <a href="/auth/logout" class="site-button-ghost">Sair</a>
+          <% } else { %>
+            <a href="/acesso-candidato?section=login" class="site-button-ghost">Entrar</a>
+            <a href="/acesso-candidato?section=register-type" class="site-button-secondary">Cadastre-se</a>
+            <a href="/admin/login" class="site-button-ghost">Acesso admin</a>
+          <% } %>
+        </nav>
+      </div>
     </div>
-  </div>
+  <% } %>
 <% } %>

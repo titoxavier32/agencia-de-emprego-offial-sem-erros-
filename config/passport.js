@@ -17,6 +17,10 @@ module.exports = function(passport) {
           return done(null, false, { message: 'Acesso negado.' });
         }
 
+        if (user.status === 'bloqueado') {
+          return done(null, false, { message: 'Conta administrativa bloqueada.' });
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
           return done(null, user);
@@ -43,7 +47,9 @@ module.exports = function(passport) {
           name: profile.displayName,
           email: profile.emails && profile.emails[0] ? profile.emails[0].value : null,
           avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : null,
-          role: 'user'
+          role: 'candidato',
+          providerLogin: 'google',
+          status: 'ativo'
         };
 
         try {
@@ -56,6 +62,7 @@ module.exports = function(passport) {
               if(existingEmail) {
                   existingEmail.googleId = profile.id;
                   existingEmail.avatar = newUser.avatar;
+                  existingEmail.providerLogin = 'google';
                   await existingEmail.save();
                   return done(null, existingEmail);
               }

@@ -89,4 +89,94 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderMenuPreview();
   }
+
+
+  document.querySelectorAll('[data-color-input]').forEach((picker) => {
+    const targetId = picker.getAttribute('data-color-input');
+    const textInput = document.getElementById(targetId);
+    if (!textInput) return;
+
+    const syncFromText = () => {
+      const value = String(textInput.value || '').trim();
+      if (/^#([0-9a-fA-F]{6})$/.test(value)) {
+        picker.value = value;
+      }
+    };
+
+    picker.addEventListener('input', () => {
+      textInput.value = picker.value;
+    });
+
+    textInput.addEventListener('input', syncFromText);
+    syncFromText();
+  });
+
+  const draggableAds = document.querySelectorAll('[data-draggable-ad]');
+  const dropSlots = document.querySelectorAll('[data-drop-slot]');
+  const addGroupButtons = document.querySelectorAll('[data-add-group]');
+  let draggedAdId = null;
+
+  draggableAds.forEach((card) => {
+    card.addEventListener('dragstart', () => {
+      draggedAdId = card.dataset.adId;
+      card.classList.add('is-dragging');
+    });
+
+    card.addEventListener('dragend', () => {
+      card.classList.remove('is-dragging');
+      draggedAdId = null;
+      dropSlots.forEach((slot) => slot.classList.remove('is-target'));
+    });
+  });
+
+  dropSlots.forEach((slot) => {
+    slot.addEventListener('dragover', (event) => {
+      if (!draggedAdId) return;
+      event.preventDefault();
+      slot.classList.add('is-target');
+    });
+
+    slot.addEventListener('dragleave', () => {
+      slot.classList.remove('is-target');
+    });
+
+    slot.addEventListener('drop', async (event) => {
+      if (!draggedAdId) return;
+      event.preventDefault();
+      slot.classList.remove('is-target');
+
+      try {
+        const response = await fetch(`/admin/propagandas/reposicionar/${draggedAdId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            placement: slot.dataset.placement,
+            groupName: slot.dataset.groupName,
+            position: slot.dataset.position
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao reposicionar');
+        }
+
+        window.location.reload();
+      } catch (error) {
+        window.alert('Nao foi possivel reposicionar a propaganda.');
+      }
+    });
+  });
+
+  addGroupButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const groupName = window.prompt('Digite o nome do novo grupo visual:');
+      if (!groupName) return;
+
+      const placement = button.dataset.placement || 'mural_home';
+      const url = `/admin/propagandas/nova?placement=${encodeURIComponent(placement)}&groupName=${encodeURIComponent(groupName)}&position=1`;
+      window.location.href = url;
+    });
+  });
 });
