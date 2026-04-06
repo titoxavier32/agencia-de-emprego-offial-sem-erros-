@@ -130,40 +130,31 @@
 
     <div class="site-nav-actions">
       <% if (user) { %>
-        <div class="site-user-chip">
+        <div class="site-user-chip lg:flex hidden">
           <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=2563eb&color=fff" class="site-avatar" alt="<%= user.name %>">
           <div class="site-chip-text">
-          <strong><%= user.name %></strong>
-          <span><%= userRoleLabel %></span>
+            <strong><%= user.name %></strong>
+            <span><%= userRoleLabel %></span>
+          </div>
         </div>
-      </div>
-        <% if (user.role === 'admin') { %>
-          <a href="/admin/dashboard" class="site-button-secondary">Painel admin</a>
-        <% } else if (user.role === 'empresa') { %>
-          <a href="/perfil" class="site-button-secondary">Area da empresa</a>
-          <a href="/vagas" class="site-button-ghost">Vagas</a>
-        <% } else { %>
-          <a href="/perfil" class="site-button-secondary">Meu currículo</a>
-          <a href="/vagas" class="site-button-ghost">Buscar vagas</a>
-        <% } %>
-        <a href="/auth/logout" class="site-button-ghost">Sair</a>
+        <a href="/auth/logout" class="site-button-ghost lg:flex hidden">Sair</a>
       <% } else { %>
-        <a href="/acesso-candidato?section=login" class="site-button-ghost">Entrar</a>
-        <a href="/acesso-candidato?section=register-type" class="site-button-secondary">
+        <a href="/acesso-candidato?section=login" class="site-button-ghost lg:flex hidden">Entrar</a>
+        <a href="/acesso-candidato?section=register-type" class="site-button-secondary lg:flex hidden">
           <i class="fas fa-user-plus"></i>
           <span>Cadastre-se</span>
         </a>
-        <% if (adminAccessMode === 'button') { %>
-          <button class="site-mobile-nav-toggle" type="button" data-mobile-toggle="site-mobile-menu" aria-expanded="false" aria-controls="site-mobile-menu">
-            <i class="fas fa-bars"></i>
-          </button>
-        <% } %>
       <% } %>
+
+      <!-- Toggle Mobile (Sempre Visível em telas pequenas) -->
+      <button class="site-mobile-nav-toggle" type="button" data-mobile-toggle="site-mobile-menu" aria-expanded="false" aria-controls="site-mobile-menu">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </div>
 
-  <% if (adminAccessMode === 'button') { %>
-    <div id="site-mobile-menu" class="site-mobile-panel">
+  <% /* Menu Lateral/Mobile Panel */ %>
+  <div id="site-mobile-menu" class="site-mobile-panel">
       <div class="site-page py-4">
         <nav class="site-mobile-links">
           <% allLinks.forEach(link => { %>
@@ -192,4 +183,3 @@
       </div>
     </div>
   <% } %>
-<% } %>

@@ -150,7 +150,7 @@ body.site-shell::before {
   align-items: center;
   justify-content: center;
   flex: 1;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Garante uma linha no desktop */
   z-index: 1;
 }
 

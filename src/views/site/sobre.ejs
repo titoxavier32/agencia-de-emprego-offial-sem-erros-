@@ -1,43 +1,174 @@
 <section class="site-hero">
   <div class="site-hero-content">
-    <span class="site-kicker">Quem somos</span>
-    <h1><%= errorMessage ? 'Nao foi possivel concluir a solicitacao.' : 'Uma agência pensada para gerar mais conexões, mais qualificação e mais resultado.' %></h1>
-    <% if (errorMessage) { %>
-      <p class="site-lead"><%= errorMessage %></p>
-    <% } else { %>
-      <p class="site-lead">
-        Posicionamos sua presença digital para parecer uma operação confiável, ativa e pronta para conectar empresas, profissionais e oportunidades reais de crescimento.
+    <span class="site-kicker text-white/80">Quem Somos</span>
+    <h1 class="text-white">Conectamos pessoas a oportunidades reais de crescimento profissional.</h1>
+    <p class="site-lead text-white/90">
+      A Agência de Emprego foi criada para reunir vagas, cursos, seleções públicas e eventos em um só lugar, facilitando o acesso à informação e ampliando as chances de desenvolvimento profissional na região.
+    </p>
+  </div>
+</section>
+
+<section class="site-section bg-slate-50">
+  <div class="site-grid-2 items-center">
+    <article class="site-panel !bg-white">
+      <div class="site-kicker">A Nossa Plataforma</div>
+      <h2 class="text-3xl font-bold mb-4">Apresentação Institucional</h2>
+      <p class="text-slate-600 mb-6 leading-relaxed">
+        A Agência de Emprego é uma plataforma pensada para aproximar candidatos, empresas e instituições de ensino por meio de uma experiência digital organizada, acessível e confiável. Nosso objetivo é facilitar a busca por oportunidades, ampliar a divulgação de vagas, fortalecer a empregabilidade e valorizar a qualificação profissional.
       </p>
-    <% } %>
+      <div class="site-info-card !bg-blue-50 !border-blue-100">
+        <p class="text-blue-700 font-medium">
+          Trabalhamos para que cada conexão feita em nossa plataforma resulte em um novo passo na jornada de sucesso de nossos usuários.
+        </p>
+      </div>
+    </article>
+    <div class="relative">
+      <div class="rounded-2xl overflow-hidden shadow-xl animate-float">
+        <img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1000&auto=format&fit=crop" alt="Trabalho em equipe" class="w-full object-cover aspect-video">
+      </div>
+      <div class="absolute -bottom-6 -right-4 bg-white p-6 rounded-xl shadow-lg border border-slate-100 hidden md:block">
+        <div class="flex items-center gap-4">
+          <div class="size-12 bg-blue-600 rounded-full flex items-center justify-center text-white">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <div>
+            <strong class="block text-slate-800">Crescimento Real</strong>
+            <span class="text-sm text-slate-500">Oportunidades validadas</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section class="site-section">
-  <div class="site-grid-2">
-    <article class="site-panel">
-      <h2>Apresentação mais comercial</h2>
-      <p>
-        A Agência de Emprego atua como um ponto de encontro entre contratação e desenvolvimento profissional.
-        Em vez de apenas listar conteúdo, a nova comunicação reforça valor percebido, organização e seriedade.
-      </p>
-      <p>
-        O objetivo é simples: ajudar empresas a ganhar visibilidade para suas vagas e fazer profissionais perceberem rapidamente que existe uma estrutura preparada para impulsionar a próxima etapa da carreira.
-      </p>
-      <ul class="site-list">
-        <li><i class="fas fa-check"></i><span>Vitrine mais convincente para vagas e cursos.</span></li>
-        <li><i class="fas fa-check"></i><span>Tom institucional mais forte, menos improvisado e mais comercial.</span></li>
-        <li><i class="fas fa-check"></i><span>Experiência pensada para gerar confiança desde o primeiro acesso.</span></li>
-      </ul>
-    </article>
+  <div class="text-center mb-16">
+    <div class="site-kicker mx-auto">Diretrizes</div>
+    <h2 class="text-4xl font-bold">Missão, Visão e Valores</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="site-card group hover:-translate-y-1 transition-all">
+      <div class="size-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+        <i class="fas fa-bullseye text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold mb-3">Missão</h3>
+      <p class="text-slate-600">Conectar pessoas a vagas, cursos, seleções públicas e eventos que contribuam para seu crescimento profissional.</p>
+    </div>
+    <div class="site-card group hover:-translate-y-1 transition-all">
+      <div class="size-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+        <i class="fas fa-eye text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold mb-3">Visão</h3>
+      <p class="text-slate-600">Ser uma plataforma de referência regional na divulgação de oportunidades e no fortalecimento da empregabilidade.</p>
+    </div>
+    <div class="site-card group hover:-translate-y-1 transition-all">
+      <div class="size-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+        <i class="fas fa-heart text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold mb-3">Valores</h3>
+      <p class="text-slate-600">Compromisso com a informação, organização, credibilidade, acessibilidade, desenvolvimento profissional e valorização das oportunidades locais.</p>
+    </div>
+  </div>
+</section>
 
-    <aside class="site-info-card">
-      <h3>O que a plataforma entrega</h3>
-      <p>Uma presença digital capaz de atrair candidatos, valorizar oportunidades e ampliar a percepção profissional da marca.</p>
-      <ul class="site-list">
-        <li><i class="fas fa-briefcase"></i><span>Divulgação de vagas com melhor apresentação.</span></li>
-        <li><i class="fas fa-graduation-cap"></i><span>Oferta de cursos como acelerador de empregabilidade.</span></li>
-        <li><i class="fas fa-bullseye"></i><span>Fluxo mais orientado a conversão e contato.</span></li>
+<section class="site-section bg-slate-900 text-white">
+  <div class="text-center mb-16">
+    <div class="site-kicker mx-auto !bg-blue-600/20 !text-blue-400">Ecossistema</div>
+    <h2 class="text-4xl font-bold">O que a plataforma oferece</h2>
+    <p class="text-slate-400 mt-4 max-w-2xl mx-auto">Reunimos todas as frentes necessárias para impulsionar carreiras e negócios em um só lugar.</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+      <i class="fas fa-briefcase text-3xl text-blue-400 mb-4"></i>
+      <h3 class="text-lg font-bold">Vagas de Emprego</h3>
+      <p class="text-slate-400 mt-2">Oportunidades em diversas áreas com conexão direta com recrutadores.</p>
+    </div>
+    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+      <i class="fas fa-graduation-cap text-3xl text-green-400 mb-4"></i>
+      <h3 class="text-lg font-bold">Cursos</h3>
+      <p class="text-slate-400 mt-2">Capacitações gratuitas e pagas para elevar sua qualificação.</p>
+    </div>
+    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+      <i class="fas fa-university text-3xl text-orange-400 mb-4"></i>
+      <h3 class="text-lg font-bold">Seleções Públicas</h3>
+      <p class="text-slate-400 mt-2">Editais de concursos e processos seletivos simplificados.</p>
+    </div>
+    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+      <i class="fas fa-calendar-alt text-3xl text-purple-400 mb-4"></i>
+      <h3 class="text-lg font-bold">Eventos Regional</h3>
+      <p class="text-slate-400 mt-2">Workshops, palestras e feiras de profissões na sua região.</p>
+    </div>
+    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+      <i class="fas fa-lightbulb text-3xl text-yellow-400 mb-4"></i>
+      <h3 class="text-lg font-bold">Oportunidades Profissionais</h3>
+      <p class="text-slate-400 mt-2">Dicas de carreira, estágio e primeiro emprego.</p>
+    </div>
+    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+      <i class="fas fa-building text-3xl text-pink-400 mb-4"></i>
+      <h3 class="text-lg font-bold">Divulgação para Empresas</h3>
+      <p class="text-slate-400 mt-2">Ponto de encontro para empresas que buscam talentos qualificados.</p>
+    </div>
+  </div>
+</section>
+
+<section class="site-section sm:py-20">
+  <div class="site-grid-2 items-center">
+    <div>
+      <div class="site-kicker">Público</div>
+      <h2 class="text-3xl font-bold mb-6">Para quem é a Agência de Emprego?</h2>
+      <ul class="space-y-4">
+        <li class="flex items-center gap-3">
+          <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-check text-xs"></i></div>
+          <span class="text-slate-700">Candidatos em busca de emprego ou recolocação</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-check text-xs"></i></div>
+          <span class="text-slate-700">Profissionais que desejam se especializar via cursos</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-check text-xs"></i></div>
+          <span class="text-slate-700">Estudantes acompanhando concursos e seleções</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-check text-xs"></i></div>
+          <span class="text-slate-700">Empresas locais em busca de visibilidade para suas vagas</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600"><i class="fas fa-check text-xs"></i></div>
+          <span class="text-slate-700">Instituições focadas em eventos e capacitações</span>
+        </li>
       </ul>
-    </aside>
+    </div>
+    <div class="bg-blue-600 rounded-3xl p-12 text-white relative overflow-hidden shadow-2xl">
+      <i class="fas fa-quote-left absolute top-8 left-8 text-8xl opacity-10"></i>
+      <h3 class="text-2xl font-bold mb-4 relative z-10">Nossos Diferenciais</h3>
+      <ul class="space-y-6 relative z-10">
+        <li>
+          <strong class="block text-lg">Navegação Simples</strong>
+          <span class="text-blue-100">Encontre o que precisa em poucos cliques.</span>
+        </li>
+        <li>
+          <strong class="block text-lg">Experiência que Gera Confiança</strong>
+          <span class="text-blue-100">Um ambiente seguro e verificado para sua carreira.</span>
+        </li>
+        <li>
+          <strong class="block text-lg">Foco Regional</strong>
+          <span class="text-blue-100">Valorizamos e potencializamos as oportunidades da nossa região.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="site-section !pt-0">
+  <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-12 text-center text-white shadow-xl">
+    <h2 class="text-3xl font-bold mb-4">Pronto para o próximo passo?</h2>
+    <p class="text-blue-100 mb-8 max-w-xl mx-auto">Explore todas as possibilidades que a nossa plataforma oferece para você ou sua empresa.</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="/vagas" class="site-button premium !bg-white !text-blue-600">Ver Vagas</a>
+      <a href="/cursos" class="site-button premium !bg-white !text-blue-600">Explorar Cursos</a>
+      <a href="/selecoes-publicas" class="site-button-secondary premium !bg-blue-500/20 !text-white hover:!bg-blue-500/40">Seleções Públicas</a>
+      <a href="/contato" class="site-button-secondary premium !bg-blue-500/20 !text-white hover:!bg-blue-500/40">Falar com Consultor</a>
+    </div>
   </div>
 </section>
