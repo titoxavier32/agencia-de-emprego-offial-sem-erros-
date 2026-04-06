@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const toggles = document.querySelectorAll('[data-mobile-toggle]');
 
   toggles.forEach((toggle) => {
@@ -30,6 +30,9 @@
   const previewPeriod = document.getElementById('site-preview-period');
   const previewPeriodRow = document.getElementById('site-preview-period-row');
   const previewLink = document.getElementById('site-preview-link');
+  const previewSecondaryLink = document.getElementById('site-preview-secondary-link');
+  const previewEducation = document.getElementById('site-preview-education');
+  const previewEducationRow = document.getElementById('site-preview-education-row');
   const adminAccessModal = document.getElementById('site-admin-access-modal');
   const adminAccessTrigger = document.getElementById('site-admin-lock-trigger');
   const adminAccessClose = document.getElementById('site-admin-access-close');
@@ -85,6 +88,23 @@
       previewLink.rel = '';
       previewLink.dataset.inlinePdf = 'false';
       previewLink.style.display = 'none';
+    }
+
+    if (item.dataset.previewSecondaryLink && previewSecondaryLink) {
+      previewSecondaryLink.href = item.dataset.previewSecondaryLink;
+      previewSecondaryLink.textContent = item.dataset.previewSecondaryLabel || 'Abrir';
+      previewSecondaryLink.target = '_blank';
+      previewSecondaryLink.rel = 'noopener noreferrer';
+      previewSecondaryLink.style.display = 'inline-flex';
+    } else if (previewSecondaryLink) {
+      previewSecondaryLink.style.display = 'none';
+    }
+
+    if (item.dataset.previewEducation && previewEducation && previewEducationRow) {
+      previewEducation.textContent = item.dataset.previewEducation;
+      previewEducationRow.style.display = 'block';
+    } else if (previewEducationRow) {
+      previewEducationRow.style.display = 'none';
     }
 
     if (previewPdf) {

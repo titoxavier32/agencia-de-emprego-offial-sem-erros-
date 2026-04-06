@@ -18,9 +18,9 @@
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Tipo</th>
+            <th>Região</th>
+            <th>Esfera</th>
             <th>Título</th>
-            <th>Processo</th>
             <th>Inscrições</th>
             <th>Situação</th>
             <th>Ações</th>
@@ -29,9 +29,9 @@
         <tbody>
           <% publicSelections.forEach(item => { %>
             <tr>
-              <td><span class="admin-badge neutral"><%= item.category === 'concurso_publico' ? 'Concurso' : 'Processo seletivo' %></span></td>
-              <td><strong><%= item.title %></strong><div class="admin-help"><%= item.description.length > 110 ? item.description.substring(0, 110) + '...' : item.description %></div></td>
-              <td><%= item.processNumber || 'Não informado' %></td>
+              <td><span class="admin-badge neutral"><%= item.region || 'Brasil' %></span></td>
+              <td><span class="admin-badge <%= item.sphere === 'Federal' ? 'info' : 'neutral' %>"><%= item.sphere || 'Não Inf.' %></span></td>
+              <td><strong><%= item.title %></strong><div class="admin-help"><%= (item.description || '').length > 110 ? item.description.substring(0, 110) + '...' : (item.description || '') %></div></td>
               <td>
                 <% if (item.registrationStartDate || item.registrationEndDate) { %>
                   <span class="admin-help">

@@ -1,64 +1,171 @@
 <%
   const formatDateBr = (value) => value ? new Date(value + 'T00:00:00').toLocaleDateString('pt-BR') : '';
-  const getDisplaySchedule = (start, end) => {
-    const startFormatted = formatDateBr(start);
-    const endFormatted = formatDateBr(end);
-    if (!startFormatted && !endFormatted) return null;
-    if (startFormatted && endFormatted && startFormatted !== endFormatted) {
-      return { label: 'Inscrições', value: `${startFormatted} a ${endFormatted}` };
-    }
-    return { label: 'Inscrição', value: startFormatted || endFormatted };
+  
+  const solveStatus = (item) => {
+    if (item.status && item.status !== 'Publicado' && item.status !== '') return item.status;
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const start = item.registrationStartDate ? new Date(item.registrationStartDate + 'T00:00:00') : null;
+    const end = item.registrationEndDate ? new Date(item.registrationEndDate + 'T00:00:00') : null;
+
+    if (start && now < start) return 'Previsto';
+    if (start && end && now >= start && now <= end) return 'Aberto';
+    if (end && now > end) return 'Encerrado';
+    
+    return 'Aberto';
   };
+
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case 'aberto': return '#28a745'; // verde
+      case 'em andamento': return '#007bff'; // azul
+      case 'encerrado': return '#dc3545'; // vermelho
+      case 'previsto': return '#ffc107'; // amarelo
+      default: return '#6c757d';
+    }
+  };
+
+  const nationalSelections = publicSelections.filter(s => s.region === 'Brasil' || !s.region);
+  const localSelections = publicSelections.filter(s => s.region === 'Rondônia');
 %>
+
+<style>
+  .selection-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+  .tab-btn { padding: 0.8rem 1.5rem; border: none; background: none; font-weight: bold; cursor: pointer; color: #666; position: relative; }
+  .tab-btn.active { color: #007bff; }
+  .tab-btn.active::after { content: ''; position: absolute; bottom: -0.6rem; left: 0; width: 100%; height: 3px; background: #007bff; }
+  
+  .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; color: #fff; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin-bottom: 0.5rem; }
+  
+  .filter-bar { display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; flex-wrap: wrap; }
+  .filter-btn { padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 0.9rem; }
+  .filter-btn.active { background: #007bff; color: #fff; border-color: #007bff; }
+
+  .site-card-meta-line { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; }
+  .salary-tag { color: #28a745; font-weight: bold; }
+</style>
+
 <section class="site-hero">
   <div class="site-hero-content">
     <span class="site-kicker">Concursos e processos seletivos</span>
-    <h1>Divulgue editais públicos com mais estrutura, credibilidade e leitura objetiva.</h1>
-    <p class="site-lead">A plataforma agora também organiza seleções públicas com dados do edital, período de inscrição, cronograma e quadro de cargos.</p>
+    <h1>Oportunidades Públicas Organizadas</h1>
+    <p class="site-lead">Acompanhe editais federais e regionais com status automatizado e leitura simplificada.</p>
   </div>
 </section>
 
 <section class="site-section">
-  <div class="site-page-header">
-    <div>
-      <h1>Seleções públicas em destaque</h1>
-      <p class="site-page-copy">Acompanhe concursos públicos e processos seletivos publicados na plataforma.</p>
-    </div>
+  <div class="selection-tabs" id="regionTabs">
+    <button class="tab-btn active" onclick="switchRegion('national')">🇧🇷 Federal / Brasil</button>
+    <button class="tab-btn" onclick="switchRegion('local')">📍 Rondônia</button>
   </div>
 
-  <% if (publicSelections.length > 0) { %>
-    <div class="site-card-grid">
-      <% publicSelections.forEach(item => { const selectionSchedule = getDisplaySchedule(item.registrationStartDate, item.registrationEndDate); %>
-        <article class="site-card" data-preview-item data-preview-badge="<%= item.category === 'concurso_publico' ? 'Concurso' : 'Processo seletivo' %>" data-preview-title="<%= item.title %>" data-preview-description="<%= (item.description || '').replace(/\"/g, '&quot;') %>" data-preview-image="<%= item.image ? '/uploads/' + item.image : '' %>" data-preview-meta-label="Situação" data-preview-meta-value="<%= item.status || 'Publicado' %>" data-preview-period="<%= selectionSchedule ? selectionSchedule.value : '' %>" data-preview-period-label="<%= selectionSchedule ? selectionSchedule.label : 'Inscrições' %>" data-preview-link="<%= item.noticePdf ? '/uploads/' + item.noticePdf : '' %>" data-preview-link-label="Ver edital" data-preview-link-target="<%= item.noticePdf ? '_blank' : '' %>">
-          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar seleção pública">
-            <% if (item.image) { %>
-              <img src="/uploads/<%= item.image %>" alt="<%= item.title %>">
-            <% } else { %>
-              <div class="site-card-icon"><i class="fas fa-file-signature"></i></div>
+  <div class="filter-bar">
+    <span>Filtrar por:</span>
+    <button class="filter-btn active" onclick="filterStatus('all')">Todos</button>
+    <button class="filter-btn" onclick="filterStatus('aberto')">Abertos</button>
+    <button class="filter-btn" onclick="filterStatus('previsto')">Previstos</button>
+    <button class="filter-btn" onclick="filterStatus('encerrado')">Encerrados</button>
+  </div>
+
+  <div id="selectionGrid" class="site-card-grid">
+    <% publicSelections.forEach(item => { 
+      const status = solveStatus(item);
+      const color = getStatusColor(status);
+    %>
+      <article class="site-card selection-item" 
+               data-region="<%= item.region === 'Rondônia' ? 'local' : 'national' %>" 
+               data-status="<%= status.toLowerCase() %>"
+               data-preview-item 
+               data-preview-badge="<%= status %>" 
+               data-preview-title="<%= item.title %>" 
+               data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" 
+               data-preview-image="<%= item.image ? '/uploads/' + item.image : '' %>" 
+               data-preview-meta-label="Salário" 
+               data-preview-meta-value="<%= item.salary || 'Ver edital' %>" 
+               data-preview-link="<%= item.noticePdf ? '/uploads/' + item.noticePdf : (item.link || '#') %>" 
+               data-preview-link-label="Ver edital"
+               data-preview-education="<%= item.educationLevel || '' %>"
+               data-preview-secondary-link="<%= item.processWebsite || '' %>"
+               data-preview-secondary-label="Site do Processo">
+        
+        <div class="site-card-media" data-open-preview role="button" tabindex="0">
+          <% if (item.image) { %>
+            <img src="/uploads/<%= item.image %>" alt="<%= item.title %>" style="object-fit: cover; width: 100%; height: 100%;">
+          <% } else { %>
+            <div class="site-card-icon"><i class="fas fa-university"></i></div>
+          <% } %>
+          <span class="status-badge" style="background: <%= color %>; position: absolute; top: 1rem; left: 1rem;"><%= status %></span>
+        </div>
+
+        <div class="site-card-body">
+          <span style="font-size: 0.8rem; color: #888; text-transform: uppercase;"><%= item.sphere || 'Público' %></span>
+          <h3 style="margin: 0.5rem 0;"><%= item.title %></h3>
+          <div style="font-size: 0.9rem; margin-bottom: 1rem;">
+            <% if (item.salary) { %><div class="salary-tag"><i class="fas fa-money-bill-wave"></i> <%= item.salary %></div><% } %>
+            <% if (item.educationLevel) { %><div><i class="fas fa-graduation-cap"></i> <%= item.educationLevel %></div><% } %>
+          </div>
+          
+          <div class="site-detail-list">
+            <% if (item.registrationEndDate) { %>
+              <span><strong>Inscrições até:</strong> <%= formatDateBr(item.registrationEndDate) %></span>
             <% } %>
-            <span class="site-card-badge -accent"><%= item.category === 'concurso_publico' ? 'Concurso' : 'Processo seletivo' %></span>
           </div>
-          <div class="site-card-body">
-            <h3><%= item.title %></h3>
-            <p class="site-card-text"><%= (item.description || '').length > 170 ? item.description.substring(0, 170) + '...' : (item.description || '') %></p>
-            <div class="site-detail-list">
-              <% if (item.processNumber) { %><span><strong>Processo:</strong> <%= item.processNumber %></span><% } %>
-              <% if (item.status) { %><span><strong>Situação:</strong> <%= item.status %></span><% } %>
-              <% if (selectionSchedule) { %><span><strong><%= selectionSchedule.label %>:</strong> <%= selectionSchedule.value %></span><% } %>
-              <% if (item.noticePdf) { %><span><strong>Edital:</strong> PDF anexado</span><% } %>
-            </div>
-            <div class="site-card-meta">
-              <span>Publicado em <%= new Date(item.createdAt).toLocaleDateString('pt-BR') %></span>
-              <button type="button" class="site-button" data-open-preview>Visualizar</button>
-            </div>
+
+          <div class="site-card-meta-line">
+            <span style="font-size: 0.8rem; color: #999;">Ref: <%= new Date(item.createdAt).toLocaleDateString('pt-BR') %></span>
+            <button type="button" class="site-button" data-open-preview>Detalhes</button>
           </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty">
-      <i class="fas fa-file-signature"></i>
-      <p>Nenhuma seleção pública cadastrada.</p>
-    </div>
-  <% } %>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+
+  <div id="emptyMessage" class="site-empty" style="display: none;">
+    <i class="fas fa-search"></i>
+    <p>Nenhuma seleção encontrada para este filtro.</p>
+  </div>
 </section>
+
+<script>
+  let currentRegion = 'national';
+  let currentStatus = 'all';
+
+  function switchRegion(region) {
+    currentRegion = region;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('onclick').includes(region));
+    });
+    applyFilters();
+  }
+
+  function filterStatus(status) {
+    currentStatus = status;
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('onclick').includes(status));
+    });
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const items = document.querySelectorAll('.selection-item');
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      const regionMatch = item.dataset.region === currentRegion;
+      const statusMatch = currentStatus === 'all' || item.dataset.status === currentStatus;
+
+      if (regionMatch && statusMatch) {
+        item.style.display = 'block';
+        visibleCount++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    document.getElementById('emptyMessage').style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+
+  // Inicializar com Nacional
+  window.addEventListener('DOMContentLoaded', () => applyFilters());
+</script>

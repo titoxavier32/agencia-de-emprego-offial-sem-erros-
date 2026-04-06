@@ -241,7 +241,12 @@ const ensurePublicSelectionColumns = async () => {
   const tableDefinition = await queryInterface.describeTable('PublicSelections');
   const columns = [
     ['noticePdf', { type: Sequelize.STRING, allowNull: true }],
-    ['noticePdfOriginalName', { type: Sequelize.STRING, allowNull: true }]
+    ['noticePdfOriginalName', { type: Sequelize.STRING, allowNull: true }],
+    ['sphere', { type: Sequelize.STRING, allowNull: true }],
+    ['region', { type: Sequelize.STRING, allowNull: true }],
+    ['salary', { type: Sequelize.STRING, allowNull: true }],
+    ['educationLevel', { type: Sequelize.STRING, allowNull: true }],
+    ['processWebsite', { type: Sequelize.STRING, allowNull: true }]
   ];
 
   for (const [columnName, definition] of columns) {
