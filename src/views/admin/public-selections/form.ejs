@@ -54,14 +54,13 @@
         <label for="noticePdf">PDF do edital ou processo seletivo <% if (publicSelection && publicSelection.noticePdf) { %><span class="admin-form-help">deixe em branco para manter o PDF atual</span><% } %></label>
         <input type="file" id="noticePdf" name="noticePdf" accept="application/pdf,.pdf">
         <div class="admin-help">Anexe o edital completo em PDF para o visitante visualizar o documento oficial.</div>
-        <% if (publicSelection && publicSelection.noticePdf) { %>
-          <div class="admin-help">PDF atual: <a href="/uploads/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer"><%= publicSelection.noticePdfOriginalName || 'Abrir PDF atual' %></a></div>
+          <div class="admin-help">PDF atual: <a href="/images/cursos/anexos/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer"><%= publicSelection.noticePdfOriginalName || 'Abrir PDF atual' %></a></div>
         <% } %>
-      </div>
+</div>
 
       <% if (publicSelection && publicSelection.image) { %>
         <div class="admin-image-preview">
-          <img src="/uploads/<%= publicSelection.image %>" alt="Imagem atual">
+          <img src="/images/cursos/anexos/<%= publicSelection.image %>" alt="Imagem atual">
         </div>
       <% } %>
 

@@ -10,10 +10,10 @@
   <% if (publicSelections.length > 0) { %>
     <div class="site-card-grid">
       <% publicSelections.forEach(item => { const selectionSchedule = getDisplaySchedule(item.registrationStartDate, item.registrationEndDate, 'Inscricao', 'Inscricoes'); %>
-        <article class="site-card" data-preview-item data-preview-badge="<%= item.category === 'concurso_p?blico' ? 'Concurso' : 'Processo seletivo' %>" data-preview-title="<%= item.title %>" data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" data-preview-image="<%= item.image ? '/uploads/' + item.image : '' %>" data-preview-meta-label="Situacao" data-preview-meta-value="<%= item.status || 'Publicado' %>" data-preview-period="<%= selectionSchedule ? selectionSchedule.value : '' %>" data-preview-period-label="<%= selectionSchedule ? selectionSchedule.label : 'Inscricoes' %>" data-preview-link="<%= item.noticePdf ? '/uploads/' + item.noticePdf : '' %>" data-preview-link-label="Ver edital" data-preview-link-target="<%= item.noticePdf ? '_blank' : '' %>">
+        <article class="site-card" data-preview-item data-preview-badge="<%= item.category === 'concurso_p?blico' ? 'Concurso' : 'Processo seletivo' %>" data-preview-title="<%= item.title %>" data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" data-preview-image="<%= item.image ? '/images/cursos/anexos/' + item.image : '' %>" data-preview-meta-label="Situacao" data-preview-meta-value="<%= item.status || 'Publicado' %>" data-preview-period="<%= selectionSchedule ? selectionSchedule.value : '' %>" data-preview-period-label="<%= selectionSchedule ? selectionSchedule.label : 'Inscricoes' %>" data-preview-link="<%= item.noticePdf ? '/images/cursos/anexos/' + item.noticePdf : '' %>" data-preview-link-label="Ver edital" data-preview-link-target="<%= item.noticePdf ? '_blank' : '' %>">
           <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar seleção pública">
             <% if (item.image) { %>
-              <img src="/uploads/<%= item.image %>" alt="<%= item.title %>">
+              <img src="/images/cursos/anexos/<%= item.image %>" alt="<%= item.title %>">
             <% } else { %>
               <div class="site-card-icon"><i class="fas fa-file-signature"></i></div>
             <% } %>

@@ -12,7 +12,7 @@
         <div class="admin-form-row"><label for="link">Link externo</label><input type="url" id="link" name="link" value="<%= course ? course.link : '' %>" placeholder="https://plataforma.com/curso"></div>
         <div class="admin-form-row"><label for="image">Imagem de capa <% if (course && course.image) { %><span class="admin-form-help">deixe em branco para manter a atual</span><% } %></label><input type="file" id="image" name="image" accept="image/*"></div>
       </div>
-      <% if (course && course.image) { %><div class="admin-image-preview"><img src="/uploads/<%= course.image %>" alt="Imagem atual"></div><% } %>
+      <% if (course && course.image) { %><div class="admin-image-preview"><img src="/images/cursos/<%= course.image %>" alt="Imagem atual"></div><% } %>
       <div class="admin-actions"><button type="submit" class="admin-btn">Salvar curso</button></div>
     </form>
   </section>

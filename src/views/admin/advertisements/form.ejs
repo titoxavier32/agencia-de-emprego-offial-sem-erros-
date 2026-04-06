@@ -104,11 +104,9 @@
       </div>
       <div class="admin-help">Desative esta opcao quando quiser manter a propaganda cadastrada no painel sem mostrar no site.</div>
 
-      <% if (advertisement && advertisement.image) { %>
         <div class="admin-image-preview">
-          <img src="/uploads/<%= advertisement.image %>" alt="Imagem atual">
+          <img src="/images/propagandas/<%= advertisement.image %>" alt="Imagem atual">
         </div>
-      <% } %>
 
       <div class="admin-help">Somente a imagem e obrigatoria. O mapa visual controla area, grupo e posicao principal do banner.</div>
 
