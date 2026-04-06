@@ -15,7 +15,7 @@
             <article class="ad-mural-card ad-anim-<%= ad.animation %>" style="--ad-width:<%= ad.width %>px; --ad-height:<%= ad.height %>px;">
               <% if (ad.link) { %><a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="ad-mural-link"><% } %>
                 <div class="ad-mural-media">
-                  <img src="/uploads/<%= ad.image %>" alt="Propaganda" class="ad-mural-image">
+                  <img src="/images/propagandas/<%= ad.image %>" alt="Propaganda" class="ad-mural-image">
                 </div>
               <% if (ad.link) { %></a><% } %>
             </article>

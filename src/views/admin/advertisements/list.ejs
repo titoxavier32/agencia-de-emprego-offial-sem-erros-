@@ -52,7 +52,7 @@
                         <article class="admin-ad-card <%= slot.advertisement.isActive ? '' : 'is-inactive' %>" draggable="true" data-draggable-ad data-ad-id="<%= slot.advertisement.id %>">
                           <div class="admin-ad-card-media">
                             <% if (slot.advertisement.image) { %>
-                              <img src="/uploads/<%= slot.advertisement.image %>" alt="Banner" class="admin-thumb" data-lightbox-src="/uploads/<%= slot.advertisement.image %>">
+                              <img src="/images/propagandas/<%= slot.advertisement.image %>" alt="Banner" class="admin-thumb" data-lightbox-src="/images/propagandas/<%= slot.advertisement.image %>">
                             <% } else { %>
                               <div class="admin-thumb-fallback"><i class="fas fa-image"></i></div>
                             <% } %>
@@ -112,7 +112,7 @@
             <tr>
               <td>
                 <% if (item.image) { %>
-                  <img src="/uploads/<%= item.image %>" alt="Propaganda cadastrada" class="admin-thumb" data-lightbox-src="/uploads/<%= item.image %>">
+                  <img src="/images/propagandas/<%= item.image %>" alt="Propaganda cadastrada" class="admin-thumb" data-lightbox-src="/images/propagandas/<%= item.image %>">
                 <% } else { %>
                   <span class="admin-help">Sem imagem</span>
                 <% } %>

@@ -31,10 +31,10 @@
   <% if (courses.length > 0) { %>
     <div class="site-card-grid">
       <% courses.forEach(course => { const courseSchedule = getDisplaySchedule(course.startDate, course.endDate); %>
-        <article class="site-card" data-preview-item data-preview-badge="Curso" data-preview-title="<%= course.title %>" data-preview-description="<%= course.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= course.image ? '/uploads/' + course.image : '' %>" data-preview-meta-label="Adicionado em" data-preview-meta-value="<%= new Date(course.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= courseSchedule ? courseSchedule.value : '' %>" data-preview-period-label="<%= courseSchedule ? courseSchedule.label : 'Período' %>" data-preview-link="<%= course.link || '' %>" data-preview-link-label="Acessar curso">
+        <article class="site-card" data-preview-item data-preview-badge="Curso" data-preview-title="<%= course.title %>" data-preview-description="<%= course.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= course.image ? '/images/cursos/' + course.image : '' %>" data-preview-meta-label="Adicionado em" data-preview-meta-value="<%= new Date(course.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= courseSchedule ? courseSchedule.value : '' %>" data-preview-period-label="<%= courseSchedule ? courseSchedule.label : 'Período' %>" data-preview-link="<%= course.link || '' %>" data-preview-link-label="Acessar curso">
           <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar curso">
             <% if (course.image) { %>
-              <img src="/uploads/<%= course.image %>" alt="<%= course.title %>">
+              <img src="/images/cursos/<%= course.image %>" alt="<%= course.title %>">
             <% } else { %>
               <div class="site-card-icon"><i class="fas fa-graduation-cap"></i></div>
             <% } %>

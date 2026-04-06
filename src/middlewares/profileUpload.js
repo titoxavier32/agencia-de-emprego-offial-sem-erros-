@@ -2,8 +2,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const candidateDir = path.join(__dirname, '../public/uploads/candidates');
-const companyDir = path.join(__dirname, '../public/uploads/companies');
+const candidateDir = path.join(__dirname, '../../public/uploads/candidates');
+const companyDir = path.join(__dirname, '../../public/uploads/companies');
 
 [candidateDir, companyDir].forEach((dir) => {
   if (!fs.existsSync(dir)) {

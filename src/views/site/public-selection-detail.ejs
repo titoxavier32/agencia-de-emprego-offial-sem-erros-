@@ -6,7 +6,7 @@
       <p class="site-lead"><%= publicSelection.description %></p>
     <% } %>
     <div class="site-hero-actions">
-      <% if (publicSelection.noticePdf) { %><a href="/uploads/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer" class="site-button">Ver edital</a><% } %>
+      <% if (publicSelection.noticePdf) { %><a href="/images/cursos/anexos/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer" class="site-button">Ver edital</a><% } %>
       <% if (publicSelection.link) { %><a href="<%= publicSelection.link %>" target="_blank" rel="noopener noreferrer" class="site-button-ghost">Abrir link oficial</a><% } %>
       <a href="/selecoes-publicas" class="site-button-ghost">Voltar para a lista</a>
     </div>
@@ -22,7 +22,7 @@
       </div>
     </div>
     <article class="site-detail-card">
-      <iframe src="/uploads/<%= publicSelection.noticePdf %>" title="Edital anexado" style="width:100%; min-height:var(--site-detail-pdf-min-height); border:0; border-radius:18px; background:#fff;"></iframe>
+      <iframe src="/images/cursos/anexos/<%= publicSelection.noticePdf %>" title="Edital anexado" style="width:100%; min-height:var(--site-detail-pdf-min-height); border:0; border-radius:18px; background:#fff;"></iframe>
     </article>
   </section>
 <% } else { %>

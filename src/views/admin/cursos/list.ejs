@@ -29,7 +29,7 @@
         <tbody>
           <% courses.forEach(course => { %>
             <tr>
-              <td><% if (course.image) { %><img src="/uploads/<%= course.image %>" alt="<%= course.title %>" class="admin-thumb" data-lightbox-src="/uploads/<%= course.image %>"><% } else { %><div class="admin-thumb-fallback"><i class="fas fa-image"></i></div><% } %></td>
+              <td><% if (course.image) { %><img src="/images/cursos/<%= course.image %>" alt="<%= course.title %>" class="admin-thumb" data-lightbox-src="/images/cursos/<%= course.image %>"><% } else { %><div class="admin-thumb-fallback"><i class="fas fa-image"></i></div><% } %></td>
               <td><strong><%= course.title %></strong><div class="admin-help"><%= course.description.length > 90 ? course.description.substring(0, 90) + '...' : course.description %></div></td>
               <td>
                 <% if (course.startDate || course.endDate) { %>

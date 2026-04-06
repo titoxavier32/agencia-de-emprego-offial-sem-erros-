@@ -4,6 +4,8 @@ const passport = require('passport');
 const adminController = require('../controllers/adminController');
 const { ensureAdmin } = require('../middlewares/auth');
 const upload = require('../middlewares/upload');
+const courseUpload = require('../middlewares/courseUpload');
+const adUpload = require('../middlewares/adUpload');
 const publicSelectionUpload = require('../middlewares/publicSelectionUpload');
 const { createRedirectUploadHandler } = require('../middlewares/handleUpload');
 const asyncHandler = require('../utils/asyncHandler');
@@ -14,6 +16,18 @@ const buildUploadMessage = (error, limitMessage, defaultMessage) => (
 
 const handleAdminImageUpload = (targetPath) => createRedirectUploadHandler(
   upload.single('image'),
+  targetPath,
+  (error) => buildUploadMessage(error, 'A imagem excede o limite de 50 MB.', 'Nao foi possivel processar a imagem enviada.')
+);
+
+const handleCourseImageUpload = (targetPath) => createRedirectUploadHandler(
+  courseUpload.single('image'),
+  targetPath,
+  (error) => buildUploadMessage(error, 'A imagem excede o limite de 50 MB.', 'Nao foi possivel processar a imagem enviada.')
+);
+
+const handleAdImageUpload = (targetPath) => createRedirectUploadHandler(
+  adUpload.single('image'),
   targetPath,
   (error) => buildUploadMessage(error, 'A imagem excede o limite de 50 MB.', 'Nao foi possivel processar a imagem enviada.')
 );
@@ -56,9 +70,9 @@ router.post('/vagas/editar/:id', handleAdminImageUpload((req) => '/admin/vagas/e
 router.post('/vagas/deletar/:id', asyncHandler(adminController.deleteJob));
 router.get('/cursos', asyncHandler(adminController.listCourses));
 router.get('/cursos/novo', asyncHandler(adminController.createCourseForm));
-router.post('/cursos/novo', handleAdminImageUpload('/admin/cursos/novo'), asyncHandler(adminController.createCourse));
+router.post('/cursos/novo', handleCourseImageUpload('/admin/cursos/novo'), asyncHandler(adminController.createCourse));
 router.get('/cursos/editar/:id', asyncHandler(adminController.editCourseForm));
-router.post('/cursos/editar/:id', handleAdminImageUpload((req) => '/admin/cursos/editar/' + req.params.id), asyncHandler(adminController.updateCourse));
+router.post('/cursos/editar/:id', handleCourseImageUpload((req) => '/admin/cursos/editar/' + req.params.id), asyncHandler(adminController.updateCourse));
 router.post('/cursos/deletar/:id', asyncHandler(adminController.deleteCourse));
 router.get('/selecoes-publicas', asyncHandler(adminController.listPublicSelections));
 router.get('/selecoes-publicas/nova', asyncHandler(adminController.createPublicSelectionForm));
@@ -68,9 +82,9 @@ router.post('/selecoes-publicas/editar/:id', handlePublicSelectionUpload((req) =
 router.post('/selecoes-publicas/deletar/:id', asyncHandler(adminController.deletePublicSelection));
 router.get('/propagandas', asyncHandler(adminController.listAdvertisements));
 router.get('/propagandas/nova', asyncHandler(adminController.createAdvertisementForm));
-router.post('/propagandas/nova', handleAdminImageUpload('/admin/propagandas/nova'), asyncHandler(adminController.createAdvertisement));
+router.post('/propagandas/nova', handleAdImageUpload('/admin/propagandas/nova'), asyncHandler(adminController.createAdvertisement));
 router.get('/propagandas/editar/:id', asyncHandler(adminController.editAdvertisementForm));
-router.post('/propagandas/editar/:id', handleAdminImageUpload((req) => '/admin/propagandas/editar/' + req.params.id), asyncHandler(adminController.updateAdvertisement));
+router.post('/propagandas/editar/:id', handleAdImageUpload((req) => '/admin/propagandas/editar/' + req.params.id), asyncHandler(adminController.updateAdvertisement));
 router.post('/propagandas/reposicionar/:id', asyncHandler(adminController.repositionAdvertisement));
 router.post('/propagandas/deletar/:id', asyncHandler(adminController.deleteAdvertisement));
 router.get('/contatos', asyncHandler(adminController.listContacts));

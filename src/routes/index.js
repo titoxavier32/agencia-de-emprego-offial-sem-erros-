@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const siteController = require('../controllers/siteController');
 const authController = require('../controllers/authController');
+const ContactMessage = require('../models/ContactMessage');
 const contactUpload = require('../middlewares/contactUpload');
 const { withUploadErrorHandling } = require('../middlewares/handleUpload');
 const asyncHandler = require('../utils/asyncHandler');
