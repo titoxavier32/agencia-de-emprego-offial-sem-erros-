@@ -1,4 +1,4 @@
-﻿<%
+<%
   const currentAccessView = typeof accessSection !== 'undefined' && accessSection ? accessSection : 'login';
 %>
 <section class="site-access-page page-center">
@@ -44,11 +44,11 @@
         </div>
 
         <div class="site-access-inline-actions site-access-inline-actions--centered">
-          <a href="/acesso-candidato?section=forgot-request" class="site-link-inline" data-access-target="forgot-request">Esqueci minha senha</a>
+          <button type="submit" class="site-button">Entrar</button>
         </div>
 
         <div class="site-access-inline-actions site-access-inline-actions--centered">
-          <button type="submit" class="site-button">Entrar</button>
+          <a href="/acesso-candidato?section=forgot-request" class="site-link-inline" data-access-target="forgot-request">Esqueci minha senha</a>
         </div>
 
         <p class="site-form-note site-form-note--centered">Ainda nao possui cadastro? Cadastre-se como candidato ou empresa.</p>

@@ -113,6 +113,7 @@ exports.updateSettings = async (req, res) => {
     previewDialogMaxWidth: parseInt(req.body.previewDialogMaxWidth, 10) || 1380,
     previewDialogMinHeight: parseInt(req.body.previewDialogMinHeight, 10) || 82,
     previewInfoPanelWidth: parseInt(req.body.previewInfoPanelWidth, 10) || 380,
+    previewSizePreset: req.body.previewSizePreset || 'large',
     detailPdfMinHeight: parseInt(req.body.detailPdfMinHeight, 10) || 1200,
     companyShowcaseEnabled: req.body.companyShowcaseEnabled === 'on',
     companyShowcaseTitle: normalizeOptionalValue(req.body.companyShowcaseTitle) || 'Empresas que divulgam vagas na plataforma',
@@ -160,7 +161,7 @@ exports.correctStoredTexts = async (req, res) => {
 
   const settings = await Setting.findAll();
   for (const setting of settings) {
-    const changed = await normalizeInstanceFields(setting, ['brandKicker', 'brandName', 'footerDescription', 'heroKicker', 'heroTitle', 'heroDescription', 'companyShowcaseTitle', 'companyShowcaseDescription', 'floatingAdminButtonLabel', 'adminSidebarConfig', 'commercialPaymentPlan']);
+    const changed = await normalizeInstanceFields(setting, ['brandKicker', 'brandName', 'footerDescription', 'heroKicker', 'heroTitle', 'heroDescription', 'companyShowcaseTitle', 'companyShowcaseDescription', 'floatingAdminButtonLabel', 'adminSidebarConfig', 'commercialPaymentPlan', 'previewSizePreset']);
     if (changed) totalUpdated += 1;
   }
 

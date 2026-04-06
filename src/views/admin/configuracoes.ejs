@@ -498,6 +498,17 @@
           </div>
         </div>
 
+        <div class="admin-form-row">
+          <label for="previewSizePreset">Tamanho pré-definido</label>
+          <select id="previewSizePreset" name="previewSizePreset" style="margin-bottom: 20px;">
+            <option value="custom" <%= s && s.previewSizePreset === 'custom' ? 'selected' : '' %>>Personalizado (usar campos abaixo)</option>
+            <option value="small" <%= s && s.previewSizePreset === 'small' ? 'selected' : '' %>>Pequeno (Focado em ler texto)</option>
+            <option value="medium" <%= s && s.previewSizePreset === 'medium' ? 'selected' : '' %>>Médio (Equilibrado)</option>
+            <option value="large" <%= s && s.previewSizePreset === 'large' ? 'selected' : '' %>>Grande (Imersivo - Padrão)</option>
+          </select>
+          <small class="admin-form-help">Ao escolher um tamanho, os campos abaixo serão preenchidos automaticamente. Você ainda pode ajustar manualmente se desejar.</small>
+        </div>
+
         <div class="admin-form-grid admin-form-grid-3">
           <div class="admin-form-row">
             <label for="previewDialogMaxWidth">Largura máxima da janela</label>
@@ -718,3 +729,32 @@
     </form>
   </section>
 </div>
+
+<script>
+  const previewSizePreset = document.getElementById('previewSizePreset');
+  const previewDialogMaxWidth = document.getElementById('previewDialogMaxWidth');
+  const previewDialogMinHeight = document.getElementById('previewDialogMinHeight');
+  const previewInfoPanelWidth = document.getElementById('previewInfoPanelWidth');
+
+  const presets = {
+    small: { maxW: 900, minH: 68, infoW: 300 },
+    medium: { maxW: 1140, minH: 76, infoW: 340 },
+    large: { maxW: 1380, minH: 82, infoW: 380 }
+  };
+
+  previewSizePreset.addEventListener('change', () => {
+    const val = previewSizePreset.value;
+    if (presets[val]) {
+      previewDialogMaxWidth.value = presets[val].maxW;
+      previewDialogMinHeight.value = presets[val].minH;
+      previewInfoPanelWidth.value = presets[val].infoW;
+    }
+  });
+
+  // Se o usuário clicar manualmente nos campos numéricos, mudamos o preset para 'custom'
+  [previewDialogMaxWidth, previewDialogMinHeight, previewInfoPanelWidth].forEach(el => {
+    el.addEventListener('input', () => {
+      previewSizePreset.value = 'custom';
+    });
+  });
+</script>

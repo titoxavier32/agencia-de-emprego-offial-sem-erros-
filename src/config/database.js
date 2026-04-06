@@ -176,6 +176,7 @@ const ensureSettingColumns = async () => {
     ['smtpFrom', { type: Sequelize.STRING, defaultValue: '' }],
     ['smtpEncryption', { type: Sequelize.STRING, defaultValue: 'tls' }],
     ['navbarPosition', { type: Sequelize.STRING, defaultValue: 'top' }],
+    ['previewSizePreset', { type: Sequelize.STRING, defaultValue: 'large' }],
     ['mercadoPagoAccessToken', { type: Sequelize.STRING, defaultValue: '' }]
   ];
 

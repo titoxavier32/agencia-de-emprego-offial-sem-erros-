@@ -76,6 +76,7 @@ const Setting = sequelize.define('Setting', {
   previewDialogMaxWidth: { type: DataTypes.INTEGER, defaultValue: 1380 },
   previewDialogMinHeight: { type: DataTypes.INTEGER, defaultValue: 82 },
   previewInfoPanelWidth: { type: DataTypes.INTEGER, defaultValue: 380 },
+  previewSizePreset: { type: DataTypes.STRING, defaultValue: 'large' },
   detailPdfMinHeight: { type: DataTypes.INTEGER, defaultValue: 1200 },
   adminAccessMode: { type: DataTypes.STRING, defaultValue: 'lock' },
   floatingAdminButtonLabel: { type: DataTypes.STRING, defaultValue: 'Acesso admin' },
