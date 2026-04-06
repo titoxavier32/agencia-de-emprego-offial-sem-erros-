@@ -1,10 +1,12 @@
-﻿const Job = require('../models/Job');
+const Job = require('../models/Job');
 const Course = require('../models/Course');
 const ContactMessage = require('../models/ContactMessage');
 const PublicSelection = require('../models/PublicSelection');
 const Advertisement = require('../models/Advertisement');
 const Setting = require('../models/Setting');
 const User = require('../models/User');
+const Event = require('../models/Event');
+const { Op } = require('sequelize');
 const crypto = require('crypto');
 const { createPaymentPreference, getAccessToken } = require('../utils/mercadopagoService');
 const { parseCurrencyToNumber } = require('./admin/helpers');
@@ -208,6 +210,76 @@ exports.advertisements = async (req, res) => {
     title: 'Mural publicitário',
     advertisements,
     advertisementGroups: buildAdvertisementGroups(advertisements)
+  });
+};
+
+exports.eventos = async (req, res) => {
+  const events = await Event.findAll({
+    where: { status: 'ativo' },
+    order: [['date', 'ASC'], ['time', 'ASC']]
+  });
+  return res.render('site/events', { title: 'Eventos e Workshops', events });
+};
+
+exports.busca = async (req, res) => {
+  const query = (req.query.q || '').trim();
+  if (!query) {
+    return res.render('site/search-results', { 
+      title: 'Resultados da busca', 
+      query, 
+      results: { jobs: [], courses: [], selections: [], events: [] } 
+    });
+  }
+
+  const searchCondition = { [Op.like]: `%${query}%` };
+
+  const [jobs, courses, selections, events] = await Promise.all([
+    Job.findAll({
+      where: {
+        status: 'ativa',
+        [Op.or]: [
+          { title: searchCondition },
+          { description: searchCondition }
+        ]
+      },
+      limit: 20
+    }),
+    Course.findAll({
+      where: {
+        [Op.or]: [
+          { title: searchCondition },
+          { description: searchCondition }
+        ]
+      },
+      limit: 20
+    }),
+    PublicSelection.findAll({
+      where: {
+        [Op.or]: [
+          { title: searchCondition },
+          { description: searchCondition },
+          { organizer: searchCondition }
+        ]
+      },
+      limit: 20
+    }),
+    Event.findAll({
+      where: {
+        status: 'ativo',
+        [Op.or]: [
+          { title: searchCondition },
+          { description: searchCondition },
+          { location: searchCondition }
+        ]
+      },
+      limit: 20
+    })
+  ]);
+
+  return res.render('site/search-results', {
+    title: `Resultados para "${query}"`,
+    query,
+    results: { jobs, courses, selections, events }
   });
 };
 

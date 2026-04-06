@@ -20,6 +20,8 @@ router.get('/selecoes-publicas', asyncHandler(siteController.publicSelections));
 router.get('/selecoes-publicas/:id', asyncHandler(siteController.publicSelectionDetail));
 router.get('/sobre', siteController.sobre);
 router.get('/contato', asyncHandler(siteController.contato));
+router.get('/eventos', asyncHandler(siteController.eventos));
+router.get('/busca', asyncHandler(siteController.busca));
 router.get('/contato/pagamento/:id', asyncHandler(siteController.contactPaymentStep));
 router.post(
   '/contato',

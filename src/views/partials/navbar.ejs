@@ -15,6 +15,7 @@
     { href: '/vagas', label: 'Vagas', icon: 'fa-briefcase', target: '_self' },
     { href: '/cursos', label: 'Cursos', icon: 'fa-graduation-cap', target: '_self' },
     { href: '/selecoes-publicas', label: 'Seleções públicas', icon: 'fa-file-signature', target: '_self' },
+    { href: '/eventos', label: 'Eventos', icon: 'fa-calendar-star', target: '_self' },
     { href: '/sobre', label: 'Sobre', icon: 'fa-building', target: '_self' },
     { href: '/contato', label: 'Contato', icon: 'fa-envelope', target: '_self' }
   ];
@@ -25,6 +26,12 @@
     target: item.target || '_self'
   }));
   const allLinks = configuredLinks.length > 0 ? configuredLinks : fallbackLinks;
+  
+  // Garantir que Eventos apareça se não estiver nos menus configurados
+  if (!allLinks.some(l => l.href === '/eventos')) {
+    allLinks.splice(4, 0, { href: '/eventos', label: 'Eventos', icon: 'fa-calendar-star', target: '_self' });
+  }
+
   const isLinkActive = (href) => href === '/' ? currentPath === '/' : currentPath === href || currentPath.indexOf(href + '/') === 0;
   const userRoleLabel = user ? (roleLabelMap[user.role] || user.role) : '';
 %>
@@ -106,13 +113,20 @@
       </span>
     </a>
 
-    <nav class="site-nav-links">
+    <nav class="site-nav-links site-nav-links--flexible">
       <% allLinks.forEach(link => { %>
         <a href="<%= link.href %>" target="<%= link.target %>" class="site-nav-link <%= isLinkActive(link.href) ? 'is-active' : '' %>">
           <%= link.label %>
         </a>
       <% }) %>
     </nav>
+
+    <div class="site-search-expandable">
+      <form action="/busca" method="GET" class="site-search-form-compact">
+        <input type="text" name="q" placeholder="Buscar..." required>
+        <button type="submit"><i class="fas fa-magnifying-glass"></i></button>
+      </form>
+    </div>
 
     <div class="site-nav-actions">
       <% if (user) { %>

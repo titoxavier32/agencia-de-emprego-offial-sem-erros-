@@ -361,6 +361,32 @@ const ensureUserColumns = async () => {
   }
 };
 
+const ensureEventColumns = async () => {
+  const queryInterface = sequelize.getQueryInterface();
+  const tableDefinition = await queryInterface.describeTable('Events').catch(() => null);
+
+  if (!tableDefinition) {
+    await queryInterface.createTable('Events', {
+      id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false },
+      title: { type: Sequelize.STRING, allowNull: false },
+      description: { type: Sequelize.TEXT, allowNull: false },
+      date: { type: Sequelize.DATEONLY, allowNull: true },
+      time: { type: Sequelize.STRING, allowNull: true },
+      location: { type: Sequelize.STRING, allowNull: true },
+      address: { type: Sequelize.STRING, allowNull: true },
+      organizer: { type: Sequelize.STRING, allowNull: true },
+      category: { type: DataTypes.STRING, allowNull: true },
+      image: { type: Sequelize.STRING, allowNull: true },
+      link: { type: Sequelize.STRING, allowNull: true },
+      status: { type: Sequelize.STRING, defaultValue: 'ativo' },
+      isFree: { type: Sequelize.BOOLEAN, defaultValue: true },
+      price: { type: Sequelize.STRING, allowNull: true },
+      createdAt: { type: Sequelize.DATE, allowNull: false },
+      updatedAt: { type: Sequelize.DATE, allowNull: false }
+    });
+  }
+};
+
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
@@ -374,6 +400,7 @@ const connectDB = async () => {
     await ensurePublicSelectionColumns();
     await ensureMenuColumns();
     await ensureUserColumns();
+    await ensureEventColumns();
     console.log('Models synchronized.');
   } catch (err) {
     console.error('Error connecting to MySQL/SQLite:', err.message);

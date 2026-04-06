@@ -329,6 +329,45 @@ const buildCourseUpdatePayload = (body, file) => {
   return payload;
 };
 
+const buildEventPayload = (body, imageFileName = '') => ({
+  title: normalizeOptionalValue(body.title),
+  description: normalizeOptionalValue(body.description),
+  date: body.date || null,
+  time: normalizeOptionalValue(body.time),
+  location: normalizeOptionalValue(body.location),
+  address: normalizeOptionalValue(body.address),
+  organizer: normalizeOptionalValue(body.organizer),
+  category: normalizeOptionalValue(body.category),
+  link: normalizeOptionalValue(body.link),
+  status: body.status || 'ativo',
+  isFree: body.isFree === 'on',
+  price: normalizeOptionalValue(body.price),
+  image: imageFileName
+});
+
+const buildEventUpdatePayload = (body, file) => {
+  const payload = {
+    title: normalizeOptionalValue(body.title),
+    description: normalizeOptionalValue(body.description),
+    date: body.date || null,
+    time: normalizeOptionalValue(body.time),
+    location: normalizeOptionalValue(body.location),
+    address: normalizeOptionalValue(body.address),
+    organizer: normalizeOptionalValue(body.organizer),
+    category: normalizeOptionalValue(body.category),
+    link: normalizeOptionalValue(body.link),
+    status: body.status || 'ativo',
+    isFree: body.isFree === 'on',
+    price: normalizeOptionalValue(body.price)
+  };
+
+  if (file) {
+    payload.image = file.filename;
+  }
+
+  return payload;
+};
+
 const normalizeAdvertisementPlacement = (value) => {
   const allowedPlacements = new Set(['hero_top', 'mural_home']);
   return allowedPlacements.has(value) ? value : 'mural_home';
@@ -484,6 +523,8 @@ module.exports = {
   buildCompanyShowcaseStatus,
   buildCoursePayload,
   buildCourseUpdatePayload,
+  buildEventPayload,
+  buildEventUpdatePayload,
   buildHomeSectionOrderFromBody,
   buildJobPayload,
   buildJobUpdatePayload,

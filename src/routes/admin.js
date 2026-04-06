@@ -109,4 +109,11 @@ router.post('/menus/editar/:id', asyncHandler(adminController.updateMenu));
 router.post('/menus/mover/:id', asyncHandler(adminController.moveMenu));
 router.post('/menus/deletar/:id', asyncHandler(adminController.deleteMenu));
 
+router.get('/events', asyncHandler(adminController.listEvents));
+router.get('/events/novo', asyncHandler(adminController.createEventForm));
+router.post('/events/novo', handleAdminImageUpload('/admin/events/novo'), asyncHandler(adminController.createEvent));
+router.get('/events/editar/:id', asyncHandler(adminController.editEventForm));
+router.post('/events/editar/:id', handleAdminImageUpload((req) => '/admin/events/editar/' + req.params.id), asyncHandler(adminController.updateEvent));
+router.post('/events/deletar/:id', asyncHandler(adminController.deleteEvent));
+
 module.exports = router;

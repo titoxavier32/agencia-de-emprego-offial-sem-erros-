@@ -85,30 +85,379 @@
     </button>
   <% } %>
 
+  <!-- Novo Modal Premium -->
   <div id="site-preview-modal" class="site-preview-modal">
-    <div class="site-preview-dialog">
+    <div class="site-preview-dialog premium">
       <button id="site-preview-close" class="site-preview-close" type="button" aria-label="Fechar visualizacao"><i class="fas fa-times"></i></button>
-      <div class="site-preview-media-wrap">
-        <img id="site-preview-image" class="site-preview-image" src="" alt="">
-        <iframe id="site-preview-pdf" class="site-preview-pdf" src="" title="Visualização do edital" style="display:none;"></iframe>
-        <div id="site-preview-fallback" class="site-preview-fallback"><i class="fas fa-image"></i></div>
-      </div>
-      <div class="site-preview-content">
-        <div id="site-preview-badge" class="site-kicker"></div>
-        <h2 id="site-preview-title"></h2>
-        <p id="site-preview-description" class="site-card-text"></p>
-        <div class="site-detail-list">
-          <span id="site-preview-period-row" style="display:none;"><strong id="site-preview-period-label">Período:</strong> <span id="site-preview-period"></span></span>
-          <span><strong id="site-preview-meta-label">Data:</strong> <span id="site-preview-meta-value"></span></span>
-          <span id="site-preview-education-row" style="display:none;"><strong id="site-preview-education-label">Escolaridade:</strong> <span id="site-preview-education"></span></span>
+      
+      <div class="site-preview-layout">
+        <!-- Coluna da Esquerda: Mídia -->
+        <div class="site-preview-media-column">
+          <div class="site-preview-media-wrap">
+            <img id="site-preview-image" class="site-preview-image" src="" alt="">
+            <iframe id="site-preview-pdf" class="site-preview-pdf" src="" title="Visualização do edital" style="display:none;"></iframe>
+            <div id="site-preview-fallback" class="site-preview-fallback"><i class="fas fa-image"></i></div>
+          </div>
         </div>
-        <div class="site-hero-actions">
-          <a id="site-preview-link" href="#" target="_blank" class="site-button" style="display:none;"></a>
-          <a id="site-preview-secondary-link" href="#" target="_blank" class="site-button-secondary" style="display:none;"></a>
+
+        <!-- Coluna da Direita: Conteúdo -->
+        <div class="site-preview-info-column">
+          <div class="site-preview-content">
+            <div class="site-preview-header">
+              <div id="site-preview-badge" class="site-kicker"></div>
+              <h2 id="site-preview-title"></h2>
+            </div>
+
+            <div class="site-preview-body">
+              <div id="site-preview-description-wrap">
+                <h3 class="site-detail-heading">Descrição</h3>
+                <p id="site-preview-description" class="site-preview-text"></p>
+              </div>
+
+              <div class="site-preview-grid">
+                <div class="site-detail-item" id="site-preview-period-row" style="display:none;">
+                  <i class="fas fa-calendar-alt"></i>
+                  <div>
+                    <strong id="site-preview-period-label">Período</strong>
+                    <span id="site-preview-period"></span>
+                  </div>
+                </div>
+
+                <div class="site-detail-item" id="site-preview-meta-row">
+                  <i class="fas fa-clock"></i>
+                  <div>
+                    <strong id="site-preview-meta-label">Data de Publicação</strong>
+                    <span id="site-preview-meta-value"></span>
+                  </div>
+                </div>
+
+                <div class="site-detail-item" id="site-preview-education-row" style="display:none;">
+                  <i class="fas fa-graduation-cap"></i>
+                  <div>
+                    <strong id="site-preview-education-label">Escolaridade</strong>
+                    <span id="site-preview-education"></span>
+                  </div>
+                </div>
+
+                <div class="site-detail-item" id="site-preview-salary-row" style="display:none;">
+                  <i class="fas fa-money-bill-wave"></i>
+                  <div>
+                    <strong>Remuneração</strong>
+                    <span id="site-preview-salary"></span>
+                  </div>
+                </div>
+
+                <div class="site-detail-item" id="site-preview-vacancies-row" style="display:none;">
+                  <i class="fas fa-users"></i>
+                  <div>
+                    <strong>Vagas</strong>
+                    <span id="site-preview-vacancies"></span>
+                  </div>
+                </div>
+
+                <div class="site-detail-item" id="site-preview-sphere-row" style="display:none;">
+                  <i class="fas fa-landmark"></i>
+                  <div>
+                    <strong>Esfera</strong>
+                    <span id="site-preview-sphere"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="site-preview-footer">
+              <div class="site-hero-actions">
+                <a id="site-preview-link" href="#" target="_blank" class="site-button premium" style="display:none;">
+                  <i class="fas fa-external-link-alt"></i>
+                  <span id="site-preview-link-text">Ver Edital Completo</span>
+                </a>
+                <a id="site-preview-secondary-link" href="#" target="_blank" class="site-button-secondary premium" style="display:none;">
+                  <i class="fas fa-globe"></i>
+                  <span>Site do Processo</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <style>
+    /* Estilos do Novo Modal Premium Dinâmico */
+    :root {
+      --modal-max-width: <%= globalSetting && globalSetting.previewDialogMaxWidth ? globalSetting.previewDialogMaxWidth : 1100 %>px;
+      --modal-min-height: <%= globalSetting && globalSetting.previewDialogMinHeight ? globalSetting.previewDialogMinHeight : 82 %>vh;
+      --modal-info-width: <%= globalSetting && globalSetting.previewInfoPanelWidth ? globalSetting.previewInfoPanelWidth : 480 %>px;
+    }
+
+    .site-preview-dialog.premium {
+      max-width: var(--modal-max-width);
+      width: 95%;
+      min-height: var(--modal-min-height);
+      max-height: 90vh;
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .site-preview-layout {
+      display: grid;
+      grid-template-columns: 1fr var(--modal-info-width);
+      min-height: var(--modal-min-height);
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .site-preview-info-column {
+      border-left: 1px solid #f1f5f9;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 90vh;
+      width: var(--modal-info-width);
+    }
+
+    .site-preview-content {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Navbar Search Fixes */
+    .site-nav-links--flexible {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .site-search-expandable {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-left: 1rem;
+    }
+
+    .site-search-form-compact {
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 0.25rem 0.5rem 0.25rem 1rem;
+      border-radius: 9999px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .site-search-form-compact:focus-within {
+      background: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .site-search-form-compact input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.875rem;
+      width: 120px;
+      transition: width 0.3s ease;
+    }
+
+    .site-search-form-compact input:focus {
+      width: 200px;
+    }
+
+    .site-search-form-compact button {
+      background: none;
+      border: none;
+      color: #64748b;
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1100px) {
+      .site-nav-links--flexible a {
+        font-size: 0.875rem;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .site-preview-layout {
+        grid-template-columns: 1fr;
+      }
+      .site-preview-info-column {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #f1f5f9;
+      }
+    }
+
+
+
+    .site-preview-media-column {
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-right: 1px solid #f1f5f9;
+    }
+
+    .site-preview-media-wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .site-preview-image {
+      max-width: 100%;
+      max-height: 600px;
+      object-fit: contain;
+    }
+
+    .site-preview-pdf {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+
+    .site-preview-info-column {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-preview-header {
+      margin-bottom: 2rem;
+    }
+
+    .site-preview-header h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #0f172a;
+      margin-top: 0.5rem;
+    }
+
+    .site-preview-body {
+      flex: 1;
+    }
+
+    .site-detail-heading {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .site-preview-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #475569;
+      margin-bottom: 2rem;
+      white-space: pre-wrap;
+    }
+
+    .site-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+
+    .site-detail-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .site-detail-item i {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      color: #2563eb;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .site-detail-item div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-detail-item strong {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    .site-detail-item span {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .site-preview-footer {
+      padding-top: 2rem;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .site-hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .site-button.premium {
+      padding: 1rem 2rem;
+      font-weight: 700;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .site-button-secondary.premium {
+      padding: 1rem 2rem;
+      font-weight: 700;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: #475569;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .site-button-secondary.premium:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+  </style>
 
   <% if ((!user || user.role !== 'admin') && adminAccessMode === 'lock') { %>
     <div id="site-admin-access-modal" class="site-admin-access-modal <%= adminLoginModalOpen ? 'is-open' : '' %>">

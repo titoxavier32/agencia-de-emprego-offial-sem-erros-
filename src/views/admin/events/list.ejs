@@ -1,0 +1,85 @@
+<div class="admin-page">
+  <section class="admin-hero">
+    <div class="admin-kicker">Gestão de Eventos</div>
+    <h1>Organize e publique eventos especiais.</h1>
+    <p>Acompanhe datas, locais e inscrições de workshops, palestras e encontros.</p>
+  </section>
+  <section class="admin-table-wrap">
+    <div class="admin-section-head">
+      <div>
+        <h2>Eventos cadastrados</h2>
+        <p>Lista completa de eventos ativos e encerrados.</p>
+      </div>
+      <a href="/admin/events/novo" class="admin-btn">
+        <i class="fas fa-plus"></i>
+        <span>Novo evento</span>
+      </a>
+    </div>
+    <% if (events.length > 0) { %>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Imagem</th>
+            <th>Título</th>
+            <th>Data/Hora</th>
+            <th>Local</th>
+            <th>Categoria</th>
+            <th>Status</th>
+            <th>Tipo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% events.forEach(event => { %>
+            <tr>
+              <td>
+                <% if (event.image) { %>
+                  <img src="/uploads/<%= event.image %>" alt="<%= event.title %>" class="admin-thumb" data-lightbox-src="/uploads/<%= event.image %>">
+                <% } else { %>
+                  <div class="admin-thumb-fallback"><i class="fas fa-calendar-alt"></i></div>
+                <% } %>
+              </td>
+              <td>
+                <strong><%= event.title %></strong>
+                <div class="admin-help"><%= event.organizer || 'Organizador não informado' %></div>
+              </td>
+              <td>
+                <span class="admin-help">
+                  <%= event.date ? new Date(event.date + 'T00:00:00').toLocaleDateString('pt-BR') : 'Data não definida' %>
+                  <br>
+                  <%= event.time || '' %>
+                </span>
+              </td>
+              <td>
+                <span class="admin-help">
+                  <%= event.location || 'Local não informado' %>
+                </span>
+              </td>
+              <td><%= event.category || 'Geral' %></td>
+              <td>
+                <span class="admin-badge <%= event.status === 'encerrado' ? 'warning' : 'success' %>">
+                  <%= event.status || 'ativo' %>
+                </span>
+              </td>
+              <td>
+                <span class="admin-help">
+                  <%= event.isFree ? 'Gratuito' : (event.price || 'Pago') %>
+                </span>
+              </td>
+              <td>
+                <div class="admin-actions">
+                  <a href="/admin/events/editar/<%= event.id %>" class="admin-btn-secondary">Editar</a>
+                  <form action="/admin/events/deletar/<%= event.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este evento?');">
+                    <button type="submit" class="admin-btn-danger">Excluir</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="admin-empty">Nenhum evento cadastrado.</div>
+    <% } %>
+  </section>
+</div>

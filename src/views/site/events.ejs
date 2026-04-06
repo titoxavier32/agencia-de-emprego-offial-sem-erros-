@@ -1,0 +1,78 @@
+<div class="site-page py-12">
+  <section class="mb-12">
+    <div class="site-kicker">Qualificação e Networking</div>
+    <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Eventos e Workshops</h1>
+    <p class="text-slate-600 max-w-2xl">Acompanhe nossa agenda de eventos presenciais e online para impulsionar sua carreira.</p>
+  </section>
+
+  <% if (events && events.length > 0) { %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% events.forEach(event => { %>
+        <div class="site-card group hover:shadow-xl transition-all duration-300" data-preview-item 
+             data-preview-title="<%= event.title %>" 
+             data-preview-description="<%= event.description %>"
+             data-preview-image="<%= event.image ? '/uploads/' + event.image : '' %>"
+             data-preview-badge="Evento <%= event.category || 'Workshop' %>"
+             data-preview-meta-label="Publicado em"
+             data-preview-meta-value="<%= new Date(event.createdAt).toLocaleDateString('pt-BR') %>"
+             data-preview-period="<%= event.date ? (new Date(event.date + 'T00:00:00').toLocaleDateString('pt-BR') + ' às ' + event.time) : 'A definir' %>"
+             data-preview-period-label="Data e Hora"
+             data-preview-education="<%= event.location %>"
+             data-preview-education-label="Local"
+             data-preview-salary="<%= event.isFree ? 'Gratuito' : event.price %>"
+             data-preview-salary-label="Investimento"
+             data-preview-sphere="<%= event.organizer %>"
+             data-preview-sphere-label="Organizador"
+             data-preview-link="<%= event.link %>">
+          
+          <div class="relative aspect-[16/9] overflow-hidden rounded-t-3xl">
+            <% if (event.image) { %>
+              <img src="/uploads/<%= event.image %>" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="<%= event.title %>">
+            <% } else { %>
+              <div class="absolute inset-0 bg-slate-100 flex items-center justify-center text-slate-300">
+                <i class="fas fa-calendar-star fa-3x"></i>
+              </div>
+            <% } %>
+            <% if (event.isFree) { %>
+              <div class="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">GRATUITO</div>
+            <% } %>
+          </div>
+
+          <div class="site-card-body p-6">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-1 rounded"><%= event.category || 'Evento' %></span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-primary transition-colors"><%= event.title %></h3>
+            
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-sm text-slate-500">
+                <i class="fas fa-calendar-alt w-5 text-slate-400"></i>
+                <span><%= event.date ? new Date(event.date + 'T00:00:00').toLocaleDateString('pt-BR') : 'Data a definir' %></span>
+              </div>
+              <div class="flex items-center text-sm text-slate-500">
+                <i class="fas fa-clock w-5 text-slate-400"></i>
+                <span><%= event.time || 'Horário a definir' %></span>
+              </div>
+              <div class="flex items-center text-sm text-slate-500">
+                <i class="fas fa-map-marker-alt w-5 text-slate-400"></i>
+                <span class="line-clamp-1"><%= event.location || 'Local a definir' %></span>
+              </div>
+            </div>
+
+            <button class="site-button w-full justify-center" data-open-preview>
+              Ver mais detalhes
+            </button>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="bg-slate-50 border border-slate-200 rounded-3xl p-12 text-center">
+      <div class="w-20 h-20 bg-white shadow-sm rounded-2xl flex items-center justify-center mx-auto mb-6 text-slate-300">
+        <i class="fas fa-calendar-alt fa-3x"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-800 mb-2">Em breve novos eventos</h2>
+      <p class="text-slate-500">Estamos organizando novos workshops e palestras para você. Volte em breve!</p>
+    </div>
+  <% } %>
+</div>

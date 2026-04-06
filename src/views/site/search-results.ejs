@@ -1,0 +1,164 @@
+<div class="site-page py-12">
+  <section class="mb-12">
+    <div class="site-kicker">Busca Global</div>
+    <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Resultados para "<%= query %>"</h1>
+    <p class="text-slate-600 max-w-2xl">Encontramos os seguintes resultados em toda a nossa plataforma.</p>
+  </section>
+
+  <% 
+    const hasJobs = results.jobs && results.jobs.length > 0;
+    const hasCourses = results.courses && results.courses.length > 0;
+    const hasSelections = results.selections && results.selections.length > 0;
+    const hasEvents = results.events && results.events.length > 0;
+    const hasAny = hasJobs || hasCourses || hasSelections || hasEvents;
+  %>
+
+  <% if (!hasAny) { %>
+    <div class="bg-slate-50 border border-slate-200 rounded-3xl p-12 text-center">
+      <div class="w-20 h-20 bg-white shadow-sm rounded-2xl flex items-center justify-center mx-auto mb-6 text-slate-300">
+        <i class="fas fa-search fa-3x"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-800 mb-2">Nenhum resultado encontrado</h2>
+      <p class="text-slate-500 mb-8">Tente usar palavras-chave diferentes ou mais genéricas.</p>
+      <a href="/" class="site-button">Voltar para o início</a>
+    </div>
+  <% } else { %>
+    
+    <% if (hasJobs) { %>
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+            <i class="fas fa-briefcase"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-800">Vagas de Emprego (<%= results.jobs.length %>)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% results.jobs.forEach(job => { %>
+            <div class="site-card" data-preview-item 
+                 data-preview-title="<%= job.title %>" 
+                 data-preview-description="<%= job.description %>"
+                 data-preview-image="<%= job.image ? '/uploads/' + job.image : '' %>"
+                 data-preview-badge="Vaga de Emprego"
+                 data-preview-meta-label="Publicada em"
+                 data-preview-meta-value="<%= new Date(job.createdAt).toLocaleDateString('pt-BR') %>"
+                 data-preview-salary="<%= job.salary %>"
+                 data-preview-vacancies="<%= job.vacancies %>">
+              <div class="site-card-body">
+                <div class="site-kicker"><%= job.companyName || 'Administrador' %></div>
+                <h3 class="site-card-title"><%= job.title %></h3>
+                <p class="site-card-text line-clamp-2"><%= job.description %></p>
+                <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
+                  <span class="text-sm font-semibold text-primary"><%= job.salary || 'A combinar' %></span>
+                  <button class="site-button-ghost sm" data-open-preview>Ver detalhes</button>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (hasSelections) { %>
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex items-center justify-center">
+            <i class="fas fa-file-signature"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-800">Concursos e Seleções (<%= results.selections.length %>)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% results.selections.forEach(selection => { %>
+            <div class="site-card" data-preview-item 
+                 data-preview-title="<%= selection.title %>" 
+                 data-preview-description="<%= selection.description %>"
+                 data-preview-image="<%= selection.image ? '/uploads/' + selection.image : '' %>"
+                 data-preview-badge="Seleção Pública"
+                 data-preview-meta-label="Atualizado em"
+                 data-preview-meta-value="<%= new Date(selection.updatedAt).toLocaleDateString('pt-BR') %>"
+                 data-preview-period="<%= selection.registrationStartDate ? (new Date(selection.registrationStartDate + 'T00:00:00').toLocaleDateString('pt-BR') + ' a ' + new Date(selection.registrationEndDate + 'T00:00:00').toLocaleDateString('pt-BR')) : 'Não informado' %>"
+                 data-preview-salary="<%= selection.salary %>"
+                 data-preview-education="<%= selection.educationLevel %>"
+                 data-preview-sphere="<%= selection.sphere %>"
+                 data-preview-link="<%= selection.link %>">
+              <div class="site-card-body">
+                <div class="site-kicker"><%= selection.organizer %></div>
+                <h3 class="site-card-title"><%= selection.title %></h3>
+                <div class="mt-4">
+                  <button class="site-button-ghost sm w-full" data-open-preview>Ver edital e detalhes</button>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (hasCourses) { %>
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-800">Cursos Disponíveis (<%= results.courses.length %>)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% results.courses.forEach(course => { %>
+            <div class="site-card" data-preview-item 
+                 data-preview-title="<%= course.title %>" 
+                 data-preview-description="<%= course.description %>"
+                 data-preview-image="<%= course.image ? '/uploads/' + course.image : '' %>"
+                 data-preview-badge="Curso Online"
+                 data-preview-link="<%= course.link %>">
+              <div class="relative aspect-video">
+                <% if (course.image) { %>
+                  <img src="/uploads/<%= course.image %>" class="absolute inset-0 w-full h-full object-cover" alt="<%= course.title %>">
+                <% } else { %>
+                  <div class="absolute inset-0 bg-slate-100 flex items-center justify-center text-slate-300">
+                    <i class="fas fa-graduation-cap fa-3x"></i>
+                  </div>
+                <% } %>
+              </div>
+              <div class="site-card-body">
+                <h3 class="site-card-title"><%= course.title %></h3>
+                <button class="site-button-ghost sm w-full mt-4" data-open-preview>Conhecer curso</button>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (hasEvents) { %>
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center">
+            <i class="fas fa-calendar-star"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-800">Eventos e Workshops (<%= results.events.length %>)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% results.events.forEach(event => { %>
+            <div class="site-card" data-preview-item 
+                 data-preview-title="<%= event.title %>" 
+                 data-preview-description="<%= event.description %>"
+                 data-preview-image="<%= event.image ? '/uploads/' + event.image : '' %>"
+                 data-preview-badge="Evento Presencial"
+                 data-preview-meta-label="Data do Evento"
+                 data-preview-meta-value="<%= event.date ? new Date(event.date + 'T00:00:00').toLocaleDateString('pt-BR') : 'A definir' %> às <%= event.time %>"
+                 data-preview-period="<%= event.location %>"
+                 data-preview-period-label="Local"
+                 data-preview-link="<%= event.link %>">
+              <div class="site-card-body">
+                <div class="site-kicker"><%= event.category || 'Workshop' %></div>
+                <h3 class="site-card-title"><%= event.title %></h3>
+                <p class="text-sm text-slate-500 mb-4"><i class="fas fa-map-marker-alt mr-2"></i><%= event.location %></p>
+                <button class="site-button-ghost sm w-full" data-open-preview>Ver informações</button>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+  <% } %>
+</div>

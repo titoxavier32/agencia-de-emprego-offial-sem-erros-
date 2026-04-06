@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewSecondaryLink = document.getElementById('site-preview-secondary-link');
   const previewEducation = document.getElementById('site-preview-education');
   const previewEducationRow = document.getElementById('site-preview-education-row');
+  const previewSalary = document.getElementById('site-preview-salary');
+  const previewSalaryRow = document.getElementById('site-preview-salary-row');
+  const previewVacancies = document.getElementById('site-preview-vacancies');
+  const previewVacanciesRow = document.getElementById('site-preview-vacancies-row');
+  const previewSphere = document.getElementById('site-preview-sphere');
+  const previewSphereRow = document.getElementById('site-preview-sphere-row');
+  const previewLinkLabel = document.getElementById('site-preview-link-text');
+  
   const adminAccessModal = document.getElementById('site-admin-access-modal');
   const adminAccessTrigger = document.getElementById('site-admin-lock-trigger');
   const adminAccessClose = document.getElementById('site-admin-access-close');
@@ -40,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closePreview = () => {
     if (previewModal) {
       previewModal.classList.remove('is-open');
+      document.body.style.overflow = '';
     }
     if (previewPdf) {
       previewPdf.src = '';
@@ -52,61 +61,84 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!item || !previewModal) return;
 
     const image = item.dataset.previewImage || '';
-    const previewBadgeText = item.dataset.previewBadge || 'Visualizacao';
-    const isPublicSelection = /concurso|processo seletivo/i.test(previewBadgeText);
+    const badgeText = item.dataset.previewBadge || 'Visualização';
+    const isPublicSelection = /concurso|processo seletivo/i.test(badgeText);
     const previewHref = item.dataset.previewLink || '';
     const isPdfLink = /\.pdf($|\?)/i.test(previewHref);
 
-    previewBadge.textContent = previewBadgeText;
-    previewTitle.textContent = item.dataset.previewTitle || '';
-    previewDescription.textContent = item.dataset.previewDescription || '';
-    previewMetaLabel.textContent = (item.dataset.previewMetaLabel || 'Data') + ':';
-      previewMetaValue.textContent = item.dataset.previewMetaValue || '';
+    // Basic Info
+    if (previewBadge) previewBadge.textContent = badgeText;
+    if (previewTitle) previewTitle.textContent = item.dataset.previewTitle || '';
+    if (previewDescription) previewDescription.textContent = item.dataset.previewDescription || '';
 
-      if (item.dataset.previewPeriod) {
-        if (previewPeriodLabel) {
-          previewPeriodLabel.textContent = (item.dataset.previewPeriodLabel || 'Período') + ':';
-        }
-        previewPeriod.textContent = item.dataset.previewPeriod;
-        previewPeriodRow.style.display = 'block';
-      } else {
-      previewPeriod.textContent = '';
+    // Meta / Publication Date
+    if (previewMetaLabel) previewMetaLabel.textContent = (item.dataset.previewMetaLabel || 'Publicado em');
+    if (previewMetaValue) previewMetaValue.textContent = item.dataset.previewMetaValue || '';
+
+    // Registration Period
+    if (item.dataset.previewPeriod && previewPeriodRow) {
+      if (previewPeriodLabel) previewPeriodLabel.textContent = (item.dataset.previewPeriodLabel || 'Inscrições');
+      if (previewPeriod) previewPeriod.textContent = item.dataset.previewPeriod;
+      previewPeriodRow.style.display = 'flex';
+    } else if (previewPeriodRow) {
       previewPeriodRow.style.display = 'none';
     }
 
+    // Education
+    if (item.dataset.previewEducation && previewEducationRow) {
+      if (previewEducation) previewEducation.textContent = item.dataset.previewEducation;
+      previewEducationRow.style.display = 'flex';
+    } else if (previewEducationRow) {
+      previewEducationRow.style.display = 'none';
+    }
+
+    // Salary
+    if (item.dataset.previewSalary && previewSalaryRow) {
+      if (previewSalary) previewSalary.textContent = item.dataset.previewSalary;
+      previewSalaryRow.style.display = 'flex';
+    } else if (previewSalaryRow) {
+      previewSalaryRow.style.display = 'none';
+    }
+
+    // Vacancies
+    if (item.dataset.previewVacancies && previewVacanciesRow) {
+      if (previewVacancies) previewVacancies.textContent = item.dataset.previewVacancies;
+      previewVacanciesRow.style.display = 'flex';
+    } else if (previewVacanciesRow) {
+      previewVacanciesRow.style.display = 'none';
+    }
+
+    // Sphere
+    if (item.dataset.previewSphere && previewSphereRow) {
+      if (previewSphere) previewSphere.textContent = item.dataset.previewSphere;
+      previewSphereRow.style.display = 'flex';
+    } else if (previewSphereRow) {
+      previewSphereRow.style.display = 'none';
+    }
+
+    // Links
     if (previewHref && (!isPublicSelection || isPdfLink)) {
       previewLink.href = previewHref;
-      previewLink.textContent = isPublicSelection ? 'Ver edital' : (item.dataset.previewLinkLabel || 'Abrir');
-      previewLink.target = isPublicSelection ? '' : (item.dataset.previewLinkTarget || '');
+      if (previewLinkLabel) {
+        previewLinkLabel.textContent = isPublicSelection ? 'Ver edital oficial' : (item.dataset.previewLinkLabel || 'Acessar agora');
+      }
+      previewLink.target = isPublicSelection ? '' : (item.dataset.previewLinkTarget || '_blank');
       previewLink.rel = previewLink.target === '_blank' ? 'noopener noreferrer' : '';
       previewLink.dataset.inlinePdf = isPublicSelection && isPdfLink ? 'true' : 'false';
       previewLink.style.display = 'inline-flex';
     } else {
-      previewLink.href = '#';
-      previewLink.textContent = '';
-      previewLink.target = '';
-      previewLink.rel = '';
-      previewLink.dataset.inlinePdf = 'false';
       previewLink.style.display = 'none';
     }
 
+    // Secondary Link (Site do Processo)
     if (item.dataset.previewSecondaryLink && previewSecondaryLink) {
       previewSecondaryLink.href = item.dataset.previewSecondaryLink;
-      previewSecondaryLink.textContent = item.dataset.previewSecondaryLabel || 'Abrir';
-      previewSecondaryLink.target = '_blank';
-      previewSecondaryLink.rel = 'noopener noreferrer';
       previewSecondaryLink.style.display = 'inline-flex';
     } else if (previewSecondaryLink) {
       previewSecondaryLink.style.display = 'none';
     }
 
-    if (item.dataset.previewEducation && previewEducation && previewEducationRow) {
-      previewEducation.textContent = item.dataset.previewEducation;
-      previewEducationRow.style.display = 'block';
-    } else if (previewEducationRow) {
-      previewEducationRow.style.display = 'none';
-    }
-
+    // Media Logic
     if (previewPdf) {
       previewPdf.src = '';
       previewPdf.style.display = 'none';
@@ -124,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     previewModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden'; // Bloquear scroll do body
   };
 
   document.querySelectorAll('[data-open-preview]').forEach((trigger) => {
