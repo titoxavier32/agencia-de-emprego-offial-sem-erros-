@@ -733,6 +733,19 @@
         </div>
       </div>
 
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Google AdSense</h2>
+            <p>Cole o código oficial fornecido pelo Google (Script de Cabeçalho) para exibir propagandas no site.</p>
+          </div>
+        </div>
+        <div class="admin-form-row">
+          <label for="googleAdSenseCode">Script do AdSense ou Cabeçalho</label>
+          <textarea id="googleAdSenseCode" name="googleAdSenseCode" rows="10" placeholder="<script ...></script>"><%= s && s.googleAdSenseCode ? s.googleAdSenseCode : '' %></textarea>
+        </div>
+      </div>
+
       <div class="admin-structured-block admin-magic-block">
         <div class="admin-section-head">
           <div class="admin-magic-icon">

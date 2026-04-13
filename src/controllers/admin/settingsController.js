@@ -142,7 +142,8 @@ exports.updateSettings = async (req, res) => {
     mercadoPagoAccessToken: normalizeOptionalValue(req.body.mercadoPagoAccessToken),
     homeSurveyEnabled: req.body.homeSurveyEnabled === 'on',
     homeSurveyTitle: normalizeOptionalValue(req.body.homeSurveyTitle) || 'Sua opiniao e fundamental!',
-    homeSurveySubtitle: normalizeOptionalValue(req.body.homeSurveySubtitle) || 'Ajude-nos a melhorar nossa plataforma. Responda a nossa pesquisa de satisfacao em poucos segundos.'
+    homeSurveySubtitle: normalizeOptionalValue(req.body.homeSurveySubtitle) || 'Ajude-nos a melhorar nossa plataforma. Responda a nossa pesquisa de satisfacao em poucos segundos.',
+    googleAdSenseCode: req.body.googleAdSenseCode || ''
   };
 
   if (req.file) updateData.backgroundImage = req.file.filename;

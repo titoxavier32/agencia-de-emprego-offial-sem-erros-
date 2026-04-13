@@ -105,7 +105,8 @@ const Setting = sequelize.define('Setting', {
   mercadoPagoAccessToken: { type: DataTypes.STRING, defaultValue: '' },
   homeSurveyEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
   homeSurveyTitle: { type: DataTypes.STRING, defaultValue: 'Sua opinião é fundamental!' },
-  homeSurveySubtitle: { type: DataTypes.TEXT, defaultValue: 'Ajude-nos a melhorar nossa plataforma. Responda à nossa pesquisa de satisfação em poucos segundos.' }
+  homeSurveySubtitle: { type: DataTypes.TEXT, defaultValue: 'Ajude-nos a melhorar nossa plataforma. Responda à nossa pesquisa de satisfação em poucos segundos.' },
+  googleAdSenseCode: { type: DataTypes.TEXT, defaultValue: '' }
 });
 
 module.exports = Setting;

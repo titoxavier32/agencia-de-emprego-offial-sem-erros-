@@ -98,3 +98,7 @@
     .site-detail-grid { grid-template-columns: 1fr; }
   }
 </style>
+
+<% if (globalSetting && globalSetting.googleAdSenseCode) { %>
+  <%- globalSetting.googleAdSenseCode %>
+<% } %>
