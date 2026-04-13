@@ -15,7 +15,7 @@ const buildSelectionErrorRedirect = (basePath, message) => redirectWithMessage(b
 const buildSelectionScheduleDefaults = () => [{ label: '', date: '' }];
 const buildSelectionVacancyDefaults = () => [{ role: '', total: '', pcd: '', race: '', income: '', workload: '', salary: '', zone: '', workplace: '' }];
 
-const HOME_SECTION_KEYS = ['top_ads', 'hero', 'jobs', 'mural', 'company_showcase', 'contact', 'courses', 'public_selections'];
+const HOME_SECTION_KEYS = ['top_ads', 'hero', 'jobs', 'mural', 'company_showcase', 'contact', 'courses', 'public_selections', 'survey'];
 
 const buildHomeSectionOrderFromBody = (body) => {
   const parsed = HOME_SECTION_KEYS.map((key, index) => ({
@@ -222,6 +222,11 @@ const buildPublicSelectionPayload = (body, files) => ({
   registrationEndDate: body.registrationEndDate || null,
   targetAudience: normalizeOptionalValue(body.targetAudience),
   link: normalizeOptionalValue(body.link),
+  showInHero: body.showInHero === 'on',
+  heroOrder: parsePositiveInteger(body.heroOrder, 0),
+  heroKicker: normalizeOptionalValue(body.heroKicker),
+  heroSummary: normalizeOptionalValue(body.heroSummary),
+  heroButtonLabel: normalizeOptionalValue(body.heroButtonLabel),
   schedule: JSON.stringify(normalizeScheduleItems(body)),
   vacancies: JSON.stringify(normalizeVacancyItems(body)),
   ...(files && files.image ? { image: files.image[0].filename } : {}),
@@ -342,7 +347,12 @@ const buildEventPayload = (body, imageFileName = '') => ({
   status: body.status || 'ativo',
   isFree: body.isFree === 'on',
   price: normalizeOptionalValue(body.price),
-  image: imageFileName
+  image: imageFileName,
+  showInHero: body.showInHero === 'on',
+  heroOrder: parsePositiveInteger(body.heroOrder, 0),
+  heroKicker: normalizeOptionalValue(body.heroKicker),
+  heroSummary: normalizeOptionalValue(body.heroSummary),
+  heroButtonLabel: normalizeOptionalValue(body.heroButtonLabel)
 });
 
 const buildEventUpdatePayload = (body, file) => {
@@ -358,7 +368,12 @@ const buildEventUpdatePayload = (body, file) => {
     link: normalizeOptionalValue(body.link),
     status: body.status || 'ativo',
     isFree: body.isFree === 'on',
-    price: normalizeOptionalValue(body.price)
+    price: normalizeOptionalValue(body.price),
+    showInHero: body.showInHero === 'on',
+    heroOrder: parsePositiveInteger(body.heroOrder, 0),
+    heroKicker: normalizeOptionalValue(body.heroKicker),
+    heroSummary: normalizeOptionalValue(body.heroSummary),
+    heroButtonLabel: normalizeOptionalValue(body.heroButtonLabel)
   };
 
   if (file) {
@@ -513,7 +528,8 @@ const buildSiteStructureMeta = () => ({
   company_showcase: { label: 'Empresas parceiras', description: 'Vitrine institucional para reforcar confianca e credibilidade.' },
   contact: { label: 'Contato', description: 'Ponto de conversao para mensagens, suporte e relacionamento.' },
   courses: { label: 'Cursos', description: 'Area de formacao e desenvolvimento para ampliar a recorrencia.' },
-  public_selections: { label: 'Selecoes publicas', description: 'Conteudo de editais, cronogramas e processos seletivos.' }
+  public_selections: { label: 'Selecoes publicas', description: 'Conteudo de editais, cronogramas e processos seletivos.' },
+  survey: { label: 'Pesquisa de Satisfacao', description: 'Bloco integrado no final da home para coleta de feedbacks direto dos usuarios.' }
 });
 
 module.exports = {

@@ -24,13 +24,14 @@ exports.listEvents = async (req, res) => {
 
   const events = await Event.findAll({ 
     where,
-    order: [['date', 'ASC'], ['createdAt', 'DESC']] 
+    order: [['showInHero', 'DESC'], ['heroOrder', 'ASC'], ['date', 'ASC'], ['createdAt', 'DESC']] 
   });
 
   // Estatísticas para o Dashboard
   const stats = {
     total: await Event.count(),
     active: await Event.count({ where: { status: 'ativo' } }),
+    hero: await Event.count({ where: { showInHero: true, status: 'ativo' } }),
     free: await Event.count({ where: { isFree: true } }),
     other: await Event.count({ where: { status: { [Op.ne]: 'ativo' } } })
   };

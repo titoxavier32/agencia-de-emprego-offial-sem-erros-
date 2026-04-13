@@ -1,29 +1,31 @@
 <section class="site-section site-home-mural site-home-mural--<%= globalSetting && globalSetting.muralAdsAlignment ? globalSetting.muralAdsAlignment : 'center' %>">
-  <div class="site-section-head">
-    <div class="site-section-heading">
-      <h2>Mural publicitário</h2>
-      <p>Campanhas visuais com formato livre, imagem animada e destaque comercial.</p>
+  <div class="site-page">
+    <div class="site-section-head">
+      <div class="site-section-heading">
+        <h2>Mural publicitário</h2>
+        <p>Campanhas visuais com formato livre, imagem animada e destaque comercial.</p>
+      </div>
+      <a href="/mural-publicitario" class="site-section-link">Ver mural <i class="fas fa-arrow-right"></i></a>
     </div>
-    <a href="/mural-publicitario" class="site-section-link">Ver mural <i class="fas fa-arrow-right"></i></a>
-  </div>
 
-  <% if (homeMuralAdGroups.some(group => group.items && group.items.length > 0)) { %>
-    <% homeMuralAdGroups.forEach(group => { %>
-      <% if (group.items && group.items.length > 0) { %>
-        <div class="ad-mural-grid ad-mural-grid--triple" style="margin-top:18px;">
-          <% group.items.forEach(ad => { %>
-            <article class="ad-mural-card ad-anim-<%= ad.animation %>" style="--ad-width:<%= ad.width %>px; --ad-height:<%= ad.height %>px;">
-              <% if (ad.link) { %><a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="ad-mural-link"><% } %>
-                <div class="ad-mural-media">
-                  <img src="/images/propagandas/<%= ad.image %>" alt="Propaganda" class="ad-mural-image">
-                </div>
-              <% if (ad.link) { %></a><% } %>
-            </article>
-          <% }) %>
-        </div>
-      <% } %>
-    <% }) %>
-  <% } else { %>
-    <div class="site-empty"><i class="fas fa-bullhorn"></i><p>Nenhuma propaganda publicada no momento.</p></div>
-  <% } %>
+    <% if (homeMuralAdGroups.some(group => group.items && group.items.length > 0)) { %>
+      <% homeMuralAdGroups.forEach(group => { %>
+        <% if (group.items && group.items.length > 0) { %>
+          <div class="ad-mural-grid ad-mural-grid--triple" style="margin-top:18px;">
+            <% group.items.forEach(ad => { %>
+              <article class="ad-mural-card ad-anim-<%= ad.animation %>" style="--ad-width:<%= ad.width %>px; --ad-height:<%= ad.height %>px;">
+                <% if (ad.link) { %><a href="<%= ad.link %>" target="_blank" rel="noopener noreferrer" class="ad-mural-link"><% } %>
+                  <div class="ad-mural-media">
+                    <img src="/images/propagandas/<%= ad.image %>" alt="Propaganda" class="ad-mural-image">
+                  </div>
+                <% if (ad.link) { %></a><% } %>
+              </article>
+            <% }) %>
+          </div>
+        <% } %>
+      <% }) %>
+    <% } else { %>
+      <div class="site-empty"><i class="fas fa-bullhorn"></i><p>Nenhuma propaganda publicada no momento.</p></div>
+    <% } %>
+  </div>
 </section>

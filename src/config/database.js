@@ -177,7 +177,10 @@ const ensureSettingColumns = async () => {
     ['smtpEncryption', { type: Sequelize.STRING, defaultValue: 'tls' }],
     ['navbarPosition', { type: Sequelize.STRING, defaultValue: 'top' }],
     ['previewSizePreset', { type: Sequelize.STRING, defaultValue: 'large' }],
-    ['mercadoPagoAccessToken', { type: Sequelize.STRING, defaultValue: '' }]
+    ['mercadoPagoAccessToken', { type: Sequelize.STRING, defaultValue: '' }],
+    ['homeSurveyEnabled', { type: Sequelize.BOOLEAN, defaultValue: true }],
+    ['homeSurveyTitle', { type: Sequelize.STRING, defaultValue: 'Sua opinião é fundamental!' }],
+    ['homeSurveySubtitle', { type: Sequelize.TEXT, defaultValue: 'Ajude-nos a melhorar nossa plataforma. Responda à nossa pesquisa de satisfação em poucos segundos.' }]
   ];
 
   for (const [columnName, definition] of columns) {
@@ -246,7 +249,12 @@ const ensurePublicSelectionColumns = async () => {
     ['region', { type: Sequelize.STRING, allowNull: true }],
     ['salary', { type: Sequelize.STRING, allowNull: true }],
     ['educationLevel', { type: Sequelize.STRING, allowNull: true }],
-    ['processWebsite', { type: Sequelize.STRING, allowNull: true }]
+    ['processWebsite', { type: Sequelize.STRING, allowNull: true }],
+    ['showInHero', { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false }],
+    ['heroOrder', { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 }],
+    ['heroKicker', { type: Sequelize.STRING, allowNull: true }],
+    ['heroSummary', { type: Sequelize.TEXT, allowNull: true }],
+    ['heroButtonLabel', { type: Sequelize.STRING, allowNull: true }]
   ];
 
   for (const [columnName, definition] of columns) {
@@ -375,15 +383,35 @@ const ensureEventColumns = async () => {
       location: { type: Sequelize.STRING, allowNull: true },
       address: { type: Sequelize.STRING, allowNull: true },
       organizer: { type: Sequelize.STRING, allowNull: true },
-      category: { type: DataTypes.STRING, allowNull: true },
+      category: { type: Sequelize.STRING, allowNull: true },
       image: { type: Sequelize.STRING, allowNull: true },
       link: { type: Sequelize.STRING, allowNull: true },
       status: { type: Sequelize.STRING, defaultValue: 'ativo' },
       isFree: { type: Sequelize.BOOLEAN, defaultValue: true },
       price: { type: Sequelize.STRING, allowNull: true },
+      showInHero: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+      heroOrder: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+      heroKicker: { type: Sequelize.STRING, allowNull: true },
+      heroSummary: { type: Sequelize.TEXT, allowNull: true },
+      heroButtonLabel: { type: Sequelize.STRING, allowNull: true },
       createdAt: { type: Sequelize.DATE, allowNull: false },
       updatedAt: { type: Sequelize.DATE, allowNull: false }
     });
+    return;
+  }
+
+  const columns = [
+    ['showInHero', { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false }],
+    ['heroOrder', { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 }],
+    ['heroKicker', { type: Sequelize.STRING, allowNull: true }],
+    ['heroSummary', { type: Sequelize.TEXT, allowNull: true }],
+    ['heroButtonLabel', { type: Sequelize.STRING, allowNull: true }]
+  ];
+
+  for (const [columnName, definition] of columns) {
+    if (!tableDefinition[columnName]) {
+      await queryInterface.addColumn('Events', columnName, definition);
+    }
   }
 };
 

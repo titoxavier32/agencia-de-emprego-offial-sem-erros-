@@ -139,7 +139,10 @@ exports.updateSettings = async (req, res) => {
     smtpPass: normalizeOptionalValue(req.body.smtpPass),
     smtpFrom: normalizeOptionalValue(req.body.smtpFrom),
     smtpEncryption: normalizeOptionalValue(req.body.smtpEncryption) || 'tls',
-    mercadoPagoAccessToken: normalizeOptionalValue(req.body.mercadoPagoAccessToken)
+    mercadoPagoAccessToken: normalizeOptionalValue(req.body.mercadoPagoAccessToken),
+    homeSurveyEnabled: req.body.homeSurveyEnabled === 'on',
+    homeSurveyTitle: normalizeOptionalValue(req.body.homeSurveyTitle) || 'Sua opiniao e fundamental!',
+    homeSurveySubtitle: normalizeOptionalValue(req.body.homeSurveySubtitle) || 'Ajude-nos a melhorar nossa plataforma. Responda a nossa pesquisa de satisfacao em poucos segundos.'
   };
 
   if (req.file) updateData.backgroundImage = req.file.filename;
@@ -161,7 +164,7 @@ exports.correctStoredTexts = async (req, res) => {
 
   const settings = await Setting.findAll();
   for (const setting of settings) {
-    const changed = await normalizeInstanceFields(setting, ['brandKicker', 'brandName', 'footerDescription', 'heroKicker', 'heroTitle', 'heroDescription', 'companyShowcaseTitle', 'companyShowcaseDescription', 'floatingAdminButtonLabel', 'adminSidebarConfig', 'commercialPaymentPlan', 'previewSizePreset']);
+    const changed = await normalizeInstanceFields(setting, ['brandKicker', 'brandName', 'footerDescription', 'heroKicker', 'heroTitle', 'heroDescription', 'homeSurveyTitle', 'homeSurveySubtitle', 'companyShowcaseTitle', 'companyShowcaseDescription', 'floatingAdminButtonLabel', 'adminSidebarConfig', 'commercialPaymentPlan', 'previewSizePreset']);
     if (changed) totalUpdated += 1;
   }
 
@@ -283,6 +286,18 @@ exports.deleteMenu = async (req, res) => {
   return res.redirect('/admin/menus');
 };
 
+exports.toggleMenu = async (req, res) => {
+  const menu = await Menu.findByPk(req.params.id);
+  if (!menu) {
+    return res.status(404).json({ error: 'Menu nao encontrado.' });
+  }
+
+  const newStatus = !menu.isActive;
+  await menu.update({ isActive: newStatus });
+
+  return res.json({ success: true, isActive: newStatus });
+};
+
 exports.siteStructure = async (req, res) => {
   const setting = res.locals.globalSetting;
   const menus = res.locals.menus || [];
@@ -314,7 +329,8 @@ exports.siteStructure = async (req, res) => {
     company_showcase: 'Vitrine de Empresas',
     contact: 'Chamada Contato',
     courses: 'Cursos em Alta',
-    public_selections: 'Selecoes Publicas'
+    public_selections: 'Selecoes Publicas',
+    survey: 'Pesquisa de Satisfação'
   };
 
   const rawOrder = setting.homeSectionOrder ? setting.homeSectionOrder.split(',') : [];

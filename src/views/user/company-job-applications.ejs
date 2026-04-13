@@ -1,67 +1,71 @@
 <section class="site-hero">
-  <div class="site-hero-content">
-    <span class="site-kicker">Currículos recebidos</span>
-    <h1><%= job.title %></h1>
-    <p class="site-lead">Gerencie os candidatos inscritos nessa vaga, visualize o currículo e atualize o andamento da seleção.</p>
+  <div class="site-page">
+    <div class="site-hero-content">
+      <span class="site-kicker">Currículos recebidos</span>
+      <h1><%= job.title %></h1>
+      <p class="site-lead">Gerencie os candidatos inscritos nessa vaga, visualize o currículo e atualize o andamento da seleção.</p>
+    </div>
   </div>
 </section>
 
 <section class="site-section">
-  <div class="site-page-header">
-    <div>
-      <h1>Candidatos da vaga</h1>
-      <p class="site-page-copy"><%= job.companyName || 'Empresa' %> • <%= job.location || 'Local nao informado' %></p>
+  <div class="site-page">
+    <div class="site-page-header">
+      <div>
+        <h1>Candidatos da vaga</h1>
+        <p class="site-page-copy"><%= job.companyName || 'Empresa' %> • <%= job.location || 'Local nao informado' %></p>
+      </div>
+      <a href="/perfil/empresa/vagas" class="site-button-ghost">Voltar para vagas</a>
     </div>
-    <a href="/perfil/empresa/vagas" class="site-button-ghost">Voltar para vagas</a>
-  </div>
 
-  <% if (profileError) { %><div class="admin-alert" style="margin-bottom:18px;"><%= profileError %></div><% } %>
-  <% if (profileStatus) { %><div class="site-access-status" style="margin-bottom:18px;"><%= profileStatus %></div><% } %>
+    <% if (profileError) { %><div class="admin-alert" style="margin-bottom:18px;"><%= profileError %></div><% } %>
+    <% if (profileStatus) { %><div class="site-access-status" style="margin-bottom:18px;"><%= profileStatus %></div><% } %>
 
-  <% if (applications.length > 0) { %>
-    <div class="site-card-grid">
-      <% applications.forEach(application => { const candidate = application.candidate; %>
-        <article class="site-card">
-          <div class="site-card-body">
-            <h3><%= candidate ? candidate.name : 'Candidato removido' %></h3>
-            <p class="site-card-text"><strong>E-mail:</strong> <%= candidate ? candidate.email : '-' %></p>
-            <p class="site-card-text"><strong>Telefone:</strong> <%= candidate ? (candidate.phone || candidate.mobilePhone || '-') : '-' %></p>
-            <p class="site-card-text"><strong>Cidade:</strong> <%= candidate ? ([candidate.city, candidate.state].filter(Boolean).join(' - ') || '-') : '-' %></p>
-            <p class="site-card-text"><strong>Cargo pretendido:</strong> <%= candidate ? (candidate.desiredRole || '-') : '-' %></p>
-            <p class="site-card-text"><strong>Resumo profissional:</strong> <%= candidate ? (candidate.objective || 'Não informado.') : 'Não informado.' %></p>
-            <div class="site-card-meta">
-              <span>Status atual: <strong><%= application.status %></strong></span>
-              <span>Inscricao em <%= new Date(application.createdAt).toLocaleDateString('pt-BR') %></span>
-            </div>
-            <div class="site-hero-actions">
-              <% if (candidate && candidate.resumePdf) { %>
-                <a href="/uploads/<%= candidate.resumePdf %>" target="_blank" rel="noopener noreferrer" class="site-button-secondary">Ver currículo PDF</a>
-              <% } %>
-            </div>
-            <form action="/perfil/empresa/candidaturas/<%= application.id %>/status" method="POST" class="site-form" style="margin-top:16px;">
-              <div class="site-form-grid">
-                <div class="site-form-row">
-                  <label for="application-status-<%= application.id %>">Status da candidatura</label>
-                  <select id="application-status-<%= application.id %>" name="status">
-                    <option value="recebida" <%= application.status === 'recebida' ? 'selected' : '' %>>Recebida</option>
-                    <option value="em_analise" <%= application.status === 'em_analise' ? 'selected' : '' %>>Em análise</option>
-                    <option value="entrevista" <%= application.status === 'entrevista' ? 'selected' : '' %>>Entrevista</option>
-                    <option value="aprovada" <%= application.status === 'aprovada' ? 'selected' : '' %>>Aprovada</option>
-                    <option value="reprovada" <%= application.status === 'reprovada' ? 'selected' : '' %>>Reprovada</option>
-                    <option value="banco_de_talentos" <%= application.status === 'banco_de_talentos' ? 'selected' : '' %>>Banco de talentos</option>
-                  </select>
-                </div>
+    <% if (applications.length > 0) { %>
+      <div class="site-card-grid">
+        <% applications.forEach(application => { const candidate = application.candidate; %>
+          <article class="site-card">
+            <div class="site-card-body">
+              <h3><%= candidate ? candidate.name : 'Candidato removido' %></h3>
+              <p class="site-card-text"><strong>E-mail:</strong> <%= candidate ? candidate.email : '-' %></p>
+              <p class="site-card-text"><strong>Telefone:</strong> <%= candidate ? (candidate.phone || candidate.mobilePhone || '-') : '-' %></p>
+              <p class="site-card-text"><strong>Cidade:</strong> <%= candidate ? ([candidate.city, candidate.state].filter(Boolean).join(' - ') || '-') : '-' %></p>
+              <p class="site-card-text"><strong>Cargo pretendido:</strong> <%= candidate ? (candidate.desiredRole || '-') : '-' %></p>
+              <p class="site-card-text"><strong>Resumo profissional:</strong> <%= candidate ? (candidate.objective || 'Não informado.') : 'Não informado.' %></p>
+              <div class="site-card-meta">
+                <span>Status atual: <strong><%= application.status %></strong></span>
+                <span>Inscricao em <%= new Date(application.createdAt).toLocaleDateString('pt-BR') %></span>
               </div>
-              <button type="submit" class="site-button">Salvar status</button>
-            </form>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty">
-      <i class="fas fa-users"></i>
-      <p>Nenhum candidato se inscreveu nesta vaga ainda.</p>
-    </div>
-  <% } %>
+              <div class="site-hero-actions">
+                <% if (candidate && candidate.resumePdf) { %>
+                  <a href="/uploads/<%= candidate.resumePdf %>" target="_blank" rel="noopener noreferrer" class="site-button-secondary">Ver currículo PDF</a>
+                <% } %>
+              </div>
+              <form action="/perfil/empresa/candidaturas/<%= application.id %>/status" method="POST" class="site-form" style="margin-top:16px;">
+                <div class="site-form-grid">
+                  <div class="site-form-row">
+                    <label for="application-status-<%= application.id %>">Status da candidatura</label>
+                    <select id="application-status-<%= application.id %>" name="status">
+                      <option value="recebida" <%= application.status === 'recebida' ? 'selected' : '' %>>Recebida</option>
+                      <option value="em_analise" <%= application.status === 'em_analise' ? 'selected' : '' %>>Em análise</option>
+                      <option value="entrevista" <%= application.status === 'entrevista' ? 'selected' : '' %>>Entrevista</option>
+                      <option value="aprovada" <%= application.status === 'aprovada' ? 'selected' : '' %>>Aprovada</option>
+                      <option value="reprovada" <%= application.status === 'reprovada' ? 'selected' : '' %>>Reprovada</option>
+                      <option value="banco_de_talentos" <%= application.status === 'banco_de_talentos' ? 'selected' : '' %>>Banco de talentos</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" class="site-button">Salvar status</button>
+              </form>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="site-empty">
+        <i class="fas fa-users"></i>
+        <p>Nenhum candidato se inscreveu nesta vaga ainda.</p>
+      </div>
+    <% } %>
+  </div>
 </section>

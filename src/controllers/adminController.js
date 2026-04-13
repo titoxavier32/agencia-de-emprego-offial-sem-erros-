@@ -3,5 +3,6 @@ module.exports = {
   ...require('./admin/contentController'),
   ...require('./admin/settingsController'),
   ...require('./admin/usersController'),
-  ...require('./admin/eventController')
+  ...require('./admin/eventController'),
+  ...require('./admin/surveyController')
 };

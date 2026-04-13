@@ -1,32 +1,38 @@
 <section class="site-hero">
-  <div class="site-hero-content">
-    <span class="site-kicker"><%= publicSelection.category === 'concurso_publico' ? 'Concurso público' : 'Processo seletivo' %></span>
-    <h1><%= publicSelection.title %></h1>
-    <% if (publicSelection.description) { %>
-      <p class="site-lead"><%= publicSelection.description %></p>
-    <% } %>
-    <div class="site-hero-actions">
-      <% if (publicSelection.noticePdf) { %><a href="/images/cursos/anexos/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer" class="site-button">Ver edital</a><% } %>
-      <% if (publicSelection.link) { %><a href="<%= publicSelection.link %>" target="_blank" rel="noopener noreferrer" class="site-button-ghost">Abrir link oficial</a><% } %>
-      <a href="/selecoes-publicas" class="site-button-ghost">Voltar para a lista</a>
+  <div class="site-page">
+    <div class="site-hero-content">
+      <span class="site-kicker"><%= publicSelection.category === 'concurso_publico' ? 'Concurso público' : 'Processo seletivo' %></span>
+      <h1><%= publicSelection.title %></h1>
+      <% if (publicSelection.description) { %>
+        <p class="site-lead"><%= publicSelection.description %></p>
+      <% } %>
+      <div class="site-hero-actions">
+        <% if (publicSelection.noticePdf) { %><a href="/images/cursos/anexos/<%= publicSelection.noticePdf %>" target="_blank" rel="noopener noreferrer" class="site-button">Ver edital</a><% } %>
+        <% if (publicSelection.link) { %><a href="<%= publicSelection.link %>" target="_blank" rel="noopener noreferrer" class="site-button-ghost">Abrir link oficial</a><% } %>
+        <a href="/selecoes-publicas" class="site-button-ghost">Voltar para a lista</a>
+      </div>
     </div>
   </div>
 </section>
 
 <% if (publicSelection.noticePdf) { %>
   <section class="site-section">
-    <div class="site-section-head">
-      <div class="site-section-heading">
-        <h2>Edital Anexado</h2>
-        <p>Visualize o edital completo diretamente nesta página.</p>
+    <div class="site-page">
+      <div class="site-section-head">
+        <div class="site-section-heading">
+          <h2>Edital Anexado</h2>
+          <p>Visualize o edital completo diretamente nesta página.</p>
+        </div>
       </div>
+      <article class="site-detail-card">
+        <iframe src="/images/cursos/anexos/<%= publicSelection.noticePdf %>" title="Edital anexado" style="width:100%; min-height:var(--site-detail-pdf-min-height); border:0; border-radius:18px; background:#fff;"></iframe>
+      </article>
     </div>
-    <article class="site-detail-card">
-      <iframe src="/images/cursos/anexos/<%= publicSelection.noticePdf %>" title="Edital anexado" style="width:100%; min-height:var(--site-detail-pdf-min-height); border:0; border-radius:18px; background:#fff;"></iframe>
-    </article>
   </section>
 <% } else { %>
   <section class="site-section">
-    <div class="site-empty"><i class="fas fa-file-signature"></i><p>Nenhum edital em PDF foi anexado para esta divulgação.</p></div>
+    <div class="site-page">
+      <div class="site-empty"><i class="fas fa-file-signature"></i><p>Nenhum edital em PDF foi anexado para esta divulgação.</p></div>
+    </div>
   </section>
 <% } %>

@@ -3,7 +3,7 @@
     <div class="admin-section-head">
       <div>
         <h2><%= title %></h2>
-        <p>Cadastre concursos e processos seletivos com extração automática inteligente.</p>
+        <p>Cadastre concursos e processos seletivos e, se quiser, coloque esse item para rodar no banner principal da home.</p>
       </div>
       <a href="/admin/selecoes-publicas" class="admin-btn-ghost">Voltar</a>
     </div>
@@ -12,19 +12,13 @@
       <div class="admin-alert"><%= formError %></div>
     <% } %>
 
-    <div class="admin-smart-box" style="margin-bottom: 2rem; padding: 1.5rem; background: #f0f7ff; border: 2px dashed #007bff; border-radius: 12px;">
-      <label for="smartInput" style="font-weight: bold; color: #0056b3; display: block; margin-bottom: 0.5rem;">🧠 MODO INTELIGENTE: COLOQUE AS INFORMAÇÕES AQUI</label>
-      <textarea id="smartInput" rows="4" placeholder="Cole aqui o texto do concurso (Ex: Prefeitura de Porto Velho abre concurso... Inscrições até 20/05/2026...)" style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #cce5ff;"></textarea>
-      <small style="color: #666;">O sistema preencherá o formulário abaixo automaticamente ao detectar os dados.</small>
-    </div>
-
     <form action="<%= publicSelection ? '/admin/selecoes-publicas/editar/' + publicSelection.id : '/admin/selecoes-publicas/nova' %>" method="POST" enctype="multipart/form-data" class="admin-form">
       <div class="admin-form-grid">
         <div class="admin-form-row">
           <label for="category">Categoria</label>
           <select id="category" name="category">
             <option value="processo_seletivo" <%= !publicSelection || publicSelection.category === 'processo_seletivo' ? 'selected' : '' %>>Processo seletivo</option>
-            <option value="concurso_publico" <%= publicSelection && publicSelection.category === 'concurso_publico' ? 'selected' : '' %>>Concurso público</option>
+            <option value="concurso_publico" <%= publicSelection && publicSelection.category === 'concurso_publico' ? 'selected' : '' %>>Concurso publico</option>
           </select>
         </div>
         <div class="admin-form-row">
@@ -32,77 +26,113 @@
           <select id="sphere" name="sphere">
             <option value="Federal" <%= publicSelection && publicSelection.sphere === 'Federal' ? 'selected' : '' %>>Federal</option>
             <option value="Estadual" <%= publicSelection && publicSelection.sphere === 'Estadual' ? 'selected' : '' %>>Estadual</option>
-            <option value="Municipal" <%= publicSelection && publicSelection.sphere === 'Municipal' ? 'selected' : '' %>>Municipal</option>
+            <option value="Municipal" <%= !publicSelection || publicSelection.sphere === 'Municipal' ? 'selected' : '' %>>Municipal</option>
             <option value="Processo Seletivo" <%= publicSelection && publicSelection.sphere === 'Processo Seletivo' ? 'selected' : '' %>>Processo Seletivo</option>
           </select>
         </div>
         <div class="admin-form-row">
-          <label for="region">Região</label>
+          <label for="region">Regiao</label>
           <select id="region" name="region">
-            <option value="Brasil" <%= publicSelection && publicSelection.region === 'Brasil' ? 'selected' : '' %>>Brasil (Nacional)</option>
-            <option value="Rondônia" <%= !publicSelection || publicSelection.region === 'Rondônia' ? 'selected' : '' %>>Rondônia (Local)</option>
+            <option value="Brasil" <%= publicSelection && publicSelection.region === 'Brasil' ? 'selected' : '' %>>Brasil</option>
+            <option value="Rondonia" <%= !publicSelection || publicSelection.region === 'Rondonia' ? 'selected' : '' %>>Rondonia</option>
           </select>
         </div>
       </div>
 
       <div class="admin-form-row">
-        <label for="title">Título da divulgação</label>
-        <input type="text" id="title" name="title" value="<%= publicSelection ? publicSelection.title : '' %>" required placeholder="Ex: Concurso Prefeitura de Porto Velho 2026">
-      </div>
-
-      <div class="admin-form-grid">
-        <div class="admin-form-row">
-          <label for="salary">Salário / Remuneração</label>
-          <input type="text" id="salary" name="salary" value="<%= publicSelection ? publicSelection.salary : '' %>" placeholder="Ex: até R$ 4.500,00">
-        </div>
-        <div class="admin-form-row">
-          <label for="educationLevel">Nível de Escolaridade</label>
-          <input type="text" id="educationLevel" name="educationLevel" value="<%= publicSelection ? publicSelection.educationLevel : '' %>" placeholder="Ex: Médio e Superior">
-        </div>
+        <label for="title">Titulo</label>
+        <input type="text" id="title" name="title" value="<%= publicSelection ? publicSelection.title : '' %>" required placeholder="Ex: Concurso Prefeitura 2026">
       </div>
 
       <div class="admin-form-row">
-        <label for="description">Resumo da descrição</label>
-        <textarea id="description" name="description" rows="3"><%= publicSelection ? publicSelection.description : '' %></textarea>
+        <label for="description">Resumo</label>
+        <textarea id="description" name="description" rows="4"><%= publicSelection ? publicSelection.description : '' %></textarea>
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
-          <label for="registrationStartDate">Início das Inscrições</label>
+          <label for="salary">Salario / Remuneracao</label>
+          <input type="text" id="salary" name="salary" value="<%= publicSelection ? publicSelection.salary : '' %>" placeholder="Ex: ate R$ 4.500,00">
+        </div>
+        <div class="admin-form-row">
+          <label for="educationLevel">Escolaridade</label>
+          <input type="text" id="educationLevel" name="educationLevel" value="<%= publicSelection ? publicSelection.educationLevel : '' %>" placeholder="Ex: Medio e Superior">
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="admin-form-row">
+          <label for="registrationStartDate">Inicio das inscricoes</label>
           <input type="date" id="registrationStartDate" name="registrationStartDate" value="<%= publicSelection && publicSelection.registrationStartDate ? publicSelection.registrationStartDate : '' %>">
         </div>
         <div class="admin-form-row">
-          <label for="registrationEndDate">Fim das Inscrições</label>
+          <label for="registrationEndDate">Fim das inscricoes</label>
           <input type="date" id="registrationEndDate" name="registrationEndDate" value="<%= publicSelection && publicSelection.registrationEndDate ? publicSelection.registrationEndDate : '' %>">
         </div>
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
-          <label for="link">Link do Edital (PDF ou Site)</label>
+          <label for="link">Link do edital</label>
           <input type="url" id="link" name="link" value="<%= publicSelection ? publicSelection.link : '' %>" placeholder="https://site.com/edital.pdf">
         </div>
         <div class="admin-form-row">
-          <label for="processWebsite">Site Inscricao / Processo</label>
-          <input type="url" id="processWebsite" name="processWebsite" value="<%= publicSelection ? publicSelection.processWebsite : '' %>" placeholder="https://site-da-organizadora.com">
+          <label for="processWebsite">Site do processo</label>
+          <input type="url" id="processWebsite" name="processWebsite" value="<%= publicSelection ? publicSelection.processWebsite : '' %>" placeholder="https://site-da-banca.com">
         </div>
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
-          <label for="image">Banner / Card de Imagem <% if (publicSelection && publicSelection.image) { %><span class="admin-form-help">(atual mantido)</span><% } %></label>
+          <label for="image">Imagem de capa <% if (publicSelection && publicSelection.image) { %><span class="admin-form-help">(atual mantida)</span><% } %></label>
           <input type="file" id="image" name="image" accept="image/*" <%= publicSelection ? '' : 'required' %>>
         </div>
         <div class="admin-form-row">
-          <label for="noticePdf">Documento PDF (Edital) <% if (publicSelection && publicSelection.noticePdf) { %><span class="admin-form-help">(atual mantido)</span><% } %></label>
+          <label for="noticePdf">PDF do edital <% if (publicSelection && publicSelection.noticePdf) { %><span class="admin-form-help">(atual mantido)</span><% } %></label>
           <input type="file" id="noticePdf" name="noticePdf" accept="application/pdf,.pdf">
         </div>
       </div>
 
       <div class="admin-form-row">
-        <label for="status">Status / Situação Manual (Opcional)</label>
-        <input type="text" id="status" name="status" value="<%= publicSelection ? publicSelection.status : '' %>" placeholder="Deixe vazio para automático">
-        <small class="admin-form-help">Se vazio, o site usará o status automático baseado nas datas.</small>
+        <label for="status">Status</label>
+        <input type="text" id="status" name="status" value="<%= publicSelection ? publicSelection.status : '' %>" placeholder="Ex: Publicado">
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Banner principal da home</h2>
+            <p>Ative para exibir este concurso ou processo seletivo no banner rotativo da pagina inicial.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card">
+            <label>
+              <input type="checkbox" name="showInHero" <%= publicSelection && publicSelection.showInHero ? 'checked' : '' %>>
+              <span>Exibir no banner principal</span>
+            </label>
+          </div>
+          <div class="admin-form-row">
+            <label for="heroOrder">Ordem do slide</label>
+            <input type="number" id="heroOrder" name="heroOrder" min="0" max="99" value="<%= publicSelection && publicSelection.heroOrder !== undefined ? publicSelection.heroOrder : 0 %>">
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="heroKicker">Linha superior do slide</label>
+          <input type="text" id="heroKicker" name="heroKicker" value="<%= publicSelection && publicSelection.heroKicker ? publicSelection.heroKicker : '' %>" placeholder="Ex: Concurso em destaque">
+        </div>
+
+        <div class="admin-form-row">
+          <label for="heroSummary">Resumo curto para o banner</label>
+          <textarea id="heroSummary" name="heroSummary" rows="3" placeholder="Resumo curto e direto para aparecer no banner."><%= publicSelection && publicSelection.heroSummary ? publicSelection.heroSummary : '' %></textarea>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="heroButtonLabel">Texto do botao</label>
+          <input type="text" id="heroButtonLabel" name="heroButtonLabel" value="<%= publicSelection && publicSelection.heroButtonLabel ? publicSelection.heroButtonLabel : '' %>" placeholder="Ex: Ver edital">
+        </div>
       </div>
 
       <% if (publicSelection && publicSelection.image) { %>
@@ -112,84 +142,8 @@
       <% } %>
 
       <div class="admin-actions">
-        <button type="submit" class="admin-btn">Salvar divulgação profissional</button>
+        <button type="submit" class="admin-btn">Salvar divulgacao</button>
       </div>
     </form>
   </section>
 </div>
-
-<script>
-  const smartInput = document.getElementById('smartInput');
-  const titleInput = document.getElementById('title');
-  const sphereInput = document.getElementById('sphere');
-  const regionInput = document.getElementById('region');
-  const salaryInput = document.getElementById('salary');
-  const educationLevelInput = document.getElementById('educationLevel');
-  const linkInput = document.getElementById('link');
-  const startDateInput = document.getElementById('registrationStartDate');
-  const endDateInput = document.getElementById('registrationEndDate');
-  const descriptionInput = document.getElementById('description');
-
-  smartInput.addEventListener('input', (e) => {
-    const text = e.target.value;
-    if (!text.trim()) return;
-
-    const data = parseSmartInput(text);
-    
-    if (data.title && !titleInput.value) titleInput.value = data.title;
-    if (data.sphere) sphereInput.value = data.sphere;
-    if (data.region) regionInput.value = data.region;
-    if (data.salary && !salaryInput.value) salaryInput.value = data.salary;
-    if (data.educationLevel && !educationLevelInput.value) educationLevelInput.value = data.educationLevel;
-    if (data.link && !linkInput.value) linkInput.value = data.link;
-    if (data.registrationStartDate && !startDateInput.value) startDateInput.value = data.registrationStartDate;
-    if (data.registrationEndDate && !endDateInput.value) endDateInput.value = data.registrationEndDate;
-    if (data.description && !descriptionInput.value) descriptionInput.value = data.description;
-  });
-
-  function parseSmartInput(text) {
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-    const result = {
-      description: text.substring(0, 500)
-    };
-
-    if (lines.length > 0) result.title = lines[0];
-
-    if (/federal|brasil|nacional|ministério|ministerio/i.test(text)) result.sphere = 'Federal';
-    else if (/estado|estadual|rondônia|rondonia|governo do estado/i.test(text)) result.sphere = 'Estadual';
-    else if (/prefeitura|municipal|câmara|camara/i.test(text)) result.sphere = 'Municipal';
-    else if (/processo seletivo/i.test(text)) result.sphere = 'Processo Seletivo';
-
-    if (/RO|Rondônia|Rondonia|Porto Velho|Vilhena|Ji-Paraná|Cacoal|Ariquemes/i.test(text)) result.region = 'Rondônia';
-    else result.region = 'Brasil';
-
-    const dateRegex = /(\d{2}\/\d{2}\/\d{4})/g;
-    const dates = text.match(dateRegex);
-    if (dates) {
-      if (dates.length >= 1) result.registrationStartDate = convertDate(dates[0]);
-      if (dates.length >= 2) result.registrationEndDate = convertDate(dates[1]);
-    }
-
-    const salaryRegex = /(R\$\s*[\d,.]+)/i;
-    const salaryMatch = text.match(salaryRegex);
-    if (salaryMatch) result.salary = salaryMatch[0];
-
-    const levels = [];
-    if (/fundamental/i.test(text)) levels.push('Fundamental');
-    if (/médio|medio/i.test(text)) levels.push('Médio');
-    if (/superior/i.test(text)) levels.push('Superior');
-    if (levels.length > 0) result.educationLevel = levels.join(', ');
-
-    const urlRegex = /(https?:\/\/[^\s]+)/;
-    const urlMatch = text.match(urlRegex);
-    if (urlMatch) result.link = urlMatch[0];
-
-    return result;
-  }
-
-  function convertDate(dateStr) {
-    const parts = dateStr.split('/');
-    if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    return null;
-  }
-</script>

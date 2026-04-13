@@ -11,79 +11,83 @@
   };
 %>
 <section class="site-hero">
-  <div class="site-hero-content">
-    <span class="site-kicker">Vagas abertas</span>
-    <h1>Oportunidades organizadas para leitura rapida e decisao imediata.</h1>
-    <p class="site-lead">
-      Cada vaga agora segue um padrao visual mais profissional, com foco em clareza, credibilidade e conversao.
-    </p>
+  <div class="site-page">
+    <div class="site-hero-content">
+      <span class="site-kicker">Vagas abertas</span>
+      <h1>Oportunidades organizadas para leitura rapida e decisao imediata.</h1>
+      <p class="site-lead">
+        Cada vaga agora segue um padrao visual mais profissional, com foco em clareza, credibilidade e conversao.
+      </p>
+    </div>
   </div>
 </section>
 
 <section class="site-section">
-  <div class="site-page-header">
-    <div>
-      <h1>Vagas disponiveis</h1>
-      <p class="site-page-copy">Consulte as oportunidades publicadas e avance para a candidatura com menos friccao.</p>
+  <div class="site-page">
+    <div class="site-page-header">
+      <div>
+        <h1>Vagas disponiveis</h1>
+        <p class="site-page-copy">Consulte as oportunidades publicadas e avance para a candidatura com menos friccao.</p>
+      </div>
+      <% if (!user) { %>
+        <a href="/acesso-candidato?section=register-candidate" class="site-button">Cadastrar-se para candidatar</a>
+      <% } else if (user.role === 'empresa') { %>
+        <a href="/perfil/empresa/vagas" class="site-button">Gerenciar minhas vagas</a>
+      <% } else if (user.role === 'admin') { %>
+        <a href="/admin/vagas" class="site-button">Gerenciar vagas</a>
+      <% } else { %>
+        <a href="/perfil" class="site-button">Meu currículo</a>
+      <% } %>
     </div>
-    <% if (!user) { %>
-      <a href="/acesso-candidato?section=register-candidate" class="site-button">Cadastrar-se para candidatar</a>
-    <% } else if (user.role === 'empresa') { %>
-      <a href="/perfil/empresa/vagas" class="site-button">Gerenciar minhas vagas</a>
-    <% } else if (user.role === 'admin') { %>
-      <a href="/admin/vagas" class="site-button">Gerenciar vagas</a>
+
+    <% if (typeof status !== 'undefined' && status) { %><div class="site-access-status" style="margin-bottom:18px;"><%= status %></div><% } %>
+    <% if (typeof error !== 'undefined' && error) { %><div class="admin-alert" style="margin-bottom:18px;"><%= error %></div><% } %>
+
+    <% if (jobs.length > 0) { %>
+      <div class="site-card-grid">
+        <% jobs.forEach(job => { const jobSchedule = getDisplaySchedule(job.startDate, job.endDate); %>
+          <article class="site-card" data-preview-item data-preview-badge="Vaga" data-preview-title="<%= job.title %>" data-preview-description="<%= job.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= job.image ? '/uploads/' + job.image : '' %>" data-preview-meta-label="Publicado em" data-preview-meta-value="<%= new Date(job.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= jobSchedule ? jobSchedule.value : '' %>" data-preview-period-label="<%= jobSchedule ? jobSchedule.label : 'Periodo' %>" data-preview-link="<%= job.link || '/acesso-candidato' %>" data-preview-link-label="Candidatar">
+            <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar vaga">
+              <% if (job.image) { %>
+                <img src="/uploads/<%= job.image %>" alt="<%= job.title %>">
+              <% } else { %>
+                <div class="site-card-icon"><i class="fas fa-briefcase"></i></div>
+              <% } %>
+              <span class="site-card-badge">Oportunidade</span>
+            </div>
+            <div class="site-card-body">
+              <h3><%= job.title %></h3>
+              <p class="site-card-text"><%= job.description %></p>
+              <p class="site-card-text"><strong>Empresa:</strong> <%= job.companyName || 'Administrador' %></p>
+              <p class="site-card-text"><strong>Local:</strong> <%= job.location || 'Não informado' %></p>
+              <% if (job.workplaceMode || job.employmentType) { %>
+                <p class="site-card-text"><strong>Perfil:</strong> <%= [job.workplaceMode, job.employmentType].filter(Boolean).join(' / ') %></p>
+              <% } %>
+              <% if (jobSchedule) { %>
+                <p class="site-card-text"><%= jobSchedule.label %>: <%= jobSchedule.value %></p>
+              <% } %>
+              <div class="site-card-meta">
+                <span>Publicado em <%= new Date(job.createdAt).toLocaleDateString('pt-BR') %></span>
+                <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
+              </div>
+              <div class="site-hero-actions" style="margin-top:14px;">
+                <% if (user && (user.role === 'candidato' || user.role === 'user')) { %>
+                  <form action="/perfil/vagas/<%= job.id %>/candidatar" method="POST">
+                    <button type="submit" class="site-button">Candidatar-se</button>
+                  </form>
+                <% } else { %>
+                  <a href="/acesso-candidato?section=login" class="site-button">Entrar para candidatar</a>
+                <% } %>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </div>
     <% } else { %>
-      <a href="/perfil" class="site-button">Meu currículo</a>
+      <div class="site-empty">
+        <i class="fas fa-briefcase"></i>
+        <p>Nenhuma vaga cadastrada.</p>
+      </div>
     <% } %>
   </div>
-
-  <% if (typeof status !== 'undefined' && status) { %><div class="site-access-status" style="margin-bottom:18px;"><%= status %></div><% } %>
-  <% if (typeof error !== 'undefined' && error) { %><div class="admin-alert" style="margin-bottom:18px;"><%= error %></div><% } %>
-
-  <% if (jobs.length > 0) { %>
-    <div class="site-card-grid">
-      <% jobs.forEach(job => { const jobSchedule = getDisplaySchedule(job.startDate, job.endDate); %>
-        <article class="site-card" data-preview-item data-preview-badge="Vaga" data-preview-title="<%= job.title %>" data-preview-description="<%= job.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= job.image ? '/uploads/' + job.image : '' %>" data-preview-meta-label="Publicado em" data-preview-meta-value="<%= new Date(job.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= jobSchedule ? jobSchedule.value : '' %>" data-preview-period-label="<%= jobSchedule ? jobSchedule.label : 'Periodo' %>" data-preview-link="<%= job.link || '/acesso-candidato' %>" data-preview-link-label="Candidatar">
-          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar vaga">
-            <% if (job.image) { %>
-              <img src="/uploads/<%= job.image %>" alt="<%= job.title %>">
-            <% } else { %>
-              <div class="site-card-icon"><i class="fas fa-briefcase"></i></div>
-            <% } %>
-            <span class="site-card-badge">Oportunidade</span>
-          </div>
-          <div class="site-card-body">
-            <h3><%= job.title %></h3>
-            <p class="site-card-text"><%= job.description %></p>
-            <p class="site-card-text"><strong>Empresa:</strong> <%= job.companyName || 'Administrador' %></p>
-            <p class="site-card-text"><strong>Local:</strong> <%= job.location || 'Não informado' %></p>
-            <% if (job.workplaceMode || job.employmentType) { %>
-              <p class="site-card-text"><strong>Perfil:</strong> <%= [job.workplaceMode, job.employmentType].filter(Boolean).join(' / ') %></p>
-            <% } %>
-            <% if (jobSchedule) { %>
-              <p class="site-card-text"><%= jobSchedule.label %>: <%= jobSchedule.value %></p>
-            <% } %>
-            <div class="site-card-meta">
-              <span>Publicado em <%= new Date(job.createdAt).toLocaleDateString('pt-BR') %></span>
-              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
-            </div>
-            <div class="site-hero-actions" style="margin-top:14px;">
-              <% if (user && (user.role === 'candidato' || user.role === 'user')) { %>
-                <form action="/perfil/vagas/<%= job.id %>/candidatar" method="POST">
-                  <button type="submit" class="site-button">Candidatar-se</button>
-                </form>
-              <% } else { %>
-                <a href="/acesso-candidato?section=login" class="site-button">Entrar para candidatar</a>
-              <% } %>
-            </div>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty">
-      <i class="fas fa-briefcase"></i>
-      <p>Nenhuma vaga cadastrada.</p>
-    </div>
-  <% } %>
 </section>

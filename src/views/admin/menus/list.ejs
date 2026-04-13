@@ -36,7 +36,12 @@
               <td><code><%= menu.url %></code></td>
               <td><span class="admin-help"><i class="fas <%= menu.icon || 'fa-link' %>"></i> <%= menu.icon || 'fa-link' %></span></td>
               <td><span class="admin-help"><%= menu.target === '_blank' ? 'Nova aba' : 'Mesma aba' %></span></td>
-              <td><span class="admin-badge <%= menu.isActive ? 'success' : 'warning' %>"><%= menu.isActive ? 'Ativo' : 'Oculto' %></span></td>
+              <td>
+                <label class="admin-toggle">
+                  <input type="checkbox" <%= menu.isActive ? 'checked' : '' %> onchange="toggleMenuStatus('<%= menu.id %>', this)">
+                  <span class="admin-toggle-slider"></span>
+                </label>
+              </td>
               <td>
                 <div class="admin-actions">
                   <form action="/admin/menus/mover/<%= menu.id %>" method="POST">
@@ -70,3 +75,86 @@
     <% } %>
   </section>
 </div>
+
+<style>
+  /* Admin Toggle Switch */
+  .admin-toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+  }
+
+  .admin-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .admin-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e2e8f0;
+    transition: .3s;
+    border-radius: 24px;
+  }
+
+  .admin-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  input:checked + .admin-toggle-slider {
+    background-color: #2563eb;
+  }
+
+  input:checked + .admin-toggle-slider:before {
+    transform: translateX(20px);
+  }
+
+  input:focus + .admin-toggle-slider {
+    box-shadow: 0 0 1px #2563eb;
+  }
+</style>
+
+<script>
+  async function toggleMenuStatus(menuId, checkbox) {
+    const originalState = !checkbox.checked;
+    checkbox.disabled = true;
+
+    try {
+      const response = await fetch(`/admin/menus/toggle/${menuId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao alternar status.');
+      }
+      
+      // Feedback visual opcional (ex: toast) poderia ser adicionado aqui
+    } catch (error) {
+      console.error('Toggle error:', error);
+      alert('Não foi possível alterar o status do menu. Tente novamente.');
+      checkbox.checked = originalState; // Reverte o estado visual
+    } finally {
+      checkbox.disabled = false;
+    }
+  }
+</script>

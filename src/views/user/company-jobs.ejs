@@ -1,50 +1,54 @@
 <section class="site-hero">
-  <div class="site-hero-content">
-    <span class="site-kicker">Vagas da empresa</span>
-    <h1>Gerencie as oportunidades publicadas pela sua empresa.</h1>
-    <p class="site-lead">Cadastre vagas de forma profissional para que os candidatos possam visualizar e se candidatar pela plataforma.</p>
+  <div class="site-page">
+    <div class="site-hero-content">
+      <span class="site-kicker">Vagas da empresa</span>
+      <h1>Gerencie as oportunidades publicadas pela sua empresa.</h1>
+      <p class="site-lead">Cadastre vagas de forma profissional para que os candidatos possam visualizar e se candidatar pela plataforma.</p>
+    </div>
   </div>
 </section>
 
 <section class="site-section">
-  <div class="site-page-header">
-    <div>
-      <h1><%= companyName %></h1>
-      <p class="site-page-copy">Area da empresa para publicar, editar e encerrar vagas.</p>
+  <div class="site-page">
+    <div class="site-page-header">
+      <div>
+        <h1><%= companyName %></h1>
+        <p class="site-page-copy">Area da empresa para publicar, editar e encerrar vagas.</p>
+      </div>
+      <a href="/perfil/empresa/vagas/nova" class="site-button">Nova vaga</a>
     </div>
-    <a href="/perfil/empresa/vagas/nova" class="site-button">Nova vaga</a>
+
+    <% if (profileError) { %><div class="admin-alert" style="margin-bottom:18px;"><%= profileError %></div><% } %>
+    <% if (profileStatus) { %><div class="site-access-status" style="margin-bottom:18px;"><%= profileStatus %></div><% } %>
+
+    <% if (jobs.length > 0) { %>
+      <div class="site-card-grid">
+        <% jobs.forEach(job => { %>
+          <article class="site-card">
+            <div class="site-card-body">
+              <h3><%= job.title %></h3>
+              <p class="site-card-text"><%= job.description %></p>
+              <div class="site-card-meta">
+                <span><%= job.location || 'Local nao informado' %></span>
+                <span><%= job.status || 'ativa' %></span>
+                <span><%= applicationCountMap && applicationCountMap[job.id] ? applicationCountMap[job.id] : 0 %> candidatura(s)</span>
+              </div>
+              <div class="site-hero-actions">
+                <a href="/perfil/empresa/vagas/<%= job.id %>/candidatos" class="site-button">Ver currículos</a>
+                <a href="/perfil/empresa/vagas/<%= job.id %>/editar" class="site-button-secondary">Editar</a>
+                <form action="/perfil/empresa/vagas/<%= job.id %>/deletar" method="POST" onsubmit="return confirm('Excluir esta vaga?');">
+                  <button type="submit" class="site-button-ghost">Excluir</button>
+                </form>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="site-empty">
+        <i class="fas fa-briefcase"></i>
+        <p>Nenhuma vaga publicada pela empresa ainda.</p>
+      </div>
+    <% } %>
   </div>
-
-  <% if (profileError) { %><div class="admin-alert" style="margin-bottom:18px;"><%= profileError %></div><% } %>
-  <% if (profileStatus) { %><div class="site-access-status" style="margin-bottom:18px;"><%= profileStatus %></div><% } %>
-
-  <% if (jobs.length > 0) { %>
-    <div class="site-card-grid">
-      <% jobs.forEach(job => { %>
-        <article class="site-card">
-          <div class="site-card-body">
-            <h3><%= job.title %></h3>
-            <p class="site-card-text"><%= job.description %></p>
-            <div class="site-card-meta">
-              <span><%= job.location || 'Local nao informado' %></span>
-              <span><%= job.status || 'ativa' %></span>
-              <span><%= applicationCountMap && applicationCountMap[job.id] ? applicationCountMap[job.id] : 0 %> candidatura(s)</span>
-            </div>
-            <div class="site-hero-actions">
-              <a href="/perfil/empresa/vagas/<%= job.id %>/candidatos" class="site-button">Ver currículos</a>
-              <a href="/perfil/empresa/vagas/<%= job.id %>/editar" class="site-button-secondary">Editar</a>
-              <form action="/perfil/empresa/vagas/<%= job.id %>/deletar" method="POST" onsubmit="return confirm('Excluir esta vaga?');">
-                <button type="submit" class="site-button-ghost">Excluir</button>
-              </form>
-            </div>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty">
-      <i class="fas fa-briefcase"></i>
-      <p>Nenhuma vaga publicada pela empresa ainda.</p>
-    </div>
-  <% } %>
 </section>

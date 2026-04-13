@@ -1,39 +1,41 @@
 <section class="site-section">
-  <div class="site-section-head">
-    <div class="site-section-heading">
-      <h2>Vagas em destaque</h2>
-      <p>As oportunidades sao exibidas com mais peso visual, leitura mais rapida e chamada de acao mais clara.</p>
+  <div class="site-page">
+    <div class="site-section-head">
+      <div class="site-section-heading">
+        <h2>Vagas em destaque</h2>
+        <p>As oportunidades sao exibidas com mais peso visual, leitura mais rapida e chamada de acao mais clara.</p>
+      </div>
+      <a href="/vagas" class="site-section-link">Ver todas <i class="fas fa-arrow-right"></i></a>
     </div>
-    <a href="/vagas" class="site-section-link">Ver todas <i class="fas fa-arrow-right"></i></a>
-  </div>
 
-  <% if (jobs.length > 0) { %>
-    <div class="site-card-grid">
-      <% jobs.forEach(job => { const jobSchedule = getDisplaySchedule(job.startDate, job.endDate); %>
-        <article class="site-card" data-preview-item data-preview-badge="Vaga" data-preview-title="<%= job.title %>" data-preview-description="<%= job.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= job.image ? '/uploads/' + job.image : '' %>" data-preview-meta-label="Publicado em" data-preview-meta-value="<%= new Date(job.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= jobSchedule ? jobSchedule.value : '' %>" data-preview-period-label="<%= jobSchedule ? jobSchedule.label : 'Periodo' %>" data-preview-link="<%= job.link || '' %>" data-preview-link-label="Ver detalhes">
-          <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar vaga">
-            <% if (job.image) { %>
-              <img src="/uploads/<%= job.image %>" alt="<%= job.title %>">
-            <% } else { %>
-              <div class="site-card-icon"><i class="fas fa-briefcase"></i></div>
-            <% } %>
-            <span class="site-card-badge">Nova vaga</span>
-          </div>
-          <div class="site-card-body">
-            <h3><%= job.title %></h3>
-            <p class="site-card-text"><%= job.description.length > 150 ? job.description.substring(0, 150) + '...' : job.description %></p>
-            <% if (jobSchedule) { %>
-              <p class="site-card-text"><%= jobSchedule.label %>: <%= jobSchedule.value %></p>
-            <% } %>
-            <div class="site-card-meta">
-              <span><i class="fas fa-calendar-days"></i> <%= new Date(job.createdAt).toLocaleDateString('pt-BR') %></span>
-              <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
+    <% if (jobs.length > 0) { %>
+      <div class="site-card-grid">
+        <% jobs.forEach(job => { const jobSchedule = getDisplaySchedule(job.startDate, job.endDate); %>
+          <article class="site-card" data-preview-item data-preview-badge="Vaga" data-preview-title="<%= job.title %>" data-preview-description="<%= job.description.replace(/"/g, '&quot;') %>" data-preview-image="<%= job.image ? '/uploads/' + job.image : '' %>" data-preview-meta-label="Publicado em" data-preview-meta-value="<%= new Date(job.createdAt).toLocaleDateString('pt-BR') %>" data-preview-period="<%= jobSchedule ? jobSchedule.value : '' %>" data-preview-period-label="<%= jobSchedule ? jobSchedule.label : 'Periodo' %>" data-preview-link="<%= job.link || '' %>" data-preview-link-label="Ver detalhes">
+            <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar vaga">
+              <% if (job.image) { %>
+                <img src="/uploads/<%= job.image %>" alt="<%= job.title %>">
+              <% } else { %>
+                <div class="site-card-icon"><i class="fas fa-briefcase"></i></div>
+              <% } %>
+              <span class="site-card-badge">Nova vaga</span>
             </div>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty"><i class="fas fa-briefcase"></i><p>Nenhuma vaga publicada no momento.</p></div>
-  <% } %>
+            <div class="site-card-body">
+              <h3><%= job.title %></h3>
+              <p class="site-card-text"><%= job.description.length > 150 ? job.description.substring(0, 150) + '...' : job.description %></p>
+              <% if (jobSchedule) { %>
+                <p class="site-card-text"><%= jobSchedule.label %>: <%= jobSchedule.value %></p>
+              <% } %>
+              <div class="site-card-meta">
+                <span><i class="fas fa-calendar-days"></i> <%= new Date(job.createdAt).toLocaleDateString('pt-BR') %></span>
+                <button type="button" class="site-button-secondary" data-open-preview>Visualizar</button>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="site-empty"><i class="fas fa-briefcase"></i><p>Nenhuma vaga publicada no momento.</p></div>
+    <% } %>
+  </div>
 </section>

@@ -1,59 +1,111 @@
 <%
-  const heroActionPrimaryLabel = globalSetting && globalSetting.heroActionPrimaryLabel ? globalSetting.heroActionPrimaryLabel : 'Cadastrar currículo';
+  const heroActionPrimaryLabel = globalSetting && globalSetting.heroActionPrimaryLabel ? globalSetting.heroActionPrimaryLabel : 'Cadastrar curriculo';
   const heroActionPrimaryLink = globalSetting && globalSetting.heroActionPrimaryLink ? globalSetting.heroActionPrimaryLink : '/acesso-candidato?section=register-candidate';
   const heroActionSecondaryLabel = globalSetting && globalSetting.heroActionSecondaryLabel ? globalSetting.heroActionSecondaryLabel : 'Explorar vagas';
   const heroActionSecondaryLink = globalSetting && globalSetting.heroActionSecondaryLink ? globalSetting.heroActionSecondaryLink : '/vagas';
-  const heroActionTertiaryLabel = globalSetting && globalSetting.heroActionTertiaryLabel ? globalSetting.heroActionTertiaryLabel : 'Conhecer cursos';
-  const heroActionTertiaryLink = globalSetting && globalSetting.heroActionTertiaryLink ? globalSetting.heroActionTertiaryLink : '/cursos';
-  const heroActionQuaternaryLabel = globalSetting && globalSetting.heroActionQuaternaryLabel ? globalSetting.heroActionQuaternaryLabel : 'Falar com a equipe';
-  const heroActionQuaternaryLink = globalSetting && globalSetting.heroActionQuaternaryLink ? globalSetting.heroActionQuaternaryLink : '/contato';
-  const heroStats = [
-    {
-      value: globalSetting && globalSetting.heroStat1Value ? globalSetting.heroStat1Value : String(jobs.length),
-      label: globalSetting && globalSetting.heroStat1Label ? globalSetting.heroStat1Label : 'vagas com apresentação mais objetiva'
-    },
-    {
-      value: globalSetting && globalSetting.heroStat2Value ? globalSetting.heroStat2Value : String(courses.length),
-      label: globalSetting && globalSetting.heroStat2Label ? globalSetting.heroStat2Label : 'cursos posicionados para conversão'
-    },
-    {
-      value: globalSetting && globalSetting.heroStat3Value ? globalSetting.heroStat3Value : String(publicSelections.length),
-      label: globalSetting && globalSetting.heroStat3Label ? globalSetting.heroStat3Label : 'editais públicos com cronograma e quadro de vagas'
-    }
-  ];
+
+  const eventSlides = (typeof featuredHeroEvents !== 'undefined' ? featuredHeroEvents : [])
+    .filter((item) => item && (item.title || item.description))
+    .map((item) => ({
+      order: item.heroOrder || 0,
+      kicker: item.heroKicker || item.category || 'Noticia em destaque',
+      title: item.title,
+      summary: item.heroSummary || item.description,
+      image: item.image ? ('/uploads/' + item.image) : '',
+      primaryLabel: item.heroButtonLabel || 'Saiba mais',
+      primaryLink: item.link || '/eventos',
+      secondaryLabel: heroActionSecondaryLabel,
+      secondaryLink: heroActionSecondaryLink,
+      meta: [item.date ? new Date(item.date + 'T00:00:00').toLocaleDateString('pt-BR') : '', item.location || ''].filter(Boolean).join(' | ')
+    }));
+
+  const publicSelectionSlides = (typeof featuredHeroPublicSelections !== 'undefined' ? featuredHeroPublicSelections : [])
+    .filter((item) => item && (item.title || item.description))
+    .map((item) => ({
+      order: item.heroOrder || 0,
+      kicker: item.heroKicker || (item.category === 'concurso_publico' ? 'Concurso em destaque' : 'Processo seletivo'),
+      title: item.title,
+      summary: item.heroSummary || item.description,
+      image: item.image ? ('/uploads/' + item.image) : '',
+      primaryLabel: item.heroButtonLabel || 'Ver edital',
+      primaryLink: item.link || ('/selecoes-publicas/' + item.id),
+      secondaryLabel: 'Ver concursos',
+      secondaryLink: '/selecoes-publicas',
+      meta: [item.sphere || '', item.region || ''].filter(Boolean).join(' | ')
+    }));
+
+  const combinedSlides = [...eventSlides, ...publicSelectionSlides]
+    .sort((left, right) => (left.order || 0) - (right.order || 0))
+    .slice(0, 8);
+
+  const fallbackImage = globalSetting && globalSetting.backgroundImage ? ('/uploads/' + globalSetting.backgroundImage) : '';
+  const slides = combinedSlides.length > 0 ? combinedSlides : [{
+    kicker: globalSetting && globalSetting.heroKicker ? globalSetting.heroKicker : 'Plataforma profissional para carreira',
+    title: globalSetting && globalSetting.heroTitle ? globalSetting.heroTitle : 'Conecte talento, vagas e qualificacao em uma vitrine moderna.',
+    summary: globalSetting && globalSetting.heroDescription ? globalSetting.heroDescription : 'Uma plataforma pensada para divulgar oportunidades, noticias e editais com mais clareza, confianca e presenca institucional.',
+    image: fallbackImage,
+    primaryLabel: heroActionSecondaryLabel,
+    primaryLink: heroActionSecondaryLink,
+    secondaryLabel: heroActionPrimaryLabel,
+    secondaryLink: heroActionPrimaryLink,
+    meta: 'Vagas, cursos, eventos e concursos em destaque'
+  }];
 %>
-<section class="site-hero site-home-hero site-home-hero--<%= globalSetting && globalSetting.heroTextAlign ? globalSetting.heroTextAlign : 'left' %>">
-  <div class="site-home-hero-grid">
-    <div class="site-hero-content <%= globalSetting && globalSetting.heroContentBackgroundColor ? 'site-home-hero-content--panel' : '' %>">
-      <% if (!globalSetting || globalSetting.heroShowKicker !== false) { %>
-        <span class="site-kicker"><%= globalSetting && globalSetting.heroKicker ? globalSetting.heroKicker : 'Plataforma profissional para carreira' %></span>
-      <% } %>
-      <h1><%= globalSetting && globalSetting.heroTitle ? globalSetting.heroTitle : 'Conecte talento, contratação e qualificação em uma vitrine que transmite confiança.' %></h1>
-      <% if (!globalSetting || globalSetting.heroShowDescription !== false) { %>
-        <p class="site-lead"><%= globalSetting && globalSetting.heroDescription ? globalSetting.heroDescription : 'Sua agência agora apresenta vagas e cursos em uma experiência mais forte comercialmente: clara para quem busca oportunidade e convincente para quem quer divulgar serviços e atrair candidatos qualificados.' %></p>
-      <% } %>
-    </div>
+<section class="site-hero site-home-hero site-home-hero-carousel site-home-hero-nu" data-hero-carousel data-hero-autoplay="7000">
+  <div class="site-page">
+    <div class="site-home-hero-shell">
+      <div class="site-home-hero-slides">
+        <% slides.forEach((slide, index) => { %>
+          <article class="site-home-hero-slide <%= index === 0 ? 'is-active' : '' %>" data-hero-slide aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
+            <div class="site-home-hero-copy">
+              <div class="site-home-hero-copy-top">
+                <span class="site-kicker"><%= slide.kicker %></span>
+                <% if (slide.meta) { %>
+                  <span class="site-home-hero-meta"><%= slide.meta %></span>
+                <% } %>
+              </div>
 
-    <div class="site-home-hero-side <%= globalSetting && globalSetting.heroContentBackgroundColor ? 'site-home-hero-content--panel' : '' %>">
-      <% if (!globalSetting || globalSetting.heroShowActions !== false) { %>
-        <div class="site-home-hero-actions">
-          <a href="<%= heroActionPrimaryLink %>" class="site-button-secondary"><%= heroActionPrimaryLabel %></a>
-          <a href="<%= heroActionSecondaryLink %>" class="site-button"><%= heroActionSecondaryLabel %></a>
-          <a href="<%= heroActionTertiaryLink %>" class="site-button-ghost"><%= heroActionTertiaryLabel %></a>
-          <a href="<%= heroActionQuaternaryLink %>" class="site-button-secondary"><%= heroActionQuaternaryLabel %></a>
-        </div>
-      <% } %>
+              <h1><%= slide.title %></h1>
+              <p class="site-lead"><%= String(slide.summary || '').slice(0, 170) %><%= String(slide.summary || '').length > 170 ? '...' : '' %></p>
 
-      <% if (!globalSetting || globalSetting.heroShowStats !== false) { %>
-        <div class="site-home-hero-stats">
-          <% heroStats.forEach(function(stat) { %>
-            <div class="site-stat">
-              <strong><%= stat.value %></strong>
-              <span><%= stat.label %></span>
+              <div class="site-home-hero-actions-row">
+                <a href="<%= slide.primaryLink %>" class="site-button"><%= slide.primaryLabel %></a>
+                <a href="<%= slide.secondaryLink %>" class="site-button-ghost"><%= slide.secondaryLabel %></a>
+              </div>
             </div>
-          <% }) %>
+
+            <div class="site-home-hero-media">
+              <% if (slide.image) { %>
+                <img src="<%= slide.image %>" alt="<%= slide.title %>">
+              <% } else { %>
+                <div class="site-home-hero-media-fallback">
+                  <span>Agencia de Emprego</span>
+                </div>
+              <% } %>
+              <div class="site-home-hero-glow"></div>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+
+      <div class="site-home-hero-footer">
+        <div class="site-home-hero-caption">
+          <strong>Agencia de Emprego</strong>
+          <span>Banner rotativo com noticias, eventos e concursos ativados no painel.</span>
         </div>
-      <% } %>
+
+        <% if (slides.length > 1) { %>
+          <div class="site-home-hero-nav">
+            <button type="button" class="site-home-hero-arrow" data-hero-prev aria-label="Slide anterior"><i class="fas fa-chevron-left"></i></button>
+            <div class="site-home-hero-dots">
+              <% slides.forEach((slide, index) => { %>
+                <button type="button" class="site-home-hero-dot <%= index === 0 ? 'is-active' : '' %>" data-hero-dot="<%= index %>" aria-label="Ir para slide <%= index + 1 %>"></button>
+              <% }) %>
+            </div>
+            <button type="button" class="site-home-hero-arrow" data-hero-next aria-label="Proximo slide"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        <% } %>
+      </div>
     </div>
   </div>
 </section>

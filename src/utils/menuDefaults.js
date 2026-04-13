@@ -5,7 +5,7 @@ const DEFAULT_MENUS = [
   { label: 'Vagas', url: '/vagas', icon: 'fa-briefcase', order: 2, isActive: true, target: '_self' },
   { label: 'Cursos', url: '/cursos', icon: 'fa-graduation-cap', order: 3, isActive: true, target: '_self' },
   { label: 'Seleções públicas', url: '/selecoes-publicas', icon: 'fa-file-signature', order: 4, isActive: true, target: '_self' },
-  { label: 'Sobre', url: '/sobre', icon: 'fa-building', order: 5, isActive: true, target: '_self' },
+  { label: 'Quem Somos', url: '/sobre', icon: 'fa-circle-info', order: 5, isActive: true, target: '_self' },
   { label: 'Contato', url: '/contato', icon: 'fa-envelope', order: 6, isActive: true, target: '_self' }
 ];
 
@@ -27,7 +27,14 @@ const ensureDefaultMenus = async () => {
 
     const updateData = {};
 
-    if (!existing.label) updateData.label = item.label;
+    // Forçar atualização se o rótulo for "Sobre" para migrar para "Quem Somos"
+    if (existing.label === 'Sobre' && item.label === 'Quem Somos') {
+      updateData.label = item.label;
+      updateData.icon = item.icon; // Aproveitar para atualizar o ícone também
+    } else if (!existing.label) {
+      updateData.label = item.label;
+    }
+
     if (!existing.icon) updateData.icon = item.icon;
     if (!existing.target) updateData.target = item.target;
     if (existing.order === null || existing.order === undefined) updateData.order = item.order;

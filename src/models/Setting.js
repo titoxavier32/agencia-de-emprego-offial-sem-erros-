@@ -102,7 +102,10 @@ const Setting = sequelize.define('Setting', {
   smtpPass: { type: DataTypes.STRING, defaultValue: '' },
   smtpFrom: { type: DataTypes.STRING, defaultValue: '' },
   smtpEncryption: { type: DataTypes.STRING, defaultValue: 'tls' },
-  mercadoPagoAccessToken: { type: DataTypes.STRING, defaultValue: '' }
+  mercadoPagoAccessToken: { type: DataTypes.STRING, defaultValue: '' },
+  homeSurveyEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
+  homeSurveyTitle: { type: DataTypes.STRING, defaultValue: 'Sua opinião é fundamental!' },
+  homeSurveySubtitle: { type: DataTypes.TEXT, defaultValue: 'Ajude-nos a melhorar nossa plataforma. Responda à nossa pesquisa de satisfação em poucos segundos.' }
 });
 
 module.exports = Setting;

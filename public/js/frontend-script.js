@@ -1,4 +1,70 @@
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-hero-carousel]').forEach((carousel) => {
+    const slides = Array.from(carousel.querySelectorAll('[data-hero-slide]'));
+    const dots = Array.from(carousel.querySelectorAll('[data-hero-dot]'));
+    const prevButton = carousel.querySelector('[data-hero-prev]');
+    const nextButton = carousel.querySelector('[data-hero-next]');
+    const autoplayMs = Number(carousel.dataset.heroAutoplay || 7000);
+    let activeIndex = slides.findIndex((slide) => slide.classList.contains('is-active'));
+    let timer = null;
+
+    if (!slides.length) return;
+    if (activeIndex < 0) activeIndex = 0;
+
+    const renderHeroSlide = (nextIndex) => {
+      activeIndex = (nextIndex + slides.length) % slides.length;
+
+      slides.forEach((slide, index) => {
+        const isActive = index === activeIndex;
+        slide.classList.toggle('is-active', isActive);
+        slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+      });
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('is-active', index === activeIndex);
+      });
+    };
+
+    const stopAutoplay = () => {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    const startAutoplay = () => {
+      stopAutoplay();
+      if (slides.length <= 1) return;
+      timer = window.setInterval(() => renderHeroSlide(activeIndex + 1), autoplayMs);
+    };
+
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        renderHeroSlide(activeIndex - 1);
+        startAutoplay();
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        renderHeroSlide(activeIndex + 1);
+        startAutoplay();
+      });
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        renderHeroSlide(index);
+        startAutoplay();
+      });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    renderHeroSlide(activeIndex);
+    startAutoplay();
+  });
+
   const toggles = document.querySelectorAll('[data-mobile-toggle]');
 
   toggles.forEach((toggle) => {
@@ -39,6 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewVacanciesRow = document.getElementById('site-preview-vacancies-row');
   const previewSphere = document.getElementById('site-preview-sphere');
   const previewSphereRow = document.getElementById('site-preview-sphere-row');
+  const previewOrganizer = document.getElementById('site-preview-organizer');
+  const previewOrganizerRow = document.getElementById('site-preview-organizer-row');
+  const previewAgency = document.getElementById('site-preview-agency');
+  const previewAgencyRow = document.getElementById('site-preview-agency-row');
+  const previewRegime = document.getElementById('site-preview-regime');
+  const previewRegimeRow = document.getElementById('site-preview-regime-row');
+  const previewTarget = document.getElementById('site-preview-target');
+  const previewTargetRow = document.getElementById('site-preview-target-row');
   const previewLinkLabel = document.getElementById('site-preview-link-text');
   
   const adminAccessModal = document.getElementById('site-admin-access-modal');
@@ -114,6 +188,38 @@ document.addEventListener('DOMContentLoaded', () => {
       previewSphereRow.style.display = 'flex';
     } else if (previewSphereRow) {
       previewSphereRow.style.display = 'none';
+    }
+
+    // Organizer
+    if (item.dataset.previewOrganizer && previewOrganizerRow) {
+      if (previewOrganizer) previewOrganizer.textContent = item.dataset.previewOrganizer;
+      previewOrganizerRow.style.display = 'flex';
+    } else if (previewOrganizerRow) {
+      previewOrganizerRow.style.display = 'none';
+    }
+
+    // Agency
+    if (item.dataset.previewAgency && previewAgencyRow) {
+      if (previewAgency) previewAgency.textContent = item.dataset.previewAgency;
+      previewAgencyRow.style.display = 'flex';
+    } else if (previewAgencyRow) {
+      previewAgencyRow.style.display = 'none';
+    }
+
+    // Regime
+    if (item.dataset.previewRegime && previewRegimeRow) {
+      if (previewRegime) previewRegime.textContent = item.dataset.previewRegime;
+      previewRegimeRow.style.display = 'flex';
+    } else if (previewRegimeRow) {
+      previewRegimeRow.style.display = 'none';
+    }
+
+    // Target
+    if (item.dataset.previewTarget && previewTargetRow) {
+      if (previewTarget) previewTarget.textContent = item.dataset.previewTarget;
+      previewTargetRow.style.display = 'flex';
+    } else if (previewTargetRow) {
+      previewTargetRow.style.display = 'none';
     }
 
     // Links

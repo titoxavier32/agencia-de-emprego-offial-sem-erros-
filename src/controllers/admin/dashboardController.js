@@ -1,4 +1,5 @@
-const { Op } = require('sequelize');
+const { Op, fn, col } = require('sequelize');
+const { sequelize } = require('../../config/database');
 const Job = require('../../models/Job');
 const Course = require('../../models/Course');
 const User = require('../../models/User');
@@ -7,6 +8,8 @@ const Setting = require('../../models/Setting');
 const ContactMessage = require('../../models/ContactMessage');
 const PublicSelection = require('../../models/PublicSelection');
 const JobApplication = require('../../models/JobApplication');
+const VisitorLog = require('../../models/VisitorLog');
+const SatisfactionSurvey = require('../../models/SatisfactionSurvey');
 const { buildPaymentSummary, buildSiteStructureMeta } = require('./helpers');
 
 const APPLICATION_STATUS_OPTIONS = ['recebida', 'em_analise', 'entrevista', 'aprovada', 'reprovada', 'banco_de_talentos'];
@@ -15,9 +18,13 @@ exports.loginPage = (req, res) => {
   if (req.isAuthenticated() && req.user.role === 'admin') return res.redirect('/admin/dashboard');
   return res.render('admin/login', { title: 'Login Admin', error: req.query.error });
 };
-
 exports.dashboard = async (req, res) => {
-  const [jobCount, courseCount, publicSelectionCount, userCount, companyManagerCount, candidateCount, adminCount, contactCount, applicationCount, recentContacts, allContacts] = await Promise.all([
+  const [
+    jobCount, courseCount, publicSelectionCount, userCount, 
+    companyManagerCount, candidateCount, adminCount, 
+    contactCount, applicationCount, recentContacts, allContacts,
+    visitCount, surveyCount, recentSurveys
+  ] = await Promise.all([
     Job.count(),
     Course.count(),
     PublicSelection.count(),
@@ -28,11 +35,48 @@ exports.dashboard = async (req, res) => {
     ContactMessage.count(),
     JobApplication.count(),
     ContactMessage.findAll({ order: [['createdAt', 'DESC']], limit: 5 }),
-    ContactMessage.findAll({ order: [['createdAt', 'DESC']] })
+    ContactMessage.findAll({ order: [['createdAt', 'DESC']] }),
+    VisitorLog.count(),
+    SatisfactionSurvey.count(),
+    SatisfactionSurvey.findAll({ order: [['createdAt', 'DESC']], limit: 5 })
   ]);
 
+  // Dados para Gráfico de Visitas (últimos 7 dias)
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  sevenDaysAgo.setHours(0, 0, 0, 0);
+
+  const dailyVisits = await VisitorLog.findAll({
+    attributes: [
+      [sequelize.fn('date', sequelize.col('createdAt')), 'day'],
+      [sequelize.fn('count', sequelize.col('id')), 'count']
+    ],
+    where: { createdAt: { [Op.gte]: sevenDaysAgo } },
+    group: [sequelize.fn('date', sequelize.col('createdAt'))],
+    order: [[sequelize.fn('date', sequelize.col('createdAt')), 'ASC']],
+    raw: true
+  });
+
+  // Dados para Gráfico de Satisfação (pizza)
+  const surveyStats = await SatisfactionSurvey.findAll({
+    attributes: [
+      'rating',
+      [sequelize.fn('count', sequelize.col('id')), 'count']
+    ],
+    group: ['rating'],
+    raw: true
+  });
+
+  const ratingLabels = ['1 Estrela', '2 Estrelas', '3 Estrelas', '4 Estrelas', '5 Estrelas'];
+  const ratingData = [0, 0, 0, 0, 0];
+  surveyStats.forEach(stat => {
+    if (stat.rating >= 1 && stat.rating <= 5) {
+      ratingData[stat.rating - 1] = parseInt(stat.count, 10);
+    }
+  });
+
   return res.render('admin/dashboard', {
-    title: 'Dashboard',
+    title: 'Dashboard de Inteligência',
     jobCount,
     courseCount,
     publicSelectionCount,
@@ -43,6 +87,14 @@ exports.dashboard = async (req, res) => {
     contactCount,
     applicationCount,
     recentContacts,
+    visitCount,
+    surveyCount,
+    recentSurveys,
+    dailyVisits,
+    surveyChartData: {
+      labels: ratingLabels,
+      data: ratingData
+    },
     paymentSummary: buildPaymentSummary(allContacts),
     user: req.user
   });

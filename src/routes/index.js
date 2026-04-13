@@ -7,6 +7,9 @@ const contactUpload = require('../middlewares/contactUpload');
 const { withUploadErrorHandling } = require('../middlewares/handleUpload');
 const asyncHandler = require('../utils/asyncHandler');
 const mercadopagoService = require('../utils/mercadopagoService');
+const visitorTracker = require('../middlewares/visitorTracker');
+
+router.use(visitorTracker);
 
 router.get('/', asyncHandler(siteController.home));
 router.get('/vagas', asyncHandler(siteController.vagas));
@@ -38,6 +41,8 @@ router.post(
   asyncHandler(siteController.submitContato)
 );
 router.post('/contato/pagamento/:id/confirmar', asyncHandler(siteController.confirmContactPayment));
+
+router.post('/pesquisa-satisfacao', asyncHandler(siteController.submitSatisfactionSurvey));
 
 router.post('/webhooks/mercadopago', asyncHandler(async (req, res) => {
   try {

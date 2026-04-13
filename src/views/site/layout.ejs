@@ -6,7 +6,15 @@
   <title><%= typeof title != 'undefined' ? title : 'Agência de Emprego' %></title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/css/frontend-style.css">
+  <link rel="stylesheet" href="/css/site-professional.css">
   <%- include('../partials/header') %>
+  <style>
+    :root {
+      --modal-max-width: <%= globalSetting && globalSetting.previewDialogMaxWidth ? globalSetting.previewDialogMaxWidth : 1100 %>px;
+      --modal-min-height: <%= globalSetting && globalSetting.previewDialogMinHeight ? globalSetting.previewDialogMinHeight : 82 %>vh;
+      --modal-info-width: <%= globalSetting && globalSetting.previewInfoPanelWidth ? globalSetting.previewInfoPanelWidth : 480 %>px;
+    }
+  </style>
 </head>
 <body class="site-shell">
   <% const brandKicker = globalSetting && globalSetting.brandKicker ? globalSetting.brandKicker : 'Carreira e cursos'; %>
@@ -15,6 +23,7 @@
   <% const floatingAdminButtonLabel = globalSetting && globalSetting.floatingAdminButtonLabel ? globalSetting.floatingAdminButtonLabel : 'Acesso admin'; %>
   <% const adminLoginModalOpen = typeof adminLoginOpen !== 'undefined' && adminLoginOpen; %>
   <% const adminLoginModalError = typeof adminLoginError !== 'undefined' ? adminLoginError : null; %>
+  
   <div id="root" class="min-h-screen">
     <% const navbarPosition = typeof globalSetting !== 'undefined' && globalSetting.navbarPosition ? globalSetting.navbarPosition : 'top'; %>
     <% if (navbarPosition === 'sidebar') { %>
@@ -39,17 +48,10 @@
                 <i class="fas fa-bars"></i>
               </button>
             </div>
-            <div id="site-mobile-sidebar" class="site-mobile-panel">
-              <div class="site-page py-4">
-                <%- include('../partials/navbar') %>
-              </div>
-            </div>
           </header>
 
           <main class="site-main">
-            <div class="site-page">
-              <%- body %>
-            </div>
+            <%- body %>
           </main>
 
           <%- include('../partials/footer') %>
@@ -61,9 +63,7 @@
       </header>
 
       <main class="site-main">
-        <div class="site-page">
-          <%- body %>
-        </div>
+        <%- body %>
       </main>
 
       <%- include('../partials/footer') %>
@@ -76,105 +76,67 @@
       class="site-admin-lock-trigger"
       type="button"
       aria-label="<%= floatingAdminButtonLabel %>"
-      title="<%= floatingAdminButtonLabel %>"
-      aria-controls="site-admin-access-modal"
-      aria-expanded="<%= adminLoginModalOpen ? 'true' : 'false' %>">
-      <span class="site-admin-lock-icon" aria-hidden="true">
-        <i class="fas fa-lock"></i>
-      </span>
+      title="<%= floatingAdminButtonLabel %>">
+      <i class="fas fa-lock"></i>
     </button>
+
+    <div id="site-admin-access-modal" class="site-preview-modal <%= adminLoginModalOpen ? 'is-open' : '' %>">
+      <div class="site-preview-dialog premium" style="max-width: 480px; min-height: auto;">
+        <button id="site-admin-access-close" class="site-preview-close" type="button"><i class="fas fa-times"></i></button>
+        <div class="site-preview-content">
+          <div class="site-kicker">Modo administrador</div>
+          <h2 style="font-size: 1.75rem;">Acesso restrito</h2>
+          <p class="site-preview-text" style="font-size: 0.95rem; margin-bottom: 1.5rem;">Entre com seu e-mail e senha para acessar o painel.</p>
+          
+          <% if (adminLoginModalError) { %>
+            <div style="background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.875rem; font-weight: 600; text-align: center;">
+              <%= adminLoginModalError %>
+            </div>
+          <% } %>
+
+          <form action="/auth/admin-login" method="POST" class="site-form">
+            <input type="hidden" name="returnTo" value="<%= currentPath %>">
+            <div class="site-form-row">
+              <label>E-mail</label>
+              <input type="email" name="email" required placeholder="admin@agencia.com" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px;">
+            </div>
+            <div class="site-form-row" style="margin-top: 1rem;">
+              <label>Senha</label>
+              <input type="password" name="password" required style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px;">
+            </div>
+            <button type="submit" class="site-button" style="margin-top: 1.5rem; width: 100%;">Entrar no administrador</button>
+          </form>
+        </div>
+      </div>
+    </div>
   <% } %>
 
-  <!-- Novo Modal Premium -->
+  <!-- Modal Preview -->
   <div id="site-preview-modal" class="site-preview-modal">
     <div class="site-preview-dialog premium">
-      <button id="site-preview-close" class="site-preview-close" type="button" aria-label="Fechar visualizacao"><i class="fas fa-times"></i></button>
-      
+      <button id="site-preview-close" class="site-preview-close" type="button"><i class="fas fa-times"></i></button>
       <div class="site-preview-layout">
-        <!-- Coluna da Esquerda: Mídia -->
         <div class="site-preview-media-column">
           <div class="site-preview-media-wrap">
             <img id="site-preview-image" class="site-preview-image" src="" alt="">
-            <iframe id="site-preview-pdf" class="site-preview-pdf" src="" title="Visualização do edital" style="display:none;"></iframe>
-            <div id="site-preview-fallback" class="site-preview-fallback"><i class="fas fa-image"></i></div>
+            <iframe id="site-preview-pdf" class="site-preview-pdf" src="" style="display:none;"></iframe>
           </div>
         </div>
-
-        <!-- Coluna da Direita: Conteúdo -->
         <div class="site-preview-info-column">
           <div class="site-preview-content">
             <div class="site-preview-header">
               <div id="site-preview-badge" class="site-kicker"></div>
               <h2 id="site-preview-title"></h2>
             </div>
-
             <div class="site-preview-body">
-              <div id="site-preview-description-wrap">
-                <h3 class="site-detail-heading">Descrição</h3>
-                <p id="site-preview-description" class="site-preview-text"></p>
-              </div>
-
-              <div class="site-preview-grid">
-                <div class="site-detail-item" id="site-preview-period-row" style="display:none;">
-                  <i class="fas fa-calendar-alt"></i>
-                  <div>
-                    <strong id="site-preview-period-label">Período</strong>
-                    <span id="site-preview-period"></span>
-                  </div>
-                </div>
-
-                <div class="site-detail-item" id="site-preview-meta-row">
-                  <i class="fas fa-clock"></i>
-                  <div>
-                    <strong id="site-preview-meta-label">Data de Publicação</strong>
-                    <span id="site-preview-meta-value"></span>
-                  </div>
-                </div>
-
-                <div class="site-detail-item" id="site-preview-education-row" style="display:none;">
-                  <i class="fas fa-graduation-cap"></i>
-                  <div>
-                    <strong id="site-preview-education-label">Escolaridade</strong>
-                    <span id="site-preview-education"></span>
-                  </div>
-                </div>
-
-                <div class="site-detail-item" id="site-preview-salary-row" style="display:none;">
-                  <i class="fas fa-money-bill-wave"></i>
-                  <div>
-                    <strong>Remuneração</strong>
-                    <span id="site-preview-salary"></span>
-                  </div>
-                </div>
-
-                <div class="site-detail-item" id="site-preview-vacancies-row" style="display:none;">
-                  <i class="fas fa-users"></i>
-                  <div>
-                    <strong>Vagas</strong>
-                    <span id="site-preview-vacancies"></span>
-                  </div>
-                </div>
-
-                <div class="site-detail-item" id="site-preview-sphere-row" style="display:none;">
-                  <i class="fas fa-landmark"></i>
-                  <div>
-                    <strong>Esfera</strong>
-                    <span id="site-preview-sphere"></span>
-                  </div>
-                </div>
-              </div>
+              <h3 class="site-detail-heading">Descrição</h3>
+              <p id="site-preview-description" class="site-preview-text"></p>
+              <div id="site-preview-grid" class="site-preview-grid"></div>
             </div>
-
             <div class="site-preview-footer">
               <div class="site-hero-actions">
-                <a id="site-preview-link" href="#" target="_blank" class="site-button premium" style="display:none;">
-                  <i class="fas fa-external-link-alt"></i>
-                  <span id="site-preview-link-text">Ver Edital Completo</span>
-                </a>
-                <a id="site-preview-secondary-link" href="#" target="_blank" class="site-button-secondary premium" style="display:none;">
-                  <i class="fas fa-globe"></i>
-                  <span>Site do Processo</span>
-                </a>
+                <a id="site-preview-link" href="#" target="_blank" class="site-button premium" style="display:none;">Ver Edital</a>
+                <a id="site-preview-secondary-link" href="#" target="_blank" class="site-button-secondary premium" style="display:none;">Site Oficial</a>
               </div>
             </div>
           </div>
@@ -183,433 +145,7 @@
     </div>
   </div>
 
-  <style>
-    /* Estilos do Novo Modal Premium Dinâmico */
-    :root {
-      --modal-max-width: <%= globalSetting && globalSetting.previewDialogMaxWidth ? globalSetting.previewDialogMaxWidth : 1100 %>px;
-      --modal-min-height: <%= globalSetting && globalSetting.previewDialogMinHeight ? globalSetting.previewDialogMinHeight : 82 %>vh;
-      --modal-info-width: <%= globalSetting && globalSetting.previewInfoPanelWidth ? globalSetting.previewInfoPanelWidth : 480 %>px;
-    }
-
-    .site-preview-dialog.premium {
-      max-width: var(--modal-max-width);
-      width: 95%;
-      min-height: var(--modal-min-height);
-      max-height: 90vh;
-      background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .site-preview-layout {
-      display: grid;
-      grid-template-columns: 1fr var(--modal-info-width);
-      min-height: var(--modal-min-height);
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .site-preview-info-column {
-      border-left: 1px solid #f1f5f9;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      overflow-x: hidden;
-      max-height: 90vh;
-      width: var(--modal-info-width);
-    }
-
-    .site-preview-content {
-      padding: 2.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .site-topbar {
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      height: 75px;
-      display: flex;
-      align-items: center;
-      transition: all 0.3s ease;
-    }
-
-    .site-nav-wrap {
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-      width: 100%;
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      flex-wrap: nowrap !important;
-    }
-
-    .site-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-
-    .site-nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-shrink: 0;
-    }
-
-    /* Menu Central */
-    .site-nav-links--flexible {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      flex: 1;
-      white-space: nowrap;
-      min-width: 0; /* Permite que o container encolha se necessário */
-    }
-
-    .site-nav-link {
-      color: #475569;
-      font-weight: 500;
-      font-size: 0.9375rem;
-      padding: 0.5rem 0.25rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .site-nav-link:hover, .site-nav-link.is-active {
-      color: var(--primary);
-    }
-
-    .site-nav-link.is-active::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: var(--primary);
-      border-radius: 99px;
-    }
-
-    /* Busca Compacta */
-    .site-search-expandable {
-      flex-shrink: 0;
-    }
-
-    .site-search-form-compact {
-      display: flex;
-      align-items: center;
-      background: #f1f5f9;
-      padding: 0.25rem 0.625rem;
-      border-radius: 9999px;
-      border: 1px solid transparent;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .site-search-form-compact:focus-within {
-      background: #fff;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
-      width: 240px;
-    }
-
-    .site-search-form-compact input {
-      border: none;
-      background: transparent;
-      outline: none;
-      font-size: 0.875rem;
-      width: 100px;
-      padding: 0.4rem 0.5rem;
-      transition: width 0.3s ease;
-    }
-
-    .site-search-form-compact input:focus {
-      width: 180px;
-    }
-
-    .site-search-form-compact button {
-      background: none;
-      border: none;
-      color: #64748b;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 0.4rem;
-    }
-
-    /* Ações da Direita */
-    .site-nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    /* Ajustes de Responsividade */
-    @media (max-width: 1250px) {
-      .site-nav-links--flexible {
-        gap: 0.8rem;
-      }
-      .site-nav-link {
-        font-size: 0.85rem;
-      }
-      .site-nav-wrap {
-        gap: 1rem;
-        padding: 0 1.25rem;
-      }
-      .site-search-form-compact input {
-        width: 80px;
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .site-nav-links--flexible {
-        display: none;
-      }
-      .site-mobile-nav-toggle {
-        display: flex !important;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .site-nav-wrap {
-        gap: 0.5rem;
-        padding: 0 1rem;
-      }
-      .site-brand-text {
-        display: none; /* Esconde texto em mobile muito pequeno para caber tudo numa linha */
-      }
-      .site-search-form-compact input {
-        width: 40px; /* Input bem pequeno que expande ao foco */
-      }
-      .site-search-form-compact:focus-within {
-        position: absolute;
-        left: 1rem;
-        right: 1rem;
-        width: auto;
-        z-index: 10;
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .site-topbar {
-        height: 70px;
-      }
-      .site-nav-wrap {
-        padding: 0 1.5rem;
-      }
-    }
-
-    /* Fix para o Espaçamento do Main */
-    .site-main {
-      padding-top: 1rem;
-    }
-
-
-
-
-    .site-preview-media-column {
-      background: #f8fafc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      border-right: 1px solid #f1f5f9;
-    }
-
-    .site-preview-media-wrap {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .site-preview-image {
-      max-width: 100%;
-      max-height: 600px;
-      object-fit: contain;
-    }
-
-    .site-preview-pdf {
-      width: 100%;
-      height: 600px;
-      border: none;
-    }
-
-    .site-preview-info-column {
-      padding: 2.5rem;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .site-preview-header {
-      margin-bottom: 2rem;
-    }
-
-    .site-preview-header h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      line-height: 1.2;
-      color: #0f172a;
-      margin-top: 0.5rem;
-    }
-
-    .site-preview-body {
-      flex: 1;
-    }
-
-    .site-detail-heading {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #64748b;
-      margin-bottom: 0.75rem;
-      font-weight: 700;
-    }
-
-    .site-preview-text {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      color: #475569;
-      margin-bottom: 2rem;
-      white-space: pre-wrap;
-    }
-
-    .site-preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-      background: #f8fafc;
-      padding: 1.5rem;
-      border-radius: 16px;
-    }
-
-    .site-detail-item {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-
-    .site-detail-item i {
-      width: 40px;
-      height: 40px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      color: #2563eb;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    .site-detail-item div {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .site-detail-item strong {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      color: #94a3b8;
-    }
-
-    .site-detail-item span {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    .site-preview-footer {
-      padding-top: 2rem;
-      border-top: 1px solid #f1f5f9;
-    }
-
-    .site-hero-actions {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .site-button.premium {
-      padding: 1rem 2rem;
-      font-weight: 700;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      transition: all 0.2s ease;
-    }
-
-    .site-button-secondary.premium {
-      padding: 1rem 2rem;
-      font-weight: 700;
-      border-radius: 12px;
-      background: #f1f5f9;
-      color: #475569;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      transition: all 0.2s ease;
-    }
-
-    .site-button-secondary.premium:hover {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-  </style>
-
-  <% if ((!user || user.role !== 'admin') && adminAccessMode === 'lock') { %>
-    <div id="site-admin-access-modal" class="site-admin-access-modal <%= adminLoginModalOpen ? 'is-open' : '' %>">
-      <div class="site-admin-access-dialog">
-        <button id="site-admin-access-close" class="site-preview-close" type="button" aria-label="Fechar acesso admin"><i class="fas fa-times"></i></button>
-        <div class="site-admin-access-content">
-          <div class="site-kicker">Modo administrador</div>
-          <h2>Acesso restrito</h2>
-          <p class="site-card-text">Entre com e-mail e senha do administrador para acessar o painel.</p>
-          <% if (adminLoginModalError) { %>
-            <div class="admin-alert"><%= adminLoginModalError %></div>
-          <% } %>
-          <form action="/auth/admin-login" method="POST" class="site-form">
-            <input type="hidden" name="returnTo" value="<%= currentPath %>">
-            <div class="site-form-row">
-              <label for="site-admin-email">E-mail</label>
-              <input type="email" id="site-admin-email" name="email" required placeholder="admin@agencia.com">
-            </div>
-            <div class="site-form-row">
-              <label for="site-admin-password">Senha</label>
-              <input type="password" id="site-admin-password" name="password" required>
-            </div>
-            <button type="submit" class="site-button">Entrar no administrador</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  <% } %>
-
+  <%- include('../partials/survey-widget') %>
   <script src="/js/frontend-script.js"></script>
 </body>
 </html>

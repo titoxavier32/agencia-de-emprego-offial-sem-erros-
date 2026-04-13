@@ -1,0 +1,350 @@
+<!-- Botão Flutuante de Pesquisa de Satisfação -->
+<div id="survey-widget" class="survey-widget">
+  <button id="survey-toggle" class="survey-toggle" title="O que você achou do site?" aria-label="Abrir pesquisa de satisfação">
+    <i class="fas fa-heart"></i>
+    <span class="survey-toggle-label">Feedback</span>
+  </button>
+
+  <div id="survey-panel" class="survey-panel hidden">
+    <div class="survey-header">
+      <div class="survey-header-info">
+        <h3>Sua opinião importa!</h3>
+        <p>O que você está achando da nossa plataforma?</p>
+      </div>
+      <button id="survey-close" class="survey-close" aria-label="Fechar">&times;</button>
+    </div>
+
+    <form id="survey-form" class="survey-form">
+      <div class="survey-rating-group">
+        <label>Qual sua nota para o site?</label>
+        <div class="survey-stars">
+          <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Excelente"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Bom"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Regular"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Ruim"><i class="fas fa-star"></i></label>
+          <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Muito ruim"><i class="fas fa-star"></i></label>
+        </div>
+      </div>
+
+      <div class="survey-comment-group">
+        <label for="survey-comment">Deixe um comentário (opcional)</label>
+        <textarea id="survey-comment" name="comment" placeholder="Como podemos melhorar?" rows="3"></textarea>
+      </div>
+
+      <input type="hidden" name="page" value="<%= typeof title !== 'undefined' ? title : '' %>" />
+
+      <button type="submit" id="survey-submit" class="survey-submit">
+        <span>Enviar Feedback</span>
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </form>
+
+    <div id="survey-thanks" class="survey-thanks hidden">
+      <div class="survey-thanks-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h4>Obrigado!</h4>
+      <p>Sua avaliação ajuda a tornar nossa agência ainda melhor.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .survey-widget {
+    position: fixed;
+    bottom: 110px;
+    right: 24px;
+    z-index: 9999;
+    font-family: inherit;
+  }
+
+  /* Botão Toggle Premium */
+  .survey-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--primary), #0f4bd7);
+    color: #fff;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 99px;
+    box-shadow: 0 12px 30px rgba(var(--primary-rgb), 0.35);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .survey-toggle i {
+    font-size: 1.25rem;
+    animation: pulse 2s infinite;
+  }
+
+  .survey-toggle:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 18px 40px rgba(var(--primary-rgb), 0.45);
+    background: linear-gradient(135deg, #0f4bd7, var(--primary));
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  /* Painel Premium */
+  .survey-panel {
+    position: absolute;
+    bottom: 85px;
+    right: 0;
+    width: 340px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.2);
+    border: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+    transform-origin: bottom right;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .survey-panel.hidden {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+    pointer-events: none;
+    display: block !important; /* Mantém no DOM para transição */
+  }
+
+  .survey-header {
+    background: #f8fafc;
+    padding: 20px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .survey-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .survey-header p {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.4;
+  }
+
+  .survey-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #94a3b8;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    margin-top: -5px;
+  }
+
+  .survey-close:hover { color: #0f172a; }
+
+  /* Formulário */
+  .survey-form {
+    padding: 20px;
+  }
+
+  .survey-rating-group, .survey-comment-group {
+    margin-bottom: 20px;
+  }
+
+  .survey-rating-group label, .survey-comment-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .survey-stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .survey-stars input { display: none; }
+
+  .survey-stars label {
+    color: #e2e8f0;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    margin: 0;
+  }
+
+  .survey-stars label:hover,
+  .survey-stars label:hover ~ label,
+  .survey-stars input:checked ~ label {
+    color: #f59e0b;
+  }
+
+  .survey-stars label i {
+    pointer-events: none;
+  }
+
+  .survey-comment-group textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 0.9rem;
+    outline: none;
+    resize: none;
+    transition: border-color 0.2s;
+    background: #fdfdfd;
+  }
+
+  .survey-comment-group textarea:focus {
+    border-color: var(--primary);
+    background: #fff;
+  }
+
+  .survey-submit {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .survey-submit:hover { opacity: 0.9; transform: translateY(-2px); }
+  .survey-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Agradecimento */
+  .survey-thanks {
+    padding: 40px 20px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .survey-thanks-icon {
+    font-size: 3rem;
+    color: #10b981;
+    margin-bottom: 16px;
+  }
+
+  .survey-thanks h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .survey-thanks p {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none !important; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('survey-toggle');
+    const panel = document.getElementById('survey-panel');
+    const close = document.getElementById('survey-close');
+    const form = document.getElementById('survey-form');
+    const thanks = document.getElementById('survey-thanks');
+    const submitBtn = document.getElementById('survey-submit');
+
+    // Abre/Fecha painel
+    toggle.addEventListener('click', () => {
+      panel.classList.toggle('hidden');
+    });
+
+    close.addEventListener('click', () => {
+      panel.classList.add('hidden');
+    });
+
+    // Fecha ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (!toggle.contains(e.target) && !panel.contains(e.target)) {
+        panel.classList.add('hidden');
+      }
+    });
+
+    // Envio do Form
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const data = {
+        rating: formData.get('rating'),
+        comment: formData.get('comment'),
+        page: formData.get('page')
+      };
+
+      if (!data.rating) {
+        alert('Por favor, selecione uma nota de 1 a 5.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.querySelector('span').textContent = 'Enviando...';
+
+      try {
+        const response = await fetch('/pesquisa-satisfacao', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          form.classList.add('hidden');
+          thanks.classList.remove('hidden');
+          
+          // Fecha automático após 3 segundos
+          setTimeout(() => {
+            panel.classList.add('hidden');
+            // Reseta para próxima vez
+            setTimeout(() => {
+              form.classList.remove('hidden');
+              thanks.classList.add('hidden');
+              form.reset();
+              submitBtn.disabled = false;
+              submitBtn.querySelector('span').textContent = 'Enviar Feedback';
+            }, 500);
+          }, 3000);
+        } else {
+          alert('Erro: ' + result.error);
+          submitBtn.disabled = false;
+          submitBtn.querySelector('span').textContent = 'Enviar Feedback';
+        }
+      } catch (error) {
+        console.error('Survey error:', error);
+        alert('Houve um erro ao enviar seu feedback. Tente novamente.');
+        submitBtn.disabled = false;
+        submitBtn.querySelector('span').textContent = 'Enviar Feedback';
+      }
+    });
+  });
+</script>

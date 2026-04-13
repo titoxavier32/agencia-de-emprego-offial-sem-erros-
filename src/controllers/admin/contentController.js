@@ -78,7 +78,7 @@ exports.deleteCourse = async (req, res) => {
 };
 
 exports.listPublicSelections = async (req, res) => {
-  const publicSelections = await PublicSelection.findAll({ order: [['createdAt', 'DESC']] });
+  const publicSelections = await PublicSelection.findAll({ order: [['showInHero', 'DESC'], ['heroOrder', 'ASC'], ['createdAt', 'DESC']] });
   return res.render('admin/public-selections/list', {
     title: 'Concursos e Processos Seletivos',
     publicSelections,

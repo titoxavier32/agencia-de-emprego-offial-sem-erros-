@@ -17,8 +17,8 @@
     : [{ groupName: 'Geral', items: (typeof muralAdvertisements !== 'undefined' ? muralAdvertisements : (typeof advertisements !== 'undefined' ? advertisements : [])) }];
   const rawHomeSectionOrder = globalSetting && globalSetting.homeSectionOrder
     ? String(globalSetting.homeSectionOrder)
-    : 'top_ads,hero,jobs,mural,company_showcase,contact,courses,public_selections';
-  const allowedHomeSections = ['top_ads', 'hero', 'jobs', 'mural', 'company_showcase', 'contact', 'courses', 'public_selections'];
+    : 'top_ads,hero,jobs,mural,company_showcase,courses,public_selections,contact,survey';
+  const allowedHomeSections = ['top_ads', 'hero', 'jobs', 'mural', 'company_showcase', 'contact', 'courses', 'public_selections', 'survey'];
   const usedSections = new Set();
   const homeSectionOrder = rawHomeSectionOrder
     .split(',')
@@ -28,11 +28,14 @@
 %>
 <% homeSectionOrder.forEach((sectionKey) => { %>
   <% if (sectionKey === 'top_ads') { %><%- include('partials/home-top-ads', { topAdGroups, globalSetting }) %><% } %>
-  <% if (sectionKey === 'hero' && (!globalSetting || globalSetting.heroEnabled !== false)) { %><%- include('partials/home-hero', { globalSetting, jobs, courses, publicSelections }) %><% } %>
+  <% if (sectionKey === 'hero' && (!globalSetting || globalSetting.heroEnabled !== false)) { %><%- include('partials/home-hero', { globalSetting, jobs, courses, publicSelections, featuredHeroEvents, featuredHeroPublicSelections }) %><% } %>
   <% if (sectionKey === 'jobs') { %><%- include('partials/home-jobs', { jobs, getDisplaySchedule }) %><% } %>
   <% if (sectionKey === 'mural') { %><%- include('partials/home-mural', { homeMuralAdGroups, globalSetting }) %><% } %>
   <% if (sectionKey === 'company_showcase') { %><%- include('partials/company-showcase', { globalSetting, publicCompanies }) %><% } %>
   <% if (sectionKey === 'contact') { %><%- include('partials/home-contact-banner') %><% } %>
   <% if (sectionKey === 'courses') { %><%- include('partials/home-courses', { courses, getDisplaySchedule }) %><% } %>
   <% if (sectionKey === 'public_selections') { %><%- include('partials/home-public-selections', { publicSelections, getDisplaySchedule }) %><% } %>
+  <% if (sectionKey === 'survey') { %>
+    <%- include('partials/home-survey-section', { globalSetting }) %>
+  <% } %>
 <% }) %>

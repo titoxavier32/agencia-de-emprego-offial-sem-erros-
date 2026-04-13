@@ -106,7 +106,8 @@ router.get('/menus/nova', asyncHandler(adminController.menuForm));
 router.post('/menus/nova', asyncHandler(adminController.createMenu));
 router.get('/menus/editar/:id', asyncHandler(adminController.menuForm));
 router.post('/menus/editar/:id', asyncHandler(adminController.updateMenu));
-router.post('/menus/mover/:id', asyncHandler(adminController.moveMenu));
+router.get('/menus/mover/:id', asyncHandler(adminController.moveMenu));
+router.post('/menus/toggle/:id', asyncHandler(adminController.toggleMenu));
 router.post('/menus/deletar/:id', asyncHandler(adminController.deleteMenu));
 
 router.get('/events', asyncHandler(adminController.listEvents));
@@ -115,5 +116,9 @@ router.post('/events/novo', handleAdminImageUpload('/admin/events/novo'), asyncH
 router.get('/events/editar/:id', asyncHandler(adminController.editEventForm));
 router.post('/events/editar/:id', handleAdminImageUpload((req) => '/admin/events/editar/' + req.params.id), asyncHandler(adminController.updateEvent));
 router.post('/events/deletar/:id', asyncHandler(adminController.deleteEvent));
+
+// Pesquisas de satisfacao
+router.get('/pesquisas', asyncHandler(adminController.listSurveys));
+router.post('/pesquisas/:id/deletar', asyncHandler(adminController.deleteSurvey));
 
 module.exports = router;

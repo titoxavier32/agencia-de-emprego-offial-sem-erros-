@@ -3,7 +3,7 @@
     <div class="admin-section-head">
       <div>
         <h2><%= title %></h2>
-        <p>Cadastre eventos com extração básica de dados via Smart Input.</p>
+        <p>Cadastre eventos e, se quiser, use este mesmo item como noticia/slide do banner principal da home.</p>
       </div>
       <a href="/admin/events" class="admin-btn-ghost">Voltar</a>
     </div>
@@ -12,77 +12,71 @@
       <div class="admin-alert"><%= formError %></div>
     <% } %>
 
-    <div class="admin-smart-box" style="margin-bottom: 2rem; padding: 1.5rem; background: #fdf2f8; border: 2px dashed #db2777; border-radius: 12px;">
-      <label for="smartInput" style="font-weight: bold; color: #9d174d; display: block; margin-bottom: 0.5rem;">🧠 EVENTO INTELIGENTE: COLE OS DADOS AQUI</label>
-      <textarea id="smartInput" rows="4" placeholder="Cole o texto do evento (Ex: Workshop de Carreira dia 15/05 às 19h no Sebrae...)" style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #f9a8d4;"></textarea>
-      <small style="color: #666;">O sistema tentará identificar Título, Data, Hora e Local.</small>
-    </div>
-
     <form action="<%= event ? '/admin/events/editar/' + event.id : '/admin/events/novo' %>" method="POST" enctype="multipart/form-data" class="admin-form">
       <div class="admin-form-row">
-        <label for="title">Título do Evento</label>
-        <input type="text" id="title" name="title" value="<%= event ? event.title : '' %>" required placeholder="Ex: I Seminário de Empregabilidade">
+        <label for="title">Titulo</label>
+        <input type="text" id="title" name="title" value="<%= event ? event.title : '' %>" required placeholder="Ex: Feira de Empregabilidade 2026">
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
-          <label for="date">Data do Evento</label>
+          <label for="date">Data</label>
           <input type="date" id="date" name="date" value="<%= event && event.date ? event.date : '' %>">
         </div>
         <div class="admin-form-row">
-          <label for="time">Horário</label>
+          <label for="time">Horario</label>
           <input type="text" id="time" name="time" value="<%= event ? event.time : '' %>" placeholder="Ex: 19:00">
         </div>
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
-          <label for="location">Local / Nome do Lugar</label>
-          <input type="text" id="location" name="location" value="<%= event ? event.location : '' %>" placeholder="Ex: Auditório Central">
+          <label for="location">Local</label>
+          <input type="text" id="location" name="location" value="<%= event ? event.location : '' %>" placeholder="Ex: Auditorio Central">
         </div>
         <div class="admin-form-row">
           <label for="category">Categoria</label>
-          <input type="text" id="category" name="category" value="<%= event ? event.category : '' %>" placeholder="Ex: Workshop, Palestra">
+          <input type="text" id="category" name="category" value="<%= event ? event.category : '' %>" placeholder="Ex: Noticia, Feira, Workshop">
         </div>
       </div>
 
       <div class="admin-form-row">
-        <label for="address">Endereço Completo</label>
+        <label for="address">Endereco</label>
         <input type="text" id="address" name="address" value="<%= event ? event.address : '' %>" placeholder="Ex: Av. Sete de Setembro, 1000 - Centro">
       </div>
 
       <div class="admin-form-row">
         <label for="organizer">Organizado por</label>
-        <input type="text" id="organizer" name="organizer" value="<%= event ? event.organizer : '' %>" placeholder="Ex: Agência de Emprego">
+        <input type="text" id="organizer" name="organizer" value="<%= event ? event.organizer : '' %>" placeholder="Ex: Agencia de Emprego">
       </div>
 
       <div class="admin-form-row">
-        <label for="description">Descrição / Detalhes</label>
-        <textarea id="description" name="description" rows="4" required><%= event ? event.description : '' %></textarea>
+        <label for="description">Descricao completa</label>
+        <textarea id="description" name="description" rows="5" required><%= event ? event.description : '' %></textarea>
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
-          <label for="isFree">Tipo de Ingresso</label>
+          <label for="isFree">Tipo</label>
           <select id="isFree" name="isFree">
             <option value="on" <%= !event || event.isFree ? 'selected' : '' %>>Gratuito</option>
             <option value="off" <%= event && !event.isFree ? 'selected' : '' %>>Pago</option>
           </select>
         </div>
         <div id="priceRow" class="admin-form-row <%= (event && !event.isFree) ? '' : 'hidden' %>">
-          <label for="price">Valor / Investimento</label>
+          <label for="price">Valor</label>
           <input type="text" id="price" name="price" value="<%= event ? event.price : '' %>" placeholder="Ex: R$ 50,00">
         </div>
       </div>
 
       <div class="admin-form-row">
-        <label for="link">Link para Inscrição / Mais Info (Opcional)</label>
-        <input type="url" id="link" name="link" value="<%= event ? event.link : '' %>" placeholder="https://site.com/inscricao">
+        <label for="link">Link principal</label>
+        <input type="url" id="link" name="link" value="<%= event ? event.link : '' %>" placeholder="https://site.com/noticia-ou-inscricao">
       </div>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">
-          <label for="image">Banner do Evento <% if (event && event.image) { %><span class="admin-form-help">(atual mantido)</span><% } %></label>
+          <label for="image">Foto do banner <% if (event && event.image) { %><span class="admin-form-help">(atual mantida)</span><% } %></label>
           <input type="file" id="image" name="image" accept="image/*">
         </div>
         <div class="admin-form-row">
@@ -95,6 +89,43 @@
         </div>
       </div>
 
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Banner principal da home</h2>
+            <p>Ative abaixo para transformar este item em um slide/noticia rotativa do banner principal.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card">
+            <label>
+              <input type="checkbox" name="showInHero" <%= event && event.showInHero ? 'checked' : '' %>>
+              <span>Exibir no banner principal da home</span>
+            </label>
+          </div>
+          <div class="admin-form-row">
+            <label for="heroOrder">Ordem do slide</label>
+            <input type="number" id="heroOrder" name="heroOrder" min="0" max="99" value="<%= event && event.heroOrder !== undefined ? event.heroOrder : 0 %>">
+          </div>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="heroKicker">Linha superior curta</label>
+          <input type="text" id="heroKicker" name="heroKicker" value="<%= event && event.heroKicker ? event.heroKicker : '' %>" placeholder="Ex: Plataforma em destaque">
+        </div>
+
+        <div class="admin-form-row">
+          <label for="heroSummary">Resumo curto para o banner</label>
+          <textarea id="heroSummary" name="heroSummary" rows="3" placeholder="Texto curto e elegante para aparecer no banner, sem excesso de informacao."><%= event && event.heroSummary ? event.heroSummary : '' %></textarea>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="heroButtonLabel">Texto do botao do slide</label>
+          <input type="text" id="heroButtonLabel" name="heroButtonLabel" value="<%= event && event.heroButtonLabel ? event.heroButtonLabel : '' %>" placeholder="Ex: Saiba mais">
+        </div>
+      </div>
+
       <% if (event && event.image) { %>
         <div class="admin-image-preview">
           <img src="/uploads/<%= event.image %>" alt="Imagem atual">
@@ -102,7 +133,7 @@
       <% } %>
 
       <div class="admin-actions">
-        <button type="submit" class="admin-btn">Salvar Evento</button>
+        <button type="submit" class="admin-btn">Salvar item</button>
       </div>
     </form>
   </section>
@@ -111,76 +142,13 @@
 <script>
   const isFreeSelect = document.getElementById('isFree');
   const priceRow = document.getElementById('priceRow');
-  
-  isFreeSelect.addEventListener('change', (e) => {
-    priceRow.style.display = e.target.value === 'off' ? 'block' : 'none';
-  });
 
-  const smartInput = document.getElementById('smartInput');
-  const titleInput = document.getElementById('title');
-  const dateInput = document.getElementById('date');
-  const timeInput = document.getElementById('time');
-  const locationInput = document.getElementById('location');
-  const addressInput = document.getElementById('address');
-  const descriptionInput = document.getElementById('description');
-
-  smartInput.addEventListener('input', (e) => {
-    const text = e.target.value;
-    if (!text.trim()) return;
-
-    const data = parseEventSmartInput(text);
-    
-    if (data.title && !titleInput.value) titleInput.value = data.title;
-    if (data.date && !dateInput.value) dateInput.value = data.date;
-    if (data.time && !timeInput.value) timeInput.value = data.time;
-    if (data.location && !locationInput.value) locationInput.value = data.location;
-    if (data.address && !addressInput.value) addressInput.value = data.address;
-    if (data.description && !descriptionInput.value) descriptionInput.value = data.description;
-  });
-
-  function parseEventSmartInput(text) {
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-    const result = {
-      description: text.substring(0, 500)
+  if (isFreeSelect && priceRow) {
+    const syncPrice = () => {
+      priceRow.style.display = isFreeSelect.value === 'off' ? 'block' : 'none';
     };
 
-    if (lines.length > 0) result.title = lines[0];
-
-    // Data regex DD/MM/YYYY ou DD/MM
-    const dateRegex = /(\d{2}\/\d{2}(\/\d{4})?)/g;
-    const dates = text.match(dateRegex);
-    if (dates) {
-      let dateStr = dates[0];
-      if (!dateStr.includes('/202')) {
-        dateStr += '/' + new Date().getFullYear();
-      }
-      result.date = convertDate(dateStr);
-    }
-
-    // Horário regex HH:MM ou HHhMM
-    const timeRegex = /(\d{1,2}(:|[hH])\d{2})/g;
-    const times = text.match(timeRegex);
-    if (times) result.time = times[0].replace('h', ':');
-
-    // Localização (palavras-chave)
-    const locKeywords = ['no ', 'na ', 'em ', 'local: ', 'lugar: '];
-    for (const kw of locKeywords) {
-      const idx = text.toLowerCase().indexOf(kw);
-      if (idx !== -1) {
-        const after = text.substring(idx + kw.length).split('\n')[0].split(',')[0];
-        if (after.length > 3) {
-          result.location = after.trim();
-          break;
-        }
-      }
-    }
-
-    return result;
-  }
-
-  function convertDate(dateStr) {
-    const parts = dateStr.split('/');
-    if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    return null;
+    isFreeSelect.addEventListener('change', syncPrice);
+    syncPrice();
   }
 </script>

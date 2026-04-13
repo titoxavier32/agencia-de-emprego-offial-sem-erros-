@@ -1,0 +1,62 @@
+<div class="admin-topbar">
+  <div class="admin-topbar-card" style="flex:1;">
+    <div>
+      <div class="admin-kicker">Monitoramento de qualidade</div>
+      <strong style="font-size:1.15rem;">Pesquisas de satisfação</strong>
+    </div>
+    <div style="color:var(--admin-muted);font-size:14px;">Audite os feedbacks enviados pelos usuários em tempo real.</div>
+  </div>
+</div>
+
+<div style="padding: 24px;">
+  <% if (surveys.length > 0) { %>
+    <article class="admin-card">
+      <div class="admin-card-head">
+        <strong>Feedbacks coletados (<%= surveys.length %>)</strong>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Avaliação</th>
+            <th>Comentário</th>
+            <th>Página</th>
+            <th>IP</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% surveys.forEach(survey => { %>
+            <tr>
+              <td><%= new Date(survey.createdAt).toLocaleDateString('pt-BR') %> <%= new Date(survey.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %></td>
+              <td>
+                <div style="color: #f59e0b; display: flex; gap: 2px;">
+                  <% for(let i=1; i<=5; i++) { %>
+                    <i class="<%= i <= survey.rating ? 'fas' : 'far' %> fa-star"></i>
+                  <% } %>
+                </div>
+              </td>
+              <td>
+                <div style="max-width: 300px; white-space: normal; line-height: 1.4;">
+                  <%= survey.comment || '<span style="color:var(--admin-muted);font-style:italic;">Sem comentário</span>' %>
+                </div>
+              </td>
+              <td style="font-size: 13px; color: var(--admin-muted);"><%= survey.page || '/' %></td>
+              <td style="font-size: 13px; color: var(--admin-muted);"><%= survey.visitorIp || '-' %></td>
+              <td>
+                <form action="/admin/pesquisas/<%= survey.id %>/deletar" method="POST" onsubmit="return confirm('Excluir este feedback permanentemente?');" style="display:inline;">
+                  <button type="submit" class="admin-btn-danger" style="padding: 6px 10px; font-size: 12px;"><i class="fas fa-trash-can"></i></button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </article>
+  <% } else { %>
+    <div class="admin-empty">
+      <i class="fas fa-star-half-stroke"></i>
+      <p>Nenhuma pesquisa de satisfação recebida ainda.</p>
+    </div>
+  <% } %>
+</div>

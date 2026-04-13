@@ -5,65 +5,69 @@
   const isFreeTrial = contact.paymentStatus === 'primeiro_mes_gratuito';
 %>
 <section class="site-hero">
-  <div class="site-hero-content">
-    <span class="site-kicker"><%= isFreeTrial ? 'Divulgação comercial liberada' : 'Pagamento da divulgação' %></span>
-    <h1><%= isFreeTrial ? 'Seu primeiro mês está gratuito para iniciar a divulgação.' : 'Finalize a etapa comercial para publicar sua solicitação.' %></h1>
-    <p class="site-lead">
-      <% if (isFreeTrial) { %>
-        Sua solicitação foi registrada com benefício de entrada. A cobrança mensal começa a partir do segundo mês.
-      <% } else { %>
-        Sua solicitação foi registrada. Agora finalize o pagamento para sinalizar à equipe que a proposta comercial está pronta para análise.
-      <% } %>
-    </p>
+  <div class="site-page">
+    <div class="site-hero-content">
+      <span class="site-kicker"><%= isFreeTrial ? 'Divulgação comercial liberada' : 'Pagamento da divulgação' %></span>
+      <h1><%= isFreeTrial ? 'Seu primeiro mês está gratuito para iniciar a divulgação.' : 'Finalize a etapa comercial para publicar sua solicitação.' %></h1>
+      <p class="site-lead">
+        <% if (isFreeTrial) { %>
+          Sua solicitação foi registrada com benefício de entrada. A cobrança mensal começa a partir do segundo mês.
+        <% } else { %>
+          Sua solicitação foi registrada. Agora finalize o pagamento para sinalizar à equipe que a proposta comercial está pronta para análise.
+        <% } %>
+      </p>
+    </div>
   </div>
 </section>
 
 <section class="site-section">
-  <div class="site-grid-2">
-    <article class="site-panel">
-      <h2>Resumo da solicitação</h2>
-      <div class="site-detail-list">
-        <span><strong>Categoria:</strong> <%= categoryLabel %></span>
-        <span><strong>Solicitante:</strong> <%= contact.name %></span>
-        <span><strong>E-mail:</strong> <%= contact.email %></span>
-        <span><strong>Valor mensal:</strong> <%= monthlyAmount %></span>
-        <span><strong>Plano:</strong> <%= monthlyPlan %></span>
-      </div>
-
-      <% if (isFreeTrial) { %>
-        <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(22,163,74,0.1);color:#166534;font-weight:700;">Primeiro mês gratuito ativado. O administrador já consegue ver no painel que esta divulgação entrou com benefício inicial.</div>
-      <% } else if (paymentStatus === 'confirmed') { %>
-        <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(22,163,74,0.1);color:#166534;font-weight:700;">Pagamento informado com sucesso. A equipe administrativa já consegue ver no painel que você sinalizou o pagamento.</div>
-      <% } else { %>
-        <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(37,99,235,0.08);color:#1d4ed8;font-weight:700;">Depois de pagar, clique em "Já paguei" para registrar sua confirmação e avisar a equipe.</div>
-      <% } %>
-
-      <% if (!isFreeTrial) { %>
-        <div class="site-hero-actions">
-          <a href="<%= paymentLink %>" target="_blank" rel="noopener noreferrer" class="site-button">Pagar com Mercado Pago</a>
+  <div class="site-page">
+    <div class="site-grid-2">
+      <article class="site-panel">
+        <h2>Resumo da solicitação</h2>
+        <div class="site-detail-list">
+          <span><strong>Categoria:</strong> <%= categoryLabel %></span>
+          <span><strong>Solicitante:</strong> <%= contact.name %></span>
+          <span><strong>E-mail:</strong> <%= contact.email %></span>
+          <span><strong>Valor mensal:</strong> <%= monthlyAmount %></span>
+          <span><strong>Plano:</strong> <%= monthlyPlan %></span>
         </div>
 
-        <form action="/contato/pagamento/<%= contact.id %>/confirmar" method="POST" class="site-form" style="margin-top:20px;">
-          <input type="hidden" name="token" value="<%= contact.paymentToken %>">
-          <button type="submit" class="site-button-secondary">Já paguei</button>
-        </form>
-        <p class="site-form-note">O link do Mercado Pago pode oferecer PIX, cartão e outras formas disponíveis na cobrança.</p>
-      <% } else { %>
-        <div class="site-hero-actions">
-          <a href="<%= paymentLink %>" target="_blank" rel="noopener noreferrer" class="site-button-secondary">Link de cobrança do próximo mês</a>
-        </div>
-        <p class="site-form-note">Guarde este link para a renovação mensal. A partir do segundo mês, a cobrança segue em <%= monthlyAmount %>.</p>
-      <% } %>
-    </article>
+        <% if (isFreeTrial) { %>
+          <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(22,163,74,0.1);color:#166534;font-weight:700;">Primeiro mês gratuito ativado. O administrador já consegue ver no painel que esta divulgação entrou com benefício inicial.</div>
+        <% } else if (paymentStatus === 'confirmed') { %>
+          <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(22,163,74,0.1);color:#166534;font-weight:700;">Pagamento informado com sucesso. A equipe administrativa já consegue ver no painel que você sinalizou o pagamento.</div>
+        <% } else { %>
+          <div style="margin:18px 0;padding:16px 18px;border-radius:16px;background:rgba(37,99,235,0.08);color:#1d4ed8;font-weight:700;">Depois de pagar, clique em "Já paguei" para registrar sua confirmação e avisar a equipe.</div>
+        <% } %>
 
-    <aside class="site-info-card">
-      <h3>Como funciona</h3>
-      <ul class="site-list">
-        <li><i class="fas fa-file-circle-check"></i><span>A solicitação comercial já foi registrada no painel administrativo.</span></li>
-        <li><i class="fas fa-gift"></i><span><%= freeTrialMonths %> mês inicial gratuito para começar a divulgação.</span></li>
-        <li><i class="fas fa-money-bill-wave"></i><span>A partir do segundo mês, o valor mensal desta modalidade é de <%= monthlyAmount %>.</span></li>
-        <li><i class="fas fa-user-shield"></i><span>O administrador visualiza no painel se a divulgação entrou gratuita, pendente ou com pagamento confirmado.</span></li>
-      </ul>
-    </aside>
+        <% if (!isFreeTrial) { %>
+          <div class="site-hero-actions">
+            <a href="<%= paymentLink %>" target="_blank" rel="noopener noreferrer" class="site-button">Pagar com Mercado Pago</a>
+          </div>
+
+          <form action="/contato/pagamento/<%= contact.id %>/confirmar" method="POST" class="site-form" style="margin-top:20px;">
+            <input type="hidden" name="token" value="<%= contact.paymentToken %>">
+            <button type="submit" class="site-button-secondary">Já paguei</button>
+          </form>
+          <p class="site-form-note">O link do Mercado Pago pode oferecer PIX, cartão e outras formas disponíveis na cobrança.</p>
+        <% } else { %>
+          <div class="site-hero-actions">
+            <a href="<%= paymentLink %>" target="_blank" rel="noopener noreferrer" class="site-button-secondary">Link de cobrança do próximo mês</a>
+          </div>
+          <p class="site-form-note">Guarde este link para a renovação mensal. A partir do segundo mês, a cobrança segue em <%= monthlyAmount %>.</p>
+        <% } %>
+      </article>
+
+      <aside class="site-info-card">
+        <h3>Como funciona</h3>
+        <ul class="site-list">
+          <li><i class="fas fa-file-circle-check"></i><span>A solicitação comercial já foi registrada no painel administrativo.</span></li>
+          <li><i class="fas fa-gift"></i><span><%= freeTrialMonths %> mês inicial gratuito para começar a divulgação.</span></li>
+          <li><i class="fas fa-money-bill-wave"></i><span>A partir do segundo mês, o valor mensal desta modalidade é de <%= monthlyAmount %>.</span></li>
+          <li><i class="fas fa-user-shield"></i><span>O administrador visualiza no painel se a divulgação entrou gratuita, pendente ou com pagamento confirmado.</span></li>
+        </ul>
+      </aside>
+    </div>
   </div>
 </section>

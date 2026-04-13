@@ -32,6 +32,11 @@ const PublicSelection = sequelize.define('PublicSelection', {
   image: { type: DataTypes.STRING, allowNull: true },
   noticePdf: { type: DataTypes.STRING, allowNull: true },
   noticePdfOriginalName: { type: DataTypes.STRING, allowNull: true },
+  showInHero: { type: DataTypes.BOOLEAN, defaultValue: false },
+  heroOrder: { type: DataTypes.INTEGER, defaultValue: 0 },
+  heroKicker: { type: DataTypes.STRING, allowNull: true },
+  heroSummary: { type: DataTypes.TEXT, allowNull: true },
+  heroButtonLabel: { type: DataTypes.STRING, allowNull: true },
   schedule: { type: DataTypes.TEXT },
   vacancies: { type: DataTypes.TEXT }
 });

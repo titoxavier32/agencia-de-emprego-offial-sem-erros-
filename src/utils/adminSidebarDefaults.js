@@ -1,5 +1,6 @@
 const DEFAULT_ADMIN_SIDEBAR_ITEMS = [
   { key: 'dashboard', label: 'Dashboard', icon: 'fa-chart-line', href: '/admin/dashboard', group: 'Visao geral', order: 1, isActive: true },
+  { key: 'pesquisas', label: 'Pesquisas', icon: 'fa-star-half-stroke', href: '/admin/pesquisas', group: 'Visao geral', order: 2, isActive: true },
   { key: 'cursos', label: 'Cursos', icon: 'fa-graduation-cap', href: '/admin/cursos', group: 'Publicacoes', order: 1, isActive: true },
   { key: 'selecoes_publicas', label: 'Seleções públicas', icon: 'fa-file-signature', href: '/admin/selecoes-publicas', group: 'Publicacoes', order: 2, isActive: true },
   { key: 'eventos', label: 'Eventos', icon: 'fa-calendar-star', href: '/admin/events', group: 'Publicacoes', order: 3, isActive: true },
@@ -128,4 +129,3 @@ module.exports = {
   buildAdminSidebarItemsFromBody,
   groupAdminSidebarItems
 };
-

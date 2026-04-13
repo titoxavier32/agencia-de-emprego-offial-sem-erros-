@@ -2,7 +2,8 @@
   const currentAccessView = typeof accessSection !== 'undefined' && accessSection ? accessSection : 'login';
 %>
 <section class="site-access-page page-center">
-  <div class="site-access-feedback-stack site-access-feedback-stack--centered">
+  <div class="site-page">
+    <div class="site-access-feedback-stack site-access-feedback-stack--centered">
     <% if (accessError) { %>
       <div class="admin-alert"><%= accessError %></div>
     <% } %>

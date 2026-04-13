@@ -14,7 +14,12 @@ const Event = sequelize.define('Event', {
   link: { type: DataTypes.STRING, allowNull: true },
   status: { type: DataTypes.STRING, defaultValue: 'ativo' },
   isFree: { type: DataTypes.BOOLEAN, defaultValue: true },
-  price: { type: DataTypes.STRING, allowNull: true }
+  price: { type: DataTypes.STRING, allowNull: true },
+  showInHero: { type: DataTypes.BOOLEAN, defaultValue: false },
+  heroOrder: { type: DataTypes.INTEGER, defaultValue: 0 },
+  heroKicker: { type: DataTypes.STRING, allowNull: true },
+  heroSummary: { type: DataTypes.TEXT, allowNull: true },
+  heroButtonLabel: { type: DataTypes.STRING, allowNull: true }
 });
 
 module.exports = Event;

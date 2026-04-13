@@ -431,6 +431,30 @@
           <div class="admin-form-row"><label for="homeOrder_contact">Contato</label><input type="number" id="homeOrder_contact" name="homeOrder_contact" min="1" max="20" value="<%= homeOrderValue('contact', 6) %>"></div>
           <div class="admin-form-row"><label for="homeOrder_courses">Cursos</label><input type="number" id="homeOrder_courses" name="homeOrder_courses" min="1" max="20" value="<%= homeOrderValue('courses', 7) %>"></div>
           <div class="admin-form-row"><label for="homeOrder_public_selections">Seleções públicas</label><input type="number" id="homeOrder_public_selections" name="homeOrder_public_selections" min="1" max="20" value="<%= homeOrderValue('public_selections', 8) %>"></div>
+          <div class="admin-form-row"><label for="homeOrder_survey">Pesquisa de Satisfação</label><input type="number" id="homeOrder_survey" name="homeOrder_survey" min="1" max="20" value="<%= homeOrderValue('survey', 9) %>"></div>
+        </div>
+      </div>
+
+      <div class="admin-structured-block">
+        <div class="admin-section-head">
+          <div>
+            <h2>Pesquisa de Satisfação na Home</h2>
+            <p>Controle a seção de feedback que aparece no final da página inicial para coletar opiniões dos usuários.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-row admin-form-checkbox admin-form-checkbox-card">
+          <label><input type="checkbox" name="homeSurveyEnabled" <%= (!s || s.homeSurveyEnabled !== false) ? 'checked' : '' %>><span>Exibir pesquisa de satisfação na página inicial</span></label>
+        </div>
+
+        <div class="admin-form-row">
+          <label for="homeSurveyTitle">Título da pesquisa</label>
+          <input type="text" id="homeSurveyTitle" name="homeSurveyTitle" value="<%= s && s.homeSurveyTitle ? s.homeSurveyTitle : 'Sua opinião é fundamental!' %>">
+        </div>
+
+        <div class="admin-form-row">
+          <label for="homeSurveySubtitle">Subtítulo da pesquisa</label>
+          <textarea id="homeSurveySubtitle" name="homeSurveySubtitle"><%= s && s.homeSurveySubtitle ? s.homeSurveySubtitle : 'Ajude-nos a melhorar nossa plataforma. Responda à nossa pesquisa de satisfação em poucos segundos.' %></textarea>
         </div>
       </div>
 
@@ -709,24 +733,30 @@
         </div>
       </div>
 
-      <div class="admin-structured-block">
+      <div class="admin-structured-block admin-magic-block">
         <div class="admin-section-head">
+          <div class="admin-magic-icon">
+            <i class="fas fa-magic"></i>
+          </div>
           <div>
-            <h2>Revisao de textos</h2>
-            <p>Use este recurso para revisar ortografia e acentuacao dos textos cadastrados no sistema pelo administrador.</p>
+            <h2>Assistente de Redação Profissional</h2>
+            <p>Clique no botão abaixo para que a IA revise instantaneamente todos os textos, títulos e descrições do seu site, corrigindo erros de português, acentuação e padronizando a ortografia.</p>
           </div>
         </div>
-        <div class="admin-form-row">
-          <small class="admin-form-help">A correcao automatica atua sobre textos salvos em configuracoes, menus, vagas, cursos, selecoes publicas, propagandas e cadastros internos.</small>
+        
+        <div class="admin-magic-footer">
+          <form action="/admin/configuracoes/corrigir-textos" method="POST" id="magic-correction-form">
+            <button type="submit" class="admin-btn admin-btn-magic" id="magic-correction-btn">
+              <i class="fas fa-spell-check"></i>
+              <span>Corrigir toda a ortografia do site agora</span>
+            </button>
+          </form>
+          <div id="magic-status" class="admin-magic-status" style="display: none;">
+            <div class="admin-spinner"></div>
+            <span>Analisando e corrigindo banco de dados...</span>
+          </div>
         </div>
       </div>
-
-      <div class="admin-actions"><button type="submit" class="admin-btn">Salvar configuracoes</button></div>
-    </form>
-
-    <form action="/admin/configuracoes/corrigir-textos" method="POST" class="admin-actions">
-      <button type="submit" class="admin-btn admin-btn-secondary">Corrigir textos salvos</button>
-    </form>
   </section>
 </div>
 
@@ -757,4 +787,101 @@
       previewSizePreset.value = 'custom';
     });
   });
+
+  // Magic Correction UI
+  const magicForm = document.getElementById('magic-correction-form');
+  const magicBtn = document.getElementById('magic-correction-btn');
+  const magicStatus = document.getElementById('magic-status');
+
+  if (magicForm) {
+    magicForm.addEventListener('submit', () => {
+      magicBtn.style.display = 'none';
+      magicStatus.style.display = 'flex';
+    });
+  }
 </script>
+
+<style>
+  .admin-magic-block {
+    background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+    border: 1px solid #dbeafe !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .admin-magic-block::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .admin-magic-icon {
+    width: 48px;
+    height: 48px;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .admin-magic-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .admin-btn-magic {
+    background: #2563eb;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 99px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+  }
+
+  .admin-btn-magic:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+  }
+
+  .admin-magic-status {
+    gap: 1rem;
+    align-items: center;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  .admin-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(37, 99, 235, 0.1);
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: admin-spin 0.8s linear infinite;
+  }
+
+  @keyframes admin-spin {
+    to { transform: rotate(360deg); }
+  }
+</style>

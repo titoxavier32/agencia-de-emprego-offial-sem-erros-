@@ -1,4 +1,4 @@
-﻿const normalizeWhitespace = (value) => value
+const normalizeWhitespace = (value) => value
   .replace(/\r\n/g, '\n')
   .replace(/[ \t]+\n/g, '\n')
   .replace(/\n{3,}/g, '\n\n')
@@ -7,6 +7,7 @@
 const simpleReplacements = [
   ['Configuracoes', 'Configurações'],
   ['Selecoes publicas', 'Seleções públicas'],
+  ['Selecoes', 'Seleções'],
   ['Selecao', 'Seleção'],
   ['Descricao', 'Descrição'],
   ['Titulo', 'Título'],
@@ -29,7 +30,46 @@ const simpleReplacements = [
   ['publico', 'público'],
   ['publicitario', 'publicitário'],
   ['Publicitario', 'Publicitário'],
-  ['Agencia', 'Agência']
+  ['Agencia', 'Agência'],
+  ['agencia', 'agência'],
+  ['Vagas de emprego', 'Vagas de Emprego'],
+  ['oportunidade', 'Oportunidade'],
+  ['oportunidades', 'Oportunidades'],
+  ['atencao', 'atenção'],
+  ['comunicacao', 'comunicação'],
+  ['situacao', 'situação'],
+  ['inscricao', 'inscrição'],
+  ['inscricoes', 'inscrições'],
+  ['edital', 'Edital'],
+  ['beneficios', 'benefícios'],
+  ['salario', 'salário'],
+  ['remuneracao', 'remuneração'],
+  ['vaga', 'vaga'],
+  ['vagas', 'vagas'],
+  ['candidato', 'candidato'],
+  ['candidatarse', 'candidatar-se'],
+  ['proximo', 'próximo'],
+  ['unico', 'único'],
+  ['periodo', 'período'],
+  ['historico', 'histórico'],
+  ['automatico', 'automático'],
+  ['area', 'área'],
+  ['saude', 'saúde'],
+  ['educacao', 'educação'],
+  ['estagio', 'estágio'],
+  ['estagios', 'estágios'],
+  ['excluir', 'excluir'],
+  ['corrigir', 'corrigir'],
+  ['alterar', 'alterar'],
+  ['visualizar', 'visualizar'],
+  ['gerenciar', 'gerenciar'],
+  ['administracao', 'administração'],
+  ['tecnico', 'técnico'],
+  ['logistica', 'logística'],
+  ['servicos', 'serviços'],
+  ['producao', 'produção'],
+  ['comercio', 'comércio'],
+  ['estatisticas', 'estatísticas']
 ];
 
 const brokenPatterns = [

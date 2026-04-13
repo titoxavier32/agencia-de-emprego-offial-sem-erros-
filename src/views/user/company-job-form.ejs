@@ -1,102 +1,106 @@
 <section class="site-hero">
-  <div class="site-hero-content">
-    <span class="site-kicker">Publicacao de vaga</span>
-    <h1><%= title %></h1>
-    <p class="site-lead">Monte a vaga com informações claras para aumentar a qualidade das candidaturas.</p>
+  <div class="site-page">
+    <div class="site-hero-content">
+      <span class="site-kicker">Publicacao de vaga</span>
+      <h1><%= title %></h1>
+      <p class="site-lead">Monte a vaga com informações claras para aumentar a qualidade das candidaturas.</p>
+    </div>
   </div>
 </section>
 
 <section class="site-section">
-  <article class="site-panel">
-    <% if (formError) { %>
-      <div class="admin-alert"><%= formError %></div>
-    <% } %>
+  <div class="site-page">
+    <article class="site-panel">
+      <% if (formError) { %>
+        <div class="admin-alert"><%= formError %></div>
+      <% } %>
 
-    <form action="<%= job ? '/perfil/empresa/vagas/' + job.id + '/editar' : '/perfil/empresa/vagas/nova' %>" method="POST" enctype="multipart/form-data" class="site-form">
-      <div class="site-form-grid">
-        <div class="site-form-row">
-          <label for="title">T?tulo da vaga</label>
-          <input type="text" id="title" name="title" value="<%= job ? job.title : '' %>" required>
+      <form action="<%= job ? '/perfil/empresa/vagas/' + job.id + '/editar' : '/perfil/empresa/vagas/nova' %>" method="POST" enctype="multipart/form-data" class="site-form">
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="title">T?tulo da vaga</label>
+            <input type="text" id="title" name="title" value="<%= job ? job.title : '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="location">Local da vaga</label>
+            <input type="text" id="location" name="location" value="<%= job ? (job.location || '') : '' %>" required>
+          </div>
+          <div class="site-form-row">
+            <label for="vacancies">Quantidade de vagas</label>
+            <input type="number" id="vacancies" name="vacancies" min="1" value="<%= job ? (job.vacancies || 1) : 1 %>">
+          </div>
+          <div class="site-form-row">
+            <label for="salary">Salario</label>
+            <input type="text" id="salary" name="salary" value="<%= job ? (job.salary || '') : '' %>">
+          </div>
+          <div class="site-form-row">
+            <label for="employmentType">Tipo de contratacao</label>
+            <select id="employmentType" name="employmentType">
+              <option value="">Selecione</option>
+              <option value="CLT" <%= job && job.employmentType === 'CLT' ? 'selected' : '' %>>CLT</option>
+              <option value="PJ" <%= job && job.employmentType === 'PJ' ? 'selected' : '' %>>PJ</option>
+              <option value="Temporario" <%= job && job.employmentType === 'Temporario' ? 'selected' : '' %>>Temporario</option>
+              <option value="Estagio" <%= job && job.employmentType === 'Estagio' ? 'selected' : '' %>>Estagio</option>
+            </select>
+          </div>
+          <div class="site-form-row">
+            <label for="workplaceMode">Modalidade</label>
+            <select id="workplaceMode" name="workplaceMode">
+              <option value="">Selecione</option>
+              <option value="Presencial" <%= job && job.workplaceMode === 'Presencial' ? 'selected' : '' %>>Presencial</option>
+              <option value="Hibrido" <%= job && job.workplaceMode === 'Hibrido' ? 'selected' : '' %>>Hibrido</option>
+              <option value="Remoto" <%= job && job.workplaceMode === 'Remoto' ? 'selected' : '' %>>Remoto</option>
+            </select>
+          </div>
         </div>
-        <div class="site-form-row">
-          <label for="location">Local da vaga</label>
-          <input type="text" id="location" name="location" value="<%= job ? (job.location || '') : '' %>" required>
-        </div>
-        <div class="site-form-row">
-          <label for="vacancies">Quantidade de vagas</label>
-          <input type="number" id="vacancies" name="vacancies" min="1" value="<%= job ? (job.vacancies || 1) : 1 %>">
-        </div>
-        <div class="site-form-row">
-          <label for="salary">Salario</label>
-          <input type="text" id="salary" name="salary" value="<%= job ? (job.salary || '') : '' %>">
-        </div>
-        <div class="site-form-row">
-          <label for="employmentType">Tipo de contratacao</label>
-          <select id="employmentType" name="employmentType">
-            <option value="">Selecione</option>
-            <option value="CLT" <%= job && job.employmentType === 'CLT' ? 'selected' : '' %>>CLT</option>
-            <option value="PJ" <%= job && job.employmentType === 'PJ' ? 'selected' : '' %>>PJ</option>
-            <option value="Temporario" <%= job && job.employmentType === 'Temporario' ? 'selected' : '' %>>Temporario</option>
-            <option value="Estagio" <%= job && job.employmentType === 'Estagio' ? 'selected' : '' %>>Estagio</option>
-          </select>
-        </div>
-        <div class="site-form-row">
-          <label for="workplaceMode">Modalidade</label>
-          <select id="workplaceMode" name="workplaceMode">
-            <option value="">Selecione</option>
-            <option value="Presencial" <%= job && job.workplaceMode === 'Presencial' ? 'selected' : '' %>>Presencial</option>
-            <option value="Hibrido" <%= job && job.workplaceMode === 'Hibrido' ? 'selected' : '' %>>Hibrido</option>
-            <option value="Remoto" <%= job && job.workplaceMode === 'Remoto' ? 'selected' : '' %>>Remoto</option>
-          </select>
-        </div>
-      </div>
 
-      <div class="site-form-row">
-        <label for="description">Descrição da vaga</label>
-        <textarea id="description" name="description" required><%= job ? job.description : '' %></textarea>
-      </div>
-      <div class="site-form-grid">
         <div class="site-form-row">
-          <label for="requirements">Requisitos</label>
-          <textarea id="requirements" name="requirements"><%= job ? (job.requirements || '') : '' %></textarea>
+          <label for="description">Descrição da vaga</label>
+          <textarea id="description" name="description" required><%= job ? job.description : '' %></textarea>
         </div>
-        <div class="site-form-row">
-          <label for="benefits">Beneficios</label>
-          <textarea id="benefits" name="benefits"><%= job ? (job.benefits || '') : '' %></textarea>
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="requirements">Requisitos</label>
+            <textarea id="requirements" name="requirements"><%= job ? (job.requirements || '') : '' %></textarea>
+          </div>
+          <div class="site-form-row">
+            <label for="benefits">Beneficios</label>
+            <textarea id="benefits" name="benefits"><%= job ? (job.benefits || '') : '' %></textarea>
+          </div>
         </div>
-      </div>
-      <div class="site-form-grid">
-        <div class="site-form-row">
-          <label for="startDate">Inicio</label>
-          <input type="date" id="startDate" name="startDate" value="<%= job && job.startDate ? job.startDate : '' %>">
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="startDate">Inicio</label>
+            <input type="date" id="startDate" name="startDate" value="<%= job && job.startDate ? job.startDate : '' %>">
+          </div>
+          <div class="site-form-row">
+            <label for="endDate">Prazo para candidatura</label>
+            <input type="date" id="endDate" name="endDate" value="<%= job && job.endDate ? job.endDate : '' %>">
+          </div>
+          <div class="site-form-row">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+              <option value="ativa" <%= !job || job.status === 'ativa' ? 'selected' : '' %>>Ativa</option>
+              <option value="encerrada" <%= job && job.status === 'encerrada' ? 'selected' : '' %>>Encerrada</option>
+            </select>
+          </div>
         </div>
-        <div class="site-form-row">
-          <label for="endDate">Prazo para candidatura</label>
-          <input type="date" id="endDate" name="endDate" value="<%= job && job.endDate ? job.endDate : '' %>">
+        <div class="site-form-grid">
+          <div class="site-form-row">
+            <label for="link">Link externo</label>
+            <input type="url" id="link" name="link" value="<%= job ? (job.link || '') : '' %>">
+          </div>
+          <div class="site-form-row">
+            <label for="image">Imagem de capa</label>
+            <input type="file" id="image" name="image" accept="image/*">
+          </div>
         </div>
-        <div class="site-form-row">
-          <label for="status">Status</label>
-          <select id="status" name="status">
-            <option value="ativa" <%= !job || job.status === 'ativa' ? 'selected' : '' %>>Ativa</option>
-            <option value="encerrada" <%= job && job.status === 'encerrada' ? 'selected' : '' %>>Encerrada</option>
-          </select>
-        </div>
-      </div>
-      <div class="site-form-grid">
-        <div class="site-form-row">
-          <label for="link">Link externo</label>
-          <input type="url" id="link" name="link" value="<%= job ? (job.link || '') : '' %>">
-        </div>
-        <div class="site-form-row">
-          <label for="image">Imagem de capa</label>
-          <input type="file" id="image" name="image" accept="image/*">
-        </div>
-      </div>
 
-      <div class="site-hero-actions">
-        <button type="submit" class="site-button">Salvar vaga</button>
-        <a href="/perfil/empresa/vagas" class="site-button-ghost">Voltar</a>
-      </div>
-    </form>
-  </article>
+        <div class="site-hero-actions">
+          <button type="submit" class="site-button">Salvar vaga</button>
+          <a href="/perfil/empresa/vagas" class="site-button-ghost">Voltar</a>
+        </div>
+      </form>
+    </article>
+  </div>
 </section>

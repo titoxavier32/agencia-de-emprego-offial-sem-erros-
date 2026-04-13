@@ -1,8 +1,8 @@
 <div class="admin-page">
   <header class="admin-hero">
-    <div class="admin-kicker">Gestão de Eventos</div>
-    <h1>Organize e publique eventos especiais.</h1>
-    <p>Acompanhe datas, locais e inscrições de workshops, palestras e encontros em um painel centralizado.</p>
+    <div class="admin-kicker">Gestao de Eventos e Banner</div>
+    <h1>Gerencie eventos, noticias e slides da home.</h1>
+    <p>Os itens marcados para o banner principal entram na rotacao da pagina inicial com foto, ordem e chamada curta.</p>
   </header>
 
   <section class="admin-stats">
@@ -17,27 +17,27 @@
       <span>Eventos ativos</span>
     </div>
     <div class="admin-stat">
+      <i class="fas fa-images" style="color: #2563eb;"></i>
+      <strong><%= stats.hero %></strong>
+      <span>No banner da home</span>
+    </div>
+    <div class="admin-stat">
       <i class="fas fa-ticket-alt" style="color: #8b5cf6;"></i>
       <strong><%= stats.free %></strong>
       <span>Eventos gratuitos</span>
-    </div>
-    <div class="admin-stat">
-      <i class="fas fa-archive" style="color: var(--admin-warning);"></i>
-      <strong><%= stats.other %></strong>
-      <span>Encerrados / Outros</span>
     </div>
   </section>
 
   <section class="admin-table-wrap">
     <div class="admin-section-head" style="flex-wrap: wrap; gap: 20px;">
       <div style="flex: 1; min-width: 300px;">
-        <h2>Eventos cadastrados</h2>
-        <p>Encontre e gerencie as publicações de eventos.</p>
+        <h2>Itens cadastrados</h2>
+        <p>Use o mesmo cadastro para eventos comuns e para noticias que devem aparecer no banner principal.</p>
       </div>
-      
+
       <div class="admin-actions" style="align-items: center;">
         <form action="/admin/events" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <input type="text" name="q" placeholder="Buscar título ou local..." value="<%= filters.q || '' %>" style="min-width: 200px; height: 44px; border-radius: 12px; border: 1px solid var(--admin-border); padding: 0 15px;">
+          <input type="text" name="q" placeholder="Buscar titulo, local ou organizador..." value="<%= filters.q || '' %>" style="min-width: 220px; height: 44px; border-radius: 12px; border: 1px solid var(--admin-border); padding: 0 15px;">
           <select name="status" style="height: 44px; border-radius: 12px; border: 1px solid var(--admin-border); padding: 0 10px; background: white;">
             <option value="">Todos os status</option>
             <option value="ativo" <%= filters.status === 'ativo' ? 'selected' : '' %>>Ativos</option>
@@ -49,10 +49,10 @@
             <a href="/admin/events" class="admin-btn-ghost" title="Limpar filtros" style="height: 44px;"><i class="fas fa-times"></i></a>
           <% } %>
         </form>
-        
+
         <a href="/admin/events/novo" class="admin-btn">
           <i class="fas fa-plus"></i>
-          <span>Novo evento</span>
+          <span>Novo item</span>
         </a>
       </div>
     </div>
@@ -62,57 +62,66 @@
         <thead>
           <tr>
             <th>Capa</th>
-            <th>Informações do Evento</th>
-            <th>Data e Local</th>
-            <th>Status / Tipo</th>
-            <th>Ações</th>
+            <th>Conteudo</th>
+            <th>Data e local</th>
+            <th>Banner / status</th>
+            <th>Acoes</th>
           </tr>
         </thead>
         <tbody>
-          <% events.forEach(event => { %>
+          <% events.forEach((event) => { %>
             <tr>
-              <td style="width: 80px;">
+              <td style="width: 88px;">
                 <% if (event.image) { %>
                   <img src="/uploads/<%= event.image %>" alt="<%= event.title %>" class="admin-thumb" data-lightbox-src="/uploads/<%= event.image %>">
                 <% } else { %>
-                  <div class="admin-thumb-fallback"><i class="fas fa-calendar-day"></i></div>
+                  <div class="admin-thumb-fallback"><i class="fas fa-image"></i></div>
                 <% } %>
               </td>
               <td>
-                <div style="margin-bottom: 4px;">
-                  <span class="admin-badge neutral" style="font-size: 10px; height: 22px; padding: 0 8px; margin-bottom: 4px;"><%= event.category || 'Geral' %></span>
+                <div style="display: grid; gap: 6px;">
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <span class="admin-badge neutral" style="font-size: 10px; height: 22px; padding: 0 8px;"><%= event.category || 'Geral' %></span>
+                    <% if (event.showInHero) { %>
+                      <span class="admin-badge primary" style="font-size: 10px; height: 22px; padding: 0 8px;">Banner principal</span>
+                    <% } %>
+                  </div>
+                  <strong style="font-size: 1.05rem; display: block;"><%= event.title %></strong>
+                  <span class="admin-help"><%= event.heroSummary || event.description %></span>
                 </div>
-                <strong style="font-size: 1.05rem; display: block; margin-bottom: 2px;"><%= event.title %></strong>
-                <div class="admin-help"><i class="fas fa-user-tie" style="font-size: 11px; margin-right: 5px;"></i><%= event.organizer || 'Organizador não informado' %></div>
               </td>
               <td>
-                <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: grid; gap: 4px;">
                   <span style="font-weight: 600; color: var(--admin-primary);">
                     <i class="far fa-calendar-alt" style="margin-right: 6px;"></i>
                     <%= event.date ? new Date(event.date + 'T00:00:00').toLocaleDateString('pt-BR') : 'Data a definir' %>
-                    <small style="margin-left: 5px; font-weight: normal; color: var(--admin-muted);"><%= event.time ? 'às ' + event.time : '' %></small>
+                    <small style="margin-left: 5px; font-weight: normal; color: var(--admin-muted);"><%= event.time ? 'as ' + event.time : '' %></small>
                   </span>
                   <span class="admin-help">
                     <i class="fas fa-map-marker-alt" style="margin-right: 6px; font-size: 12px;"></i>
-                    <%= event.location || 'Local não informado' %>
+                    <%= event.location || 'Local nao informado' %>
                   </span>
                 </div>
               </td>
               <td>
-                <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+                <div style="display: grid; gap: 8px; align-items: flex-start;">
                   <span class="admin-badge <%= event.status === 'ativo' ? 'success' : (event.status === 'encerrado' ? 'warning' : 'danger') %>">
-                    <%= (event.status || 'Ativo').toUpperCase() %>
+                    <%= (event.status || 'ativo').toUpperCase() %>
                   </span>
                   <span class="admin-help" style="font-weight: 600;">
                     <i class="fas fa-tag" style="margin-right: 5px; font-size: 11px;"></i>
                     <%= event.isFree ? 'Gratuito' : (event.price || 'Pago') %>
+                  </span>
+                  <span class="admin-help">
+                    <i class="fas fa-layer-group" style="margin-right: 5px; font-size: 11px;"></i>
+                    <%= event.showInHero ? ('Slide #' + (event.heroOrder || 0)) : 'Nao exibido no banner' %>
                   </span>
                 </div>
               </td>
               <td>
                 <div class="admin-actions">
                   <a href="/admin/events/editar/<%= event.id %>" class="admin-btn-secondary" title="Editar"><i class="fas fa-edit"></i></a>
-                  <form action="/admin/events/deletar/<%= event.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este evento?');">
+                  <form action="/admin/events/deletar/<%= event.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este item?');">
                     <button type="submit" class="admin-btn-danger" title="Excluir"><i class="fas fa-trash-alt"></i></button>
                   </form>
                 </div>
@@ -123,8 +132,8 @@
       </table>
     <% } else { %>
       <div class="admin-empty">
-        <i class="fas fa-search" style="font-size: 3rem; opacity: 0.2; display: block; margin-bottom: 20px;"></i>
-        <p>Nenhum evento encontrado para esta busca ou filtro.</p>
+        <i class="fas fa-images" style="font-size: 3rem; opacity: 0.2; display: block; margin-bottom: 20px;"></i>
+        <p>Nenhum item encontrado.</p>
         <a href="/admin/events" class="admin-btn-ghost" style="margin-top: 15px;">Limpar filtros e ver todos</a>
       </div>
     <% } %>

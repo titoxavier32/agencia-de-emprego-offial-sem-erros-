@@ -1,33 +1,35 @@
 <section class="site-section">
-  <div class="site-page-header">
-    <div>
-      <span class="site-kicker">Empresas parceiras</span>
-      <h1>Empresas que divulgam vagas na plataforma</h1>
-      <p class="site-page-copy">Painel institucional com empresas que autorizaram a divulgacao publica de dados corporativos em conformidade com a LGPD.</p>
+  <div class="site-page">
+    <div class="site-page-header">
+      <div>
+        <span class="site-kicker">Empresas parceiras</span>
+        <h1>Empresas que divulgam vagas na plataforma</h1>
+        <p class="site-page-copy">Painel institucional com empresas que autorizaram a divulgacao publica de dados corporativos em conformidade com a LGPD.</p>
+      </div>
     </div>
-  </div>
 
-  <% if (publicCompanies && publicCompanies.length > 0) { %>
-    <div class="site-card-grid">
-      <% publicCompanies.forEach(function(company) { %>
-        <article class="site-company-card site-company-card--page">
-          <div class="site-company-card-top">
-            <% if (company.logo) { %><img src="<%= company.logo %>" alt="<%= company.displayName %>" class="site-company-logo site-company-logo--page"><% } else { %><span class="site-company-mark"><%= (company.displayName || 'E').charAt(0).toUpperCase() %></span><% } %>
-            <div>
-              <strong><%= company.displayName %></strong>
-              <span class="site-company-caption">Empresa participante autorizada</span>
+    <% if (publicCompanies && publicCompanies.length > 0) { %>
+      <div class="site-card-grid">
+        <% publicCompanies.forEach(function(company) { %>
+          <article class="site-company-card site-company-card--page">
+            <div class="site-company-card-top">
+              <% if (company.logo) { %><img src="<%= company.logo %>" alt="<%= company.displayName %>" class="site-company-logo site-company-logo--page"><% } else { %><span class="site-company-mark"><%= (company.displayName || 'E').charAt(0).toUpperCase() %></span><% } %>
+              <div>
+                <strong><%= company.displayName %></strong>
+                <span class="site-company-caption">Empresa participante autorizada</span>
+              </div>
             </div>
-          </div>
-          <p class="site-company-summary"><%= company.summary %></p>
-          <div class="site-company-meta">
-            <% if (company.sector) { %><span><i class="fas fa-briefcase"></i> <%= company.sector %></span><% } %>
-            <% if (company.city || company.state) { %><span><i class="fas fa-location-dot"></i> <%= [company.city, company.state].filter(Boolean).join(' / ') %></span><% } %>
-            <% if (company.website) { %><span><i class="fas fa-globe"></i> <a href="<%= company.website %>" target="_blank" rel="noopener noreferrer">Site institucional</a></span><% } %>
-          </div>
-        </article>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <div class="site-empty"><i class="fas fa-building"></i><p>Nenhuma empresa parceira autorizada para exibicao no momento.</p></div>
-  <% } %>
+            <p class="site-company-summary"><%= company.summary %></p>
+            <div class="site-company-meta">
+              <% if (company.sector) { %><span><i class="fas fa-briefcase"></i> <%= company.sector %></span><% } %>
+              <% if (company.city || company.state) { %><span><i class="fas fa-location-dot"></i> <%= [company.city, company.state].filter(Boolean).join(' / ') %></span><% } %>
+              <% if (company.website) { %><span><i class="fas fa-globe"></i> <a href="<%= company.website %>" target="_blank" rel="noopener noreferrer">Site institucional</a></span><% } %>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="site-empty"><i class="fas fa-building"></i><p>Nenhuma empresa parceira autorizada para exibicao no momento.</p></div>
+    <% } %>
+  </div>
 </section>

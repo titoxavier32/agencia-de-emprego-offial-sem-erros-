@@ -47,83 +47,95 @@
 </style>
 
 <section class="site-hero">
-  <div class="site-hero-content">
-    <span class="site-kicker">Concursos e processos seletivos</span>
-    <h1>Oportunidades Públicas Organizadas</h1>
-    <p class="site-lead">Acompanhe editais federais e regionais com status automatizado e leitura simplificada.</p>
+  <div class="site-page">
+    <div class="site-hero-content">
+      <span class="site-kicker">Concursos e processos seletivos</span>
+      <h1>Oportunidades Públicas Organizadas</h1>
+      <p class="site-lead">Acompanhe editais federais e regionais com status automatizado e leitura simplificada.</p>
+    </div>
   </div>
 </section>
 
 <section class="site-section">
-  <div class="selection-tabs" id="regionTabs">
-    <button class="tab-btn active" onclick="switchRegion('national')">🇧🇷 Federal / Brasil</button>
-    <button class="tab-btn" onclick="switchRegion('local')">📍 Rondônia</button>
-  </div>
+  <div class="site-page">
+    <div class="selection-tabs" id="regionTabs">
+      <button class="tab-btn active" onclick="switchRegion('national')">🇧🇷 Federal / Brasil</button>
+      <button class="tab-btn" onclick="switchRegion('local')">📍 Rondônia</button>
+    </div>
 
-  <div class="filter-bar">
-    <span>Filtrar por:</span>
-    <button class="filter-btn active" onclick="filterStatus('all')">Todos</button>
-    <button class="filter-btn" onclick="filterStatus('aberto')">Abertos</button>
-    <button class="filter-btn" onclick="filterStatus('previsto')">Previstos</button>
-    <button class="filter-btn" onclick="filterStatus('encerrado')">Encerrados</button>
-  </div>
+    <div class="filter-bar">
+      <span>Filtrar por:</span>
+      <button class="filter-btn active" onclick="filterStatus('all')">Todos</button>
+      <button class="filter-btn" onclick="filterStatus('aberto')">Abertos</button>
+      <button class="filter-btn" onclick="filterStatus('previsto')">Previstos</button>
+      <button class="filter-btn" onclick="filterStatus('encerrado')">Encerrados</button>
+    </div>
 
-  <div id="selectionGrid" class="site-card-grid">
-    <% publicSelections.forEach(item => { 
-      const status = solveStatus(item);
-      const color = getStatusColor(status);
-    %>
-      <article class="site-card selection-item" 
-               data-region="<%= item.region === 'Rondônia' ? 'local' : 'national' %>" 
-               data-status="<%= status.toLowerCase() %>"
-               data-preview-item 
-               data-preview-badge="<%= status %>" 
-               data-preview-title="<%= item.title %>" 
-               data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" 
-               data-preview-image="<%= item.image ? '/uploads/' + item.image : '' %>" 
-               data-preview-meta-label="Salário" 
-               data-preview-meta-value="<%= item.salary || 'Ver edital' %>" 
-               data-preview-link="<%= item.noticePdf ? '/uploads/' + item.noticePdf : (item.link || '#') %>" 
-               data-preview-link-label="Ver edital"
-               data-preview-education="<%= item.educationLevel || '' %>"
-               data-preview-secondary-link="<%= item.processWebsite || '' %>"
-               data-preview-secondary-label="Site do Processo">
-        
-        <div class="site-card-media" data-open-preview role="button" tabindex="0">
-          <% if (item.image) { %>
-            <img src="/uploads/<%= item.image %>" alt="<%= item.title %>" style="object-fit: cover; width: 100%; height: 100%;">
-          <% } else { %>
-            <div class="site-card-icon"><i class="fas fa-university"></i></div>
-          <% } %>
-          <span class="status-badge" style="background: <%= color %>; position: absolute; top: 1rem; left: 1rem;"><%= status %></span>
-        </div>
-
-        <div class="site-card-body">
-          <span style="font-size: 0.8rem; color: #888; text-transform: uppercase;"><%= item.sphere || 'Público' %></span>
-          <h3 style="margin: 0.5rem 0;"><%= item.title %></h3>
-          <div style="font-size: 0.9rem; margin-bottom: 1rem;">
-            <% if (item.salary) { %><div class="salary-tag"><i class="fas fa-money-bill-wave"></i> <%= item.salary %></div><% } %>
-            <% if (item.educationLevel) { %><div><i class="fas fa-graduation-cap"></i> <%= item.educationLevel %></div><% } %>
-          </div>
+    <div id="selectionGrid" class="site-card-grid">
+      <% publicSelections.forEach(item => { 
+        const status = solveStatus(item);
+        const color = getStatusColor(status);
+      %>
+        <article class="site-card selection-item" 
+                 data-region="<%= item.region === 'Rondônia' ? 'local' : 'national' %>" 
+                 data-status="<%= status.toLowerCase() %>"
+                 data-preview-item 
+                 data-preview-badge="<%= status %>" 
+                 data-preview-title="<%= item.title %>" 
+                 data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" 
+                 data-preview-image="<%= item.image ? '/images/cursos/anexos/' + item.image : '' %>" 
+                 data-preview-meta-label="Salário" 
+                 data-preview-meta-value="<%= item.salary || 'Ver edital' %>" 
+                 data-preview-link="<%= item.noticePdf ? '/images/cursos/anexos/' + item.noticePdf : (item.link || '#') %>" 
+                 data-preview-link-label="Ver edital"
+                 data-preview-education="<%= item.educationLevel || '' %>"
+                 data-preview-secondary-link="<%= item.processWebsite || '' %>"
+                 data-preview-secondary-label="Site do Processo"
+                 data-preview-organizer="<%= item.organizer || '' %>"
+                 data-preview-agency="<%= item.destinationAgency || '' %>"
+                 data-preview-regime="<%= item.legalRegime || '' %>"
+                 data-preview-target="<%= item.targetAudience || '' %>"
+                 data-preview-salary="<%= item.salary || '' %>"
+                 data-preview-vacancies="<%= item.vacancies || '' %>"
+                 data-preview-sphere="<%= item.sphere || '' %>"
+                 data-preview-period="<%= (item.registrationStartDate && item.registrationEndDate) ? (new Date(item.registrationStartDate + 'T00:00:00').toLocaleDateString('pt-BR') + ' a ' + new Date(item.registrationEndDate + 'T00:00:00').toLocaleDateString('pt-BR')) : '' %>">
           
-          <div class="site-detail-list">
-            <% if (item.registrationEndDate) { %>
-              <span><strong>Inscrições até:</strong> <%= formatDateBr(item.registrationEndDate) %></span>
+          <div class="site-card-media" data-open-preview role="button" tabindex="0">
+            <% if (item.image) { %>
+              <img src="/images/cursos/anexos/<%= item.image %>" alt="<%= item.title %>" style="object-fit: cover; width: 100%; height: 100%;">
+            <% } else { %>
+              <div class="site-card-icon"><i class="fas fa-university"></i></div>
             <% } %>
+            <span class="status-badge" style="background: <%= color %>; position: absolute; top: 1rem; left: 1rem;"><%= status %></span>
           </div>
 
-          <div class="site-card-meta-line">
-            <span style="font-size: 0.8rem; color: #999;">Ref: <%= new Date(item.createdAt).toLocaleDateString('pt-BR') %></span>
-            <button type="button" class="site-button" data-open-preview>Detalhes</button>
-          </div>
-        </div>
-      </article>
-    <% }) %>
-  </div>
+          <div class="site-card-body">
+            <span style="font-size: 0.8rem; color: #888; text-transform: uppercase;"><%= item.sphere || 'Público' %></span>
+            <h3 style="margin: 0.5rem 0;"><%= item.title %></h3>
+            <div style="font-size: 0.9rem; margin-bottom: 1rem;">
+              <% if (item.salary) { %><div class="salary-tag"><i class="fas fa-money-bill-wave"></i> <%= item.salary %></div><% } %>
+              <% if (item.educationLevel) { %><div><i class="fas fa-graduation-cap"></i> <%= item.educationLevel %></div><% } %>
+            </div>
+            
+            <div class="site-detail-list">
+              <% if (item.registrationEndDate) { %>
+                <span><strong>Inscrições até:</strong> <%= formatDateBr(item.registrationEndDate) %></span>
+              <% } %>
+            </div>
 
-  <div id="emptyMessage" class="site-empty" style="display: none;">
-    <i class="fas fa-search"></i>
-    <p>Nenhuma seleção encontrada para este filtro.</p>
+            <div class="site-card-meta-line">
+              <span style="font-size: 0.8rem; color: #999;">Ref: <%= new Date(item.createdAt).toLocaleDateString('pt-BR') %></span>
+              <button type="button" class="site-button" data-open-preview>Detalhes</button>
+            </div>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+
+    <div id="emptyMessage" class="site-empty" style="display: none;">
+      <i class="fas fa-search"></i>
+      <p>Nenhuma seleção encontrada para este filtro.</p>
+    </div>
   </div>
 </section>
 

@@ -2,13 +2,16 @@
 <% const companies = typeof publicCompanies !== 'undefined' ? publicCompanies : []; %>
 <% if (showcaseEnabled && companies.length > 0) { %>
 <section class="site-section">
-  <div class="site-section-head">
-    <div class="site-section-heading">
-      <h2><%= globalSetting && globalSetting.companyShowcaseTitle ? globalSetting.companyShowcaseTitle : 'Empresas que divulgam vagas na plataforma' %></h2>
-      <p><%= globalSetting && globalSetting.companyShowcaseDescription ? globalSetting.companyShowcaseDescription : 'Painel institucional com empresas que autorizaram a divulgacao publica de dados corporativos para fortalecer a confianca de quem busca vagas.' %></p>
+  <div class="site-page">
+    <div class="site-section-head">
+      <div class="site-section-heading">
+        <h2><%= globalSetting && globalSetting.companyShowcaseTitle ? globalSetting.companyShowcaseTitle : 'Empresas que divulgam vagas na plataforma' %></h2>
+        <p><%= globalSetting && globalSetting.companyShowcaseDescription ? globalSetting.companyShowcaseDescription : 'Painel institucional com empresas que autorizaram a divulgacao publica de dados corporativos para fortalecer a confianca de quem busca vagas.' %></p>
+      </div>
+      <a href="/empresas-parceiras" class="site-section-link">Ver empresas <i class="fas fa-arrow-right"></i></a>
     </div>
-    <a href="/empresas-parceiras" class="site-section-link">Ver empresas <i class="fas fa-arrow-right"></i></a>
   </div>
+  
   <div class="site-company-showcase" style="--company-card-min-width:<%= globalSetting && globalSetting.companyShowcaseCardMinWidth ? globalSetting.companyShowcaseCardMinWidth : 240 %>px; --company-marquee-duration:<%= globalSetting && globalSetting.companyShowcaseSpeed ? globalSetting.companyShowcaseSpeed : 38 %>s;">
     <div class="site-company-showcase-track <%= globalSetting && globalSetting.companyShowcaseDirection === 'right' ? 'is-reverse' : '' %>">
       <% companies.concat(companies).forEach(function(company) { %>
@@ -30,6 +33,9 @@
       <% }) %>
     </div>
   </div>
-  <p class="site-company-lgpd-note">Exibimos apenas dados institucionais autorizados pela empresa para divulgacao publica, em conformidade com a LGPD.</p>
+
+  <div class="site-page">
+    <p class="site-company-lgpd-note">Exibimos apenas dados institucionais autorizados pela empresa para divulgacao publica, em conformidade com a LGPD.</p>
+  </div>
 </section>
 <% } %>

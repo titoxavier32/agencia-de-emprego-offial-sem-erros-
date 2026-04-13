@@ -1,0 +1,109 @@
+<section class="site-section site-survey-section">
+  <div class="site-page">
+    <div class="survey-cta-card">
+      <div class="survey-cta-content">
+        <div class="survey-cta-icon">
+          <i class="fas fa-comments-alt"></i>
+        </div>
+        <div class="survey-cta-text">
+          <h2 class="survey-cta-title"><%= globalSetting.homeSurveyTitle || 'Sua opinião é fundamental!' %></h2>
+          <p class="survey-cta-subtitle"><%= globalSetting.homeSurveySubtitle || 'Ajude-nos a melhorar nossa plataforma. Responda à nossa pesquisa de satisfação em poucos segundos.' %></p>
+        </div>
+      </div>
+      <div class="survey-cta-actions">
+        <button type="button" class="site-button-primary site-button--large" onclick="toggleSurvey()">
+          <span>Responder agora</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .site-survey-section {
+    padding: 80px 0;
+    background: linear-gradient(to bottom, transparent, rgba(var(--primary-rgb), 0.03));
+  }
+
+  .survey-cta-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    background: #fff;
+    padding: 48px;
+    border-radius: 32px;
+    box-shadow: 0 20px 50px rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .survey-cta-card::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.05) 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .survey-cta-content {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .survey-cta-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+
+  .survey-cta-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--heading);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .survey-cta-subtitle {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  .survey-cta-actions {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 991px) {
+    .survey-cta-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 40px;
+      gap: 32px;
+    }
+    .survey-cta-content {
+      flex-direction: column;
+      gap: 24px;
+    }
+    .survey-cta-subtitle {
+      max-width: 100%;
+    }
+  }
+</style>

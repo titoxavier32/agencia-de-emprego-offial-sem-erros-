@@ -1,56 +1,73 @@
 <div class="admin-page">
   <section class="admin-hero">
-    <div class="admin-kicker">Editais e oportunidades públicas</div>
-    <h1>Gerencie concursos e processos seletivos com estrutura própria.</h1>
-    <p>Essa área amplia a plataforma para divulgar editais com mais profundidade, prazos e cargos detalhados.</p>
+    <div class="admin-kicker">Editais e banner</div>
+    <h1>Gerencie concursos e processos seletivos com destaque na home.</h1>
+    <p>Ative ou desative quais editais entram no banner principal e controle a ordem de exibicao sem mexer no codigo.</p>
   </section>
 
   <section class="admin-table-wrap">
     <div class="admin-section-head">
       <div>
-        <h2>Seleções públicas cadastradas</h2>
-        <p>Concentre aqui concursos públicos e processos seletivos temporários.</p>
+        <h2>Selecoes publicas cadastradas</h2>
+        <p>Esses itens podem aparecer na pagina de concursos e tambem no banner principal da home.</p>
       </div>
-      <a href="/admin/selecoes-publicas/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Nova divulgação</span></a>
+      <a href="/admin/selecoes-publicas/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Nova divulgacao</span></a>
     </div>
 
     <% if (publicSelections.length > 0) { %>
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Região</th>
+            <th>Regiao</th>
             <th>Esfera</th>
-            <th>Título</th>
-            <th>Inscrições</th>
-            <th>Situação</th>
-            <th>Ações</th>
+            <th>Titulo</th>
+            <th>Inscricoes</th>
+            <th>Banner / situacao</th>
+            <th>Acoes</th>
           </tr>
         </thead>
         <tbody>
-          <% publicSelections.forEach(item => { %>
+          <% publicSelections.forEach((item) => { %>
             <tr>
               <td><span class="admin-badge neutral"><%= item.region || 'Brasil' %></span></td>
-              <td><span class="admin-badge <%= item.sphere === 'Federal' ? 'info' : 'neutral' %>"><%= item.sphere || 'Não Inf.' %></span></td>
-              <td><strong><%= item.title %></strong><div class="admin-help"><%= (item.description || '').length > 110 ? item.description.substring(0, 110) + '...' : (item.description || '') %></div></td>
+              <td><span class="admin-badge <%= item.sphere === 'Federal' ? 'info' : 'neutral' %>"><%= item.sphere || 'Nao informado' %></span></td>
+              <td>
+                <strong><%= item.title %></strong>
+                <div class="admin-help"><%= item.heroSummary || ((item.description || '').length > 110 ? item.description.substring(0, 110) + '...' : (item.description || '')) %></div>
+              </td>
               <td>
                 <% if (item.registrationStartDate || item.registrationEndDate) { %>
                   <span class="admin-help">
-                    <%= item.registrationStartDate ? new Date(item.registrationStartDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem início' %>
-                    até
+                    <%= item.registrationStartDate ? new Date(item.registrationStartDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem inicio' %>
+                    ate
                     <%= item.registrationEndDate ? new Date(item.registrationEndDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem fim' %>
                   </span>
                 <% } else { %>
-                  <span class="admin-help">Não informado</span>
+                  <span class="admin-help">Nao informado</span>
                 <% } %>
               </td>
-              <td><span class="admin-badge <%= item.status === 'Publicado' ? 'success' : 'warning' %>"><%= item.status || 'Sem status' %></span></td>
-              <td><div class="admin-actions"><a href="/admin/selecoes-publicas/editar/<%= item.id %>" class="admin-btn-secondary">Editar</a><form action="/admin/selecoes-publicas/deletar/<%= item.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta divulgação?');"><button type="submit" class="admin-btn-danger">Excluir</button></form></div></td>
+              <td>
+                <div style="display: grid; gap: 8px; align-items: flex-start;">
+                  <span class="admin-badge <%= item.showInHero ? 'primary' : 'neutral' %>">
+                    <%= item.showInHero ? ('Banner home #' + (item.heroOrder || 0)) : 'Fora do banner' %>
+                  </span>
+                  <span class="admin-badge <%= item.status === 'Publicado' ? 'success' : 'warning' %>"><%= item.status || 'Sem status' %></span>
+                </div>
+              </td>
+              <td>
+                <div class="admin-actions">
+                  <a href="/admin/selecoes-publicas/editar/<%= item.id %>" class="admin-btn-secondary">Editar</a>
+                  <form action="/admin/selecoes-publicas/deletar/<%= item.id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta divulgacao?');">
+                    <button type="submit" class="admin-btn-danger">Excluir</button>
+                  </form>
+                </div>
+              </td>
             </tr>
           <% }) %>
         </tbody>
       </table>
     <% } else { %>
-      <div class="admin-empty">Nenhuma seleção pública cadastrada.</div>
+      <div class="admin-empty">Nenhuma selecao publica cadastrada.</div>
     <% } %>
   </section>
 </div>

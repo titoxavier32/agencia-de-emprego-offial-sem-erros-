@@ -6,6 +6,7 @@ const Advertisement = require('../models/Advertisement');
 const Setting = require('../models/Setting');
 const User = require('../models/User');
 const Event = require('../models/Event');
+const SatisfactionSurvey = require('../models/SatisfactionSurvey');
 const { Op } = require('sequelize');
 const crypto = require('crypto');
 const { createPaymentPreference, getAccessToken } = require('../utils/mercadopagoService');
@@ -127,6 +128,18 @@ const findOrderedAdvertisements = (placement) => Advertisement.findAll({
   order: [['groupName', 'ASC'], ['position', 'ASC'], ['order', 'ASC'], ['createdAt', 'ASC']]
 });
 
+const findHomeHeroEvents = () => Event.findAll({
+  where: { status: 'ativo', showInHero: true },
+  order: [['heroOrder', 'ASC'], ['date', 'ASC'], ['createdAt', 'DESC']],
+  limit: 8
+});
+
+const findHomeHeroPublicSelections = () => PublicSelection.findAll({
+  where: { showInHero: true },
+  order: [['heroOrder', 'ASC'], ['createdAt', 'DESC']],
+  limit: 8
+});
+
 const findPublicCompanies = (options = {}) => User.findAll({
   where: { role: 'empresa', status: 'ativo', companyShowcaseEnabled: true, companyShowcaseLgpdConsent: true },
   order: [['companyShowcaseOrder', 'ASC'], ['createdAt', 'DESC']],
@@ -146,13 +159,15 @@ const buildPublicCompanyShowcaseItems = (companies) => companies.map((company) =
 })).sort((left, right) => left.order - right.order || left.displayName.localeCompare(right.displayName, 'pt-BR'));
 
 exports.home = async (req, res) => {
-  const [heroAdvertisements, muralAdvertisements, courses, jobs, publicSelections, companies] = await Promise.all([
+  const [heroAdvertisements, muralAdvertisements, courses, jobs, publicSelections, companies, featuredHeroEvents, featuredHeroPublicSelections] = await Promise.all([
     findOrderedAdvertisements('hero_top'),
     findOrderedAdvertisements('mural_home'),
     Course.findAll({ order: [['createdAt', 'DESC']], limit: 6 }),
     Job.findAll({ where: { status: 'ativa' }, order: [['createdAt', 'DESC']], limit: 6 }),
     PublicSelection.findAll({ order: [['createdAt', 'DESC']], limit: 4 }),
-    findPublicCompanies({ limit: 18 })
+    findPublicCompanies({ limit: 18 }),
+    findHomeHeroEvents(),
+    findHomeHeroPublicSelections()
   ]);
 
   return res.render('site/home', {
@@ -164,7 +179,9 @@ exports.home = async (req, res) => {
     courses,
     jobs,
     publicSelections,
-    publicCompanies: buildPublicCompanyShowcaseItems(companies)
+    publicCompanies: buildPublicCompanyShowcaseItems(companies),
+    featuredHeroEvents,
+    featuredHeroPublicSelections
   });
 };
 
@@ -299,7 +316,7 @@ exports.publicSelectionDetail = async (req, res) => {
 };
 
 exports.sobre = (req, res) => {
-  res.render('site/sobre', { title: 'Sobre nós' });
+  res.render('site/sobre', { title: 'Quem Somos' });
 };
 
 exports.contato = async (req, res) => {
@@ -450,6 +467,28 @@ exports.confirmContactPayment = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.redirect('/contato?error=Não foi possível confirmar o pagamento');
+  }
+};
+
+exports.submitSatisfactionSurvey = async (req, res) => {
+  const { rating, comment, page } = req.body;
+
+  if (!rating || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'A avaliacao deve ser entre 1 e 5.' });
+  }
+
+  try {
+    await SatisfactionSurvey.create({
+      rating: parseInt(rating, 10),
+      comment: (comment || '').trim(),
+      visitorIp: req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+      page: page || req.headers['referer'] || '/'
+    });
+
+    return res.json({ success: true, message: 'Obrigado pelo seu feedback!' });
+  } catch (error) {
+    console.error('Error submitting survey:', error);
+    return res.status(500).json({ error: 'Nao foi possivel processar sua avaliacao.' });
   }
 };
 
