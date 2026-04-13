@@ -11,17 +11,17 @@ const runSeed = async () => {
     await connectDB();
     
     // Check Admin
-    let admin = await User.findOne({ where: { email: process.env.ADMIN_EMAIL || 'admin@agencia.com' } });
+    let admin = await User.findOne({ where: { email: process.env.ADMIN_EMAIL || 'admin@admin.com' } });
     if (!admin) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'Admin123!', salt);
       await User.create({
         name: 'Administrador',
-        email: process.env.ADMIN_EMAIL || 'admin@agencia.com',
+        email: process.env.ADMIN_EMAIL || 'admin@admin.com',
         password: hashedPassword,
         role: 'admin'
       });
-      console.log('Admin user created! login: admin@agencia.com / Admin123!');
+      console.log('Admin user created! login: admin@admin.com / Admin123!');
     } else {
       console.log('Admin user already exists.');
     }
