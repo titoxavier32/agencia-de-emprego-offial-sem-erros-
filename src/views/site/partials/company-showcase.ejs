@@ -6,7 +6,7 @@
     <div class="site-section-head">
       <div class="site-section-heading">
         <h2><%= globalSetting && globalSetting.companyShowcaseTitle ? globalSetting.companyShowcaseTitle : 'Empresas que divulgam vagas na plataforma' %></h2>
-        <p><%= globalSetting && globalSetting.companyShowcaseDescription ? globalSetting.companyShowcaseDescription : 'Painel institucional com empresas que autorizaram a divulgacao publica de dados corporativos para fortalecer a confianca de quem busca vagas.' %></p>
+        <p><%= globalSetting && globalSetting.companyShowcaseDescription ? globalSetting.companyShowcaseDescription : 'Painel institucional com empresas que autorizaram a divulgação pública de dados corporativos para fortalecer a confiança de quem busca vagas.' %></p>
       </div>
       <a href="/empresas-parceiras" class="site-section-link">Ver empresas <i class="fas fa-arrow-right"></i></a>
     </div>
@@ -20,7 +20,7 @@
             <% if (company.logo) { %><img src="<%= company.logo %>" alt="<%= company.displayName %>" class="site-company-logo"><% } else { %><span class="site-company-mark"><%= (company.displayName || 'E').charAt(0).toUpperCase() %></span><% } %>
             <div>
               <strong><%= company.displayName %></strong>
-              <span class="site-company-caption">Empresa autorizada para divulgacao institucional</span>
+              <span class="site-company-caption">Empresa autorizada para divulgação institucional</span>
             </div>
           </div>
           <p class="site-company-summary"><%= company.summary %></p>
@@ -35,7 +35,7 @@
   </div>
 
   <div class="site-page">
-    <p class="site-company-lgpd-note">Exibimos apenas dados institucionais autorizados pela empresa para divulgacao publica, em conformidade com a LGPD.</p>
+    <p class="site-company-lgpd-note">Exibimos apenas dados institucionais autorizados pela empresa para divulgação pública, em conformidade com a LGPD.</p>
   </div>
 </section>
 <% } %>

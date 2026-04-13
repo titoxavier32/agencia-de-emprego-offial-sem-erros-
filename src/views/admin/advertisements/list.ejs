@@ -19,7 +19,9 @@
         <article class="admin-ad-layout-section">
           <div class="admin-ad-layout-head">
             <div>
-              <div class="admin-kicker"><%= section.key === 'hero_top' ? 'Topo da home' : 'Mural da home' %></div>
+              <div class="admin-kicker">
+                <%= section.key === 'hero_top' ? 'Topo da home' : (section.key === 'hero_slider' ? 'Banner Principal' : 'Mural da home') %>
+              </div>
               <h3><%= section.title %></h3>
               <p><%= section.description %></p>
             </div>
@@ -121,7 +123,11 @@
                 <strong><%= item.title || 'Propaganda sem titulo interno' %></strong>
                 <div class="admin-help"><%= item.link || 'Sem link' %></div>
               </td>
-              <td><span class="admin-badge neutral"><%= item.placement === 'hero_top' ? 'Topo da home' : 'Mural da home' %></span></td>
+              <td>
+                <span class="admin-badge neutral">
+                  <%= item.placement === 'hero_top' ? 'Topo da home' : (item.placement === 'hero_slider' ? 'Carrossel Hero' : 'Mural da home') %>
+                </span>
+              </td>
               <td><span class="admin-badge neutral"><%= item.groupName || 'Geral' %></span></td>
               <td><span class="admin-badge neutral"><%= item.position || 1 %></span></td>
               <td><span class="admin-badge <%= item.isActive ? 'success' : 'warning' %>"><%= item.isActive ? 'Exibida no site' : 'Oculta no site' %></span></td>

@@ -15,7 +15,7 @@
     <%
       const placementLabel = advertisement && advertisement.placement === 'hero_top'
         ? 'Acima da plataforma profissional'
-        : 'Mural publicitario da home';
+        : (advertisement && advertisement.placement === 'hero_slider' ? 'Carrossel do Hero (Principal)' : 'Mural publicitario da home');
     %>
 
     <form action="<%= advertisement && advertisement.id ? '/admin/propagandas/editar/' + advertisement.id : '/admin/propagandas/nova' %>" method="POST" enctype="multipart/form-data" class="admin-form">
@@ -60,9 +60,22 @@
       </div>
 
       <div class="admin-form-row">
-        <label for="description">Descricao interna <span class="admin-help">(opcional)</span></label>
-        <textarea id="description" name="description" placeholder="Observacao opcional para sua organizacao no painel"><%= advertisement ? (advertisement.description || '') : '' %></textarea>
+        <label for="description">Descricao <span class="admin-help">(Sera o resumo no carrossel do Hero)</span></label>
+        <textarea id="description" name="description" placeholder="Texto que aparece abaixo do titulo no banner" required><%= advertisement ? (advertisement.description || '') : '' %></textarea>
       </div>
+
+      <% if (advertisement && advertisement.placement === 'hero_slider') { %>
+        <div class="admin-form-grid">
+          <div class="admin-form-row">
+            <label for="heroKicker">Kicker / Chapeu <span class="admin-help">(Texto pequeno acima do titulo)</span></label>
+            <input type="text" id="heroKicker" name="heroKicker" value="<%= advertisement.heroKicker || '' %>" placeholder="Ex: NOVIDADE, DESTAQUE...">
+          </div>
+          <div class="admin-form-row">
+            <label for="heroButtonLabel">Texto do Botao</label>
+            <input type="text" id="heroButtonLabel" name="heroButtonLabel" value="<%= advertisement.heroButtonLabel || 'Saiba mais' %>">
+          </div>
+        </div>
+      <% } %>
 
       <div class="admin-form-grid">
         <div class="admin-form-row">

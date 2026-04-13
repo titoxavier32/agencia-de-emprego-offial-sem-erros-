@@ -53,7 +53,7 @@
   <div class="mt-auto pt-6 border-t">
     <% if (user) { %>
       <div class="site-user-chip">
-        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=2563eb&color=fff" class="site-avatar" alt="<%= user.name %>">
+        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=0055ff&color=fff" class="site-avatar" alt="<%= user.name %>">
         <div class="site-chip-text">
           <strong><%= user.name %></strong>
           <span><%= userRoleLabel %></span>
@@ -105,7 +105,7 @@
 
       <% if (user) { %>
         <div class="site-user-chip site-desktop-only">
-          <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=2563eb&color=fff" class="site-avatar" alt="<%= user.name %>" style="width: 32px; height: 32px; border-radius: 50%;">
+          <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=0055ff&color=fff" class="site-avatar" alt="<%= user.name %>" style="width: 32px; height: 32px; border-radius: 50%;">
           <div class="site-chip-text">
             <strong style="font-size: 0.85rem;"><%= user.name.split(' ')[0] %></strong>
           </div>
@@ -113,7 +113,7 @@
         <a href="/auth/logout" class="site-icon-button site-desktop-only" title="Sair"><i class="fas fa-right-from-bracket"></i></a>
       <% } else { %>
         <a href="/acesso-candidato?section=login" class="site-nav-link site-desktop-only action-btn" style="font-size: 0.75rem; border: 1px solid #e2e8f0;">Entrar</a>
-        <a href="/acesso-candidato?section=register-type" class="site-nav-link site-desktop-only action-btn primary" style="background: #2563eb; color: #fff; font-size: 0.75rem;">
+        <a href="/acesso-candidato?section=register-type" class="site-nav-link site-desktop-only action-btn primary" style="background: var(--site-primary); color: #fff; font-size: 0.75rem;">
           Cadastre-se
         </a>
       <% } %>
@@ -138,7 +138,7 @@
           <a href="/auth/logout" class="site-nav-link" style="color: #dc2626;">Sair</a>
         <% } else { %>
           <a href="/acesso-candidato?section=login" class="site-nav-link">Entrar</a>
-          <a href="/acesso-candidato?section=register-type" class="site-nav-link" style="background: #2563eb; color: #fff;">Cadastre-se</a>
+          <a href="/acesso-candidato?section=register-type" class="site-nav-link" style="background: var(--site-primary); color: #fff;">Cadastre-se</a>
         <% } %>
       </nav>
     </div>

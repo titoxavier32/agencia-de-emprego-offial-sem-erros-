@@ -3,15 +3,15 @@
     <div class="site-section-head">
       <div class="site-section-heading">
         <h2>Concursos e processos seletivos</h2>
-        <p>A plataforma agora divulga selecoes publicas com mais contexto, datas e quadro de cargos.</p>
+        <p>A plataforma agora divulga seleções públicas com mais contexto, datas e quadro de cargos.</p>
       </div>
       <a href="/selecoes-publicas" class="site-section-link">Ver tudo <i class="fas fa-arrow-right"></i></a>
     </div>
 
     <% if (publicSelections.length > 0) { %>
       <div class="site-card-grid">
-        <% publicSelections.forEach(item => { const selectionSchedule = getDisplaySchedule(item.registrationStartDate, item.registrationEndDate, 'Inscricao', 'Inscricoes'); %>
-          <article class="site-card" data-preview-item data-preview-badge="<%= item.category === 'concurso_p?blico' ? 'Concurso' : 'Processo seletivo' %>" data-preview-title="<%= item.title %>" data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" data-preview-image="<%= item.image ? '/images/cursos/anexos/' + item.image : '' %>" data-preview-meta-label="Situacao" data-preview-meta-value="<%= item.status || 'Publicado' %>" data-preview-period="<%= selectionSchedule ? selectionSchedule.value : '' %>" data-preview-period-label="<%= selectionSchedule ? selectionSchedule.label : 'Inscricoes' %>" data-preview-link="<%= item.noticePdf ? '/images/cursos/anexos/' + item.noticePdf : '' %>" data-preview-link-label="Ver edital" data-preview-link-target="<%= item.noticePdf ? '_blank' : '' %>">
+        <% publicSelections.forEach(item => { const selectionSchedule = getDisplaySchedule(item.registrationStartDate, item.registrationEndDate, 'Inscrição', 'Inscrições'); %>
+          <article class="site-card" data-preview-item data-preview-badge="<%= item.category === 'concurso_p?blico' ? 'Concurso' : 'Processo seletivo' %>" data-preview-title="<%= item.title %>" data-preview-description="<%= (item.description || '').replace(/"/g, '&quot;') %>" data-preview-image="<%= item.image ? '/images/cursos/anexos/' + item.image : '' %>" data-preview-meta-label="Situação" data-preview-meta-value="<%= item.status || 'Publicado' %>" data-preview-period="<%= selectionSchedule ? selectionSchedule.value : '' %>" data-preview-period-label="<%= selectionSchedule ? selectionSchedule.label : 'Inscrições' %>" data-preview-link="<%= item.noticePdf ? '/images/cursos/anexos/' + item.noticePdf : '' %>" data-preview-link-label="Ver edital" data-preview-link-target="<%= item.noticePdf ? '_blank' : '' %>">
             <div class="site-card-media" data-open-preview role="button" tabindex="0" aria-label="Visualizar seleção pública">
               <% if (item.image) { %>
                 <img src="/images/cursos/anexos/<%= item.image %>" alt="<%= item.title %>">

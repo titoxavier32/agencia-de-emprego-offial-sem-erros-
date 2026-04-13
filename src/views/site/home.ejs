@@ -1,6 +1,6 @@
 <%
   const formatDateBr = (value) => value ? new Date(value + 'T00:00:00').toLocaleDateString('pt-BR') : '';
-  const getDisplaySchedule = (start, end, singleLabel = 'Data', rangeLabel = 'Periodo') => {
+  const getDisplaySchedule = (start, end, singleLabel = 'Data', rangeLabel = 'Período') => {
     const startFormatted = formatDateBr(start);
     const endFormatted = formatDateBr(end);
     if (!startFormatted && !endFormatted) return null;

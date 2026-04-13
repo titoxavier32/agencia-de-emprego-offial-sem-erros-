@@ -52,6 +52,16 @@ const Advertisement = sequelize.define('Advertisement', {
     allowNull: false,
     defaultValue: 0
   },
+  heroKicker: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: ''
+  },
+  heroButtonLabel: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: ''
+  },
   isActive: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

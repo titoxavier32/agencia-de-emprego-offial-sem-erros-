@@ -159,9 +159,10 @@ const buildPublicCompanyShowcaseItems = (companies) => companies.map((company) =
 })).sort((left, right) => left.order - right.order || left.displayName.localeCompare(right.displayName, 'pt-BR'));
 
 exports.home = async (req, res) => {
-  const [heroAdvertisements, muralAdvertisements, courses, jobs, publicSelections, companies, featuredHeroEvents, featuredHeroPublicSelections] = await Promise.all([
+  const [heroAdvertisements, muralAdvertisements, sliderAdvertisements, courses, jobs, publicSelections, companies, featuredHeroEvents, featuredHeroPublicSelections] = await Promise.all([
     findOrderedAdvertisements('hero_top'),
     findOrderedAdvertisements('mural_home'),
+    findOrderedAdvertisements('hero_slider'),
     Course.findAll({ order: [['createdAt', 'DESC']], limit: 6 }),
     Job.findAll({ where: { status: 'ativa' }, order: [['createdAt', 'DESC']], limit: 6 }),
     PublicSelection.findAll({ order: [['createdAt', 'DESC']], limit: 4 }),
@@ -181,7 +182,8 @@ exports.home = async (req, res) => {
     publicSelections,
     publicCompanies: buildPublicCompanyShowcaseItems(companies),
     featuredHeroEvents,
-    featuredHeroPublicSelections
+    featuredHeroPublicSelections,
+    sliderAdvertisements
   });
 };
 

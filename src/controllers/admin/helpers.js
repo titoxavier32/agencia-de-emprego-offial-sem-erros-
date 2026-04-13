@@ -384,7 +384,7 @@ const buildEventUpdatePayload = (body, file) => {
 };
 
 const normalizeAdvertisementPlacement = (value) => {
-  const allowedPlacements = new Set(['hero_top', 'mural_home']);
+  const allowedPlacements = new Set(['hero_top', 'mural_home', 'hero_slider']);
   return allowedPlacements.has(value) ? value : 'mural_home';
 };
 
@@ -410,6 +410,8 @@ const buildAdvertisementPayload = (body, file = null) => {
     height: parsePositiveInteger(body.height, 105),
     animation: body.animation || 'pulse',
     order: parsePositiveInteger(body.order, 0),
+    heroKicker: normalizeOptionalValue(body.heroKicker),
+    heroButtonLabel: normalizeOptionalValue(body.heroButtonLabel),
     isActive: body.isActive === 'on'
   };
 
@@ -469,6 +471,11 @@ const buildAdvertisementVisualSections = (advertisements) => {
       key: 'mural_home',
       title: 'Mural publicitario da home',
       description: 'Area do mural com os quadros comerciais exibidos na pagina inicial.'
+    },
+    {
+      key: 'hero_slider',
+      title: 'Carrossel do Hero (Principal)',
+      description: 'Banners rotativos exibidos no topo da pagina inicial.'
     }
   ];
 

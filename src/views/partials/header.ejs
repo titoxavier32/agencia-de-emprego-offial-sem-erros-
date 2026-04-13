@@ -9,8 +9,8 @@
       const b = parseInt(normalized.slice(4, 6), 16);
       return `${r}, ${g}, ${b}`;
     }; %>
-    <% const defaultPrimaryHex = themeColor === 'black' ? '#0f172a' : (themeColor === 'pink' ? '#db2777' : '#2563eb'); %>
-    <% const defaultPrimaryRgb = themeColor === 'black' ? '15, 23, 42' : (themeColor === 'pink' ? '219, 39, 119' : '37, 99, 235'); %>
+    <% const defaultPrimaryHex = themeColor === 'black' ? '#0f172a' : (themeColor === 'pink' ? '#db2777' : '#0055ff'); %>
+    <% const defaultPrimaryRgb = themeColor === 'black' ? '15, 23, 42' : (themeColor === 'pink' ? '219, 39, 119' : '0, 85, 255'); %>
     <% const primaryHex = globalSetting && globalSetting.primaryColor ? globalSetting.primaryColor : defaultPrimaryHex; %>
     <% const accentHex = globalSetting && globalSetting.accentColor ? globalSetting.accentColor : '#f97316'; %>
     <% const surfaceHex = globalSetting && globalSetting.surfaceColor ? globalSetting.surfaceColor : '#ffffff'; %>
@@ -74,6 +74,9 @@
     --site-detail-pdf-min-height: <%= globalSetting && globalSetting.detailPdfMinHeight ? globalSetting.detailPdfMinHeight : 1200 %>px;
   }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/site-professional.css">
 <% if (globalSetting && globalSetting.customCss) { %>
 <style>
