@@ -6,7 +6,7 @@ const Course = require('../../models/Course');
 const User = require('../../models/User');
 const Advertisement = require('../../models/Advertisement');
 const PublicSelection = require('../../models/PublicSelection');
-const { ensureDefaultMenus } = require('../../utils/menuDefaults');
+const { ensureDefaultMenus, normalizeMenuUrl } = require('../../utils/menuDefaults');
 const { parseAdminSidebarConfig, forceAdminSidebarVisibility, buildAdminSidebarItemsFromBody } = require('../../utils/adminSidebarDefaults');
 const { clearAccessTokenCache } = require('../../utils/mercadopagoService');
 const {
@@ -226,7 +226,7 @@ exports.createMenu = async (req, res) => {
   const { label, url, icon, order, isActive, target } = req.body;
   await Menu.create({
     label,
-    url,
+    url: normalizeMenuUrl(url),
     icon: normalizeOptionalValue(icon) || 'fa-link',
     order: parseInt(order, 10) || 0,
     isActive: isActive === 'on',
@@ -241,7 +241,7 @@ exports.updateMenu = async (req, res) => {
   if (menu) {
     await menu.update({
       label,
-      url,
+      url: normalizeMenuUrl(url),
       icon: normalizeOptionalValue(icon) || 'fa-link',
       order: parseInt(order, 10) || 0,
       isActive: isActive === 'on',

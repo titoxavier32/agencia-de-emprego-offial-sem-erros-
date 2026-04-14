@@ -21,7 +21,7 @@ router.get('/cursos', asyncHandler(siteController.cursos));
 router.get('/mural-publicitario', asyncHandler(siteController.advertisements));
 router.get('/selecoes-publicas', asyncHandler(siteController.publicSelections));
 router.get('/selecoes-publicas/:id', asyncHandler(siteController.publicSelectionDetail));
-router.get('/sobre', siteController.sobre);
+router.get(['/sobre', '/quem-somos'], siteController.sobre);
 router.get('/contato', asyncHandler(siteController.contato));
 router.get('/eventos', asyncHandler(siteController.eventos));
 router.get('/busca', asyncHandler(siteController.busca));
