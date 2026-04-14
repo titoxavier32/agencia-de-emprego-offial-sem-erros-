@@ -1,17 +1,35 @@
 <div class="admin-page">
   <section class="admin-hero">
     <div class="admin-kicker">Menus do site</div>
-    <h1>Edite, reorganize e amplie a navegação pública.</h1>
-    <p>Agora os menus atuais do site também ficam sob controle do administrador, além de permitir novos links personalizados.</p>
+    <h1>Edite, reorganize e corrija a navegacao publica.</h1>
+    <p>Agora voce pode ajustar o Inicio, Quem Somos e os demais links publicos diretamente pelo painel administrativo.</p>
   </section>
 
   <section class="admin-table-wrap">
     <div class="admin-section-head">
       <div>
         <h2>Itens de menu</h2>
-        <p>Você pode ajustar rótulo, endereço, ícone, ordem, visibilidade e destino de abertura.</p>
+        <p>Voce pode ajustar rotulo, endereco, icone, ordem, visibilidade e destino de abertura.</p>
       </div>
-      <a href="/admin/menus/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Novo menu</span></a>
+      <div class="admin-actions">
+        <form action="/admin/menus/normalizar" method="POST">
+          <button type="submit" class="admin-btn-secondary">Corrigir rotas salvas</button>
+        </form>
+        <a href="/admin/menus/nova" class="admin-btn"><i class="fas fa-plus"></i><span>Novo menu</span></a>
+      </div>
+    </div>
+
+    <% if (status) { %>
+      <div class="admin-help" style="margin-bottom: 16px; padding: 14px 16px; border-radius: 14px; background: rgba(37, 99, 235, 0.08); color: #1d4ed8;">
+        <strong>Status:</strong> <%= status %>
+      </div>
+    <% } %>
+
+    <div class="admin-help" style="margin-bottom: 16px;">
+      Rotas internas prontas:
+      <% routePresets.forEach((preset, index) => { %>
+        <code><%= preset.url %></code><%= index < routePresets.length - 1 ? ', ' : '' %>
+      <% }) %>
     </div>
 
     <% if (menus.length > 0) { %>
@@ -20,20 +38,33 @@
           <tr>
             <th>Ordem</th>
             <th>Item</th>
-            <th>URL</th>
-            <th>Ícone</th>
+            <th>URL salva</th>
+            <th>URL usada</th>
+            <th>Tipo</th>
+            <th>Icone</th>
             <th>Abertura</th>
             <th>Status</th>
-            <th>Ajuste rápido</th>
-            <th>Ações</th>
+            <th>Ajuste rapido</th>
+            <th>Acoes</th>
           </tr>
         </thead>
         <tbody>
           <% menus.forEach(menu => { %>
             <tr>
               <td><span class="admin-badge neutral"><%= menu.order %></span></td>
-              <td><strong><%= menu.label %></strong></td>
+              <td>
+                <strong><%= menu.label %></strong>
+                <% if (menu.routePreset) { %>
+                  <div class="admin-help">Rota reconhecida: <%= menu.routePreset.label %></div>
+                <% } %>
+              </td>
               <td><code><%= menu.url %></code></td>
+              <td><code><%= menu.normalizedUrl %></code></td>
+              <td>
+                <span class="admin-badge <%= menu.routePreset ? 'success' : 'neutral' %>">
+                  <%= menu.routePreset ? 'Interna' : 'Livre/externa' %>
+                </span>
+              </td>
               <td><span class="admin-help"><i class="fas <%= menu.icon || 'fa-link' %>"></i> <%= menu.icon || 'fa-link' %></span></td>
               <td><span class="admin-help"><%= menu.target === '_blank' ? 'Nova aba' : 'Mesma aba' %></span></td>
               <td>
@@ -77,7 +108,6 @@
 </div>
 
 <style>
-  /* Admin Toggle Switch */
   .admin-toggle {
     position: relative;
     display: inline-block;
@@ -147,12 +177,10 @@
       if (!result.success) {
         throw new Error(result.error || 'Erro ao alternar status.');
       }
-      
-      // Feedback visual opcional (ex: toast) poderia ser adicionado aqui
     } catch (error) {
       console.error('Toggle error:', error);
-      alert('Não foi possível alterar o status do menu. Tente novamente.');
-      checkbox.checked = originalState; // Reverte o estado visual
+      alert('Nao foi possivel alterar o status do menu. Tente novamente.');
+      checkbox.checked = originalState;
     } finally {
       checkbox.disabled = false;
     }

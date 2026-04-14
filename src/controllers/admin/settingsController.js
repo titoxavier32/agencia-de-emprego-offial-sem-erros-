@@ -6,7 +6,7 @@ const Course = require('../../models/Course');
 const User = require('../../models/User');
 const Advertisement = require('../../models/Advertisement');
 const PublicSelection = require('../../models/PublicSelection');
-const { ensureDefaultMenus, normalizeMenuUrl } = require('../../utils/menuDefaults');
+const { ensureDefaultMenus, normalizeMenuUrl, SITE_ROUTE_PRESETS, getRoutePresetMeta } = require('../../utils/menuDefaults');
 const { parseAdminSidebarConfig, forceAdminSidebarVisibility, buildAdminSidebarItemsFromBody } = require('../../utils/adminSidebarDefaults');
 const { clearAccessTokenCache } = require('../../utils/mercadopagoService');
 const {
@@ -211,7 +211,21 @@ exports.correctStoredTexts = async (req, res) => {
 exports.listMenus = async (req, res) => {
   await ensureDefaultMenus();
   const menus = await Menu.findAll({ order: [['order', 'ASC']] });
-  return res.render('admin/menus/list', { title: 'Gerenciar Menus', menus, user: req.user });
+  const menuItems = menus.map((menu) => {
+    const plainMenu = menu.get({ plain: true });
+    return {
+      ...plainMenu,
+      normalizedUrl: normalizeMenuUrl(plainMenu.url),
+      routePreset: getRoutePresetMeta(plainMenu.url)
+    };
+  });
+  return res.render('admin/menus/list', {
+    title: 'Gerenciar Menus',
+    menus: menuItems,
+    routePresets: SITE_ROUTE_PRESETS,
+    user: req.user,
+    status: req.query.status || ''
+  });
 };
 
 exports.menuForm = async (req, res) => {
@@ -219,7 +233,14 @@ exports.menuForm = async (req, res) => {
   if (req.params.id) {
     menu = await Menu.findByPk(req.params.id);
   }
-  return res.render('admin/menus/form', { title: menu ? 'Editar Menu' : 'Novo Menu', menu, user: req.user });
+  const plainMenu = menu ? menu.get({ plain: true }) : null;
+  return res.render('admin/menus/form', {
+    title: menu ? 'Editar Menu' : 'Novo Menu',
+    menu: plainMenu,
+    routePresets: SITE_ROUTE_PRESETS,
+    currentPresetUrl: plainMenu ? (getRoutePresetMeta(plainMenu.url) || {}).url || '' : '',
+    user: req.user
+  });
 };
 
 exports.createMenu = async (req, res) => {
@@ -297,6 +318,21 @@ exports.toggleMenu = async (req, res) => {
   await menu.update({ isActive: newStatus });
 
   return res.json({ success: true, isActive: newStatus });
+};
+
+exports.normalizeMenus = async (req, res) => {
+  const menus = await Menu.findAll();
+  let updatedCount = 0;
+
+  for (const menu of menus) {
+    const normalizedUrl = normalizeMenuUrl(menu.url);
+    if (normalizedUrl && normalizedUrl !== menu.url) {
+      await menu.update({ url: normalizedUrl });
+      updatedCount += 1;
+    }
+  }
+
+  return res.redirect('/admin/menus?status=' + encodeURIComponent(`Rotas normalizadas com sucesso. ${updatedCount} item(ns) atualizado(s).`));
 };
 
 exports.siteStructure = async (req, res) => {

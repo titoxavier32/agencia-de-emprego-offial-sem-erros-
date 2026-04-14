@@ -102,6 +102,7 @@ router.post('/empresas/editar/:id', handleCompanyLogoUpload((req) => '/admin/emp
 router.post('/empresas/:id/aprovar', asyncHandler(adminController.approveCompany));
 router.post('/empresas/:id/bloquear', asyncHandler(adminController.blockCompany));
 router.get('/menus', asyncHandler(adminController.listMenus));
+router.post('/menus/normalizar', asyncHandler(adminController.normalizeMenus));
 router.get('/menus/nova', asyncHandler(adminController.menuForm));
 router.post('/menus/nova', asyncHandler(adminController.createMenu));
 router.get('/menus/editar/:id', asyncHandler(adminController.menuForm));

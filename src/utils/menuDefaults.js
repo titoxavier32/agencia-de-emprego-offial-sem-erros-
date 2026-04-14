@@ -9,6 +9,22 @@ const DEFAULT_MENUS = [
   { label: 'Contato', url: '/contato', icon: 'fa-envelope', order: 6, isActive: true, target: '_self' }
 ];
 
+const SITE_ROUTE_PRESETS = [
+  { label: 'In\u00edcio', url: '/', aliases: ['inicio', 'início', 'home', 'index'] },
+  { label: 'Vagas', url: '/vagas', aliases: ['vaga', 'vagas'] },
+  { label: 'Cursos', url: '/cursos', aliases: ['curso', 'cursos'] },
+  { label: 'Sele\u00e7\u00f5es p\u00fablicas', url: '/selecoes-publicas', aliases: ['selecoes-publicas', 'selecao-publica', 'selecao-publica', 'seleções públicas'] },
+  { label: 'Quem Somos', url: '/sobre', aliases: ['sobre', 'quem-somos', 'quem somos', 'sobre-nos'] },
+  { label: 'Contato', url: '/contato', aliases: ['contato', 'fale-conosco', 'fale conosco'] },
+  { label: 'Eventos', url: '/eventos', aliases: ['evento', 'eventos'] },
+  { label: 'Mural Publicit\u00e1rio', url: '/mural-publicitario', aliases: ['mural', 'mural-publicitario'] },
+  { label: 'Empresas Parceiras', url: '/empresas-parceiras', aliases: ['empresas-parceiras', 'parceiros', 'empresa-parceira'] },
+  { label: 'Acesso do Candidato', url: '/acesso-candidato', aliases: ['acesso-candidato', 'login', 'entrar'] },
+  { label: 'Busca', url: '/busca', aliases: ['busca', 'pesquisa'] },
+  { label: 'Pol\u00edtica de Privacidade', url: '/politica-de-privacidade', aliases: ['politica-de-privacidade', 'privacidade'] },
+  { label: 'Termos de Uso', url: '/termos-de-uso', aliases: ['termos-de-uso', 'termos'] }
+];
+
 const normalizeLabel = (value) => String(value || '')
   .normalize('NFD')
   .replace(/[\u0300-\u036f]/g, '')
@@ -30,12 +46,21 @@ const normalizeMenuUrl = (value) => {
   }
 
   normalized = normalized.replace(/\/{2,}/g, '/');
+  const comparablePath = normalizeLabel(normalized.replace(/\?.*$/, '').replace(/^\/+/, ''));
+  const matchedPreset = SITE_ROUTE_PRESETS.find((preset) =>
+    preset.aliases.some((alias) => normalizeLabel(alias) === comparablePath)
+  );
 
-  if (['/quem-somos', '/sobre-nos'].includes(normalized)) {
-    return '/sobre';
+  if (matchedPreset) {
+    return matchedPreset.url;
   }
 
   return normalized;
+};
+
+const getRoutePresetMeta = (value) => {
+  const normalized = normalizeMenuUrl(value);
+  return SITE_ROUTE_PRESETS.find((preset) => preset.url === normalized) || null;
 };
 
 const isAboutMenu = (menu) => ['sobre', 'quem somos'].includes(normalizeLabel(menu && menu.label));
@@ -93,5 +118,7 @@ const ensureDefaultMenus = async () => {
 module.exports = {
   DEFAULT_MENUS,
   ensureDefaultMenus,
-  normalizeMenuUrl
+  normalizeMenuUrl,
+  SITE_ROUTE_PRESETS,
+  getRoutePresetMeta
 };
